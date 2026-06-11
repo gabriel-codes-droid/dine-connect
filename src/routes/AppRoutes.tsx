@@ -1,51 +1,42 @@
-import type { ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 import DashboardLayout from '../components/layout/DashboardLayout';
-import Login from '../pages/Login';
-import AdminOverview from '../pages/AdminOverview';
-import RestaurantOverview from '../pages/RestaurantOverview';
-import CustomerOverview from '../pages/CustomerOverview';
-import type { UserRole } from '../types';
 
-function getStoredRole(): UserRole | null {
-  const role = sessionStorage.getItem('dineconnect_role');
-  if (role === 'super-admin' || role === 'restaurant-admin' || role === 'customer') {
-    return role;
-  }
-  return null;
-}
+import Login from '../pages/auth/Login';
+import SignUp from '../pages/auth/SignUp';
 
-function PlaceholderPage({ title }: { title: string }) {
-  const role = getStoredRole();
-  if (!role) return <Navigate to="/login" replace />;
+import CustomerOverview from '../pages/customer/Overview';
+import Discover from '../pages/customer/Discover';
+import RestaurantDetails from '../pages/customer/RestaurantDetails';
+import CustomerPlaceholder from '../pages/customer/PlaceholderPage';
 
+import AdminOverview from '../pages/admin/Overview';
+import AdminAnalytics from '../pages/admin/Analytics';
+import AdminPlaceholder from '../pages/admin/PlaceholderPage';
+
+import RestaurantOverview from '../pages/restaurant/Overview';
+
+function CustomerLayout({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <DashboardLayout userRole={role} userName="Sarah Anderson" title={title}>
-      <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
-        <p className="text-gray-500">This section is coming soon.</p>
-      </div>
-    </DashboardLayout>
+    <ProtectedRoute allowedRoles={['customer']}>
+      <DashboardLayout userRole="customer" title={title}>{children}</DashboardLayout>
+    </ProtectedRoute>
   );
 }
 
-function ProtectedDashboard({
-  role,
-  title,
-  children,
-}: {
-  role: UserRole;
-  title: string;
-  children: ReactNode;
-}) {
-  const storedRole = getStoredRole();
-  if (!storedRole) return <Navigate to="/login" replace />;
-  if (storedRole !== role) return <Navigate to="/login" replace />;
-
+function AdminLayout({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <DashboardLayout userRole={role} userName="Sarah Anderson" title={title}>
-      {children}
-    </DashboardLayout>
+    <ProtectedRoute allowedRoles={['super-admin']}>
+      <DashboardLayout userRole="super-admin" title={title}>{children}</DashboardLayout>
+    </ProtectedRoute>
+  );
+}
+
+function RestaurantLayout({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <ProtectedRoute allowedRoles={['restaurant-admin']}>
+      <DashboardLayout userRole="restaurant-admin" title={title}>{children}</DashboardLayout>
+    </ProtectedRoute>
   );
 }
 
@@ -53,39 +44,36 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
 
-      <Route
-        path="/admin"
-        element={
-          <ProtectedDashboard role="super-admin" title="Overview">
-            <AdminOverview />
-          </ProtectedDashboard>
-        }
-      />
-      <Route
-        path="/restaurant"
-        element={
-          <ProtectedDashboard role="restaurant-admin" title="Overview">
-            <RestaurantOverview />
-          </ProtectedDashboard>
-        }
-      />
-      <Route
-        path="/customer"
-        element={
-          <ProtectedDashboard role="customer" title="Overview">
-            <CustomerOverview />
-          </ProtectedDashboard>
-        }
-      />
+      {/* Customer Routes */}
+      <Route path="/customer" element={<CustomerLayout title="Overview"><CustomerOverview /></CustomerLayout>} />
+      <Route path="/customer/discover" element={<CustomerLayout title="Discover"><Discover /></CustomerLayout>} />
+      <Route path="/customer/restaurants/:slug" element={<CustomerLayout title="Restaurant"><RestaurantDetails /></CustomerLayout>} />
+      <Route path="/customer/orders" element={<CustomerLayout title="Orders"><CustomerPlaceholder title="Orders" description="Track all your orders in one place." /></CustomerLayout>} />
+      <Route path="/customer/reservations" element={<CustomerLayout title="Reservations"><CustomerPlaceholder title="Reservations" description="Manage your table reservations." /></CustomerLayout>} />
+      <Route path="/customer/favorites" element={<CustomerLayout title="Favorites"><CustomerPlaceholder title="Favorites" description="Your favorite restaurants." /></CustomerLayout>} />
+      <Route path="/customer/reviews" element={<CustomerLayout title="Reviews"><CustomerPlaceholder title="Reviews" description="Your restaurant reviews." /></CustomerLayout>} />
+      <Route path="/customer/notifications" element={<CustomerLayout title="Notifications"><CustomerPlaceholder title="Notifications" /></CustomerLayout>} />
+      <Route path="/customer/settings" element={<CustomerLayout title="Settings"><CustomerPlaceholder title="Settings" /></CustomerLayout>} />
 
-      <Route path="/restaurants" element={<PlaceholderPage title="Restaurants" />} />
-      <Route path="/orders" element={<PlaceholderPage title="Orders" />} />
-      <Route path="/reservations" element={<PlaceholderPage title="Reservations" />} />
-      <Route path="/customers" element={<PlaceholderPage title="Customers" />} />
-      <Route path="/analytics" element={<PlaceholderPage title="Analytics" />} />
-      <Route path="/reports" element={<PlaceholderPage title="Reports" />} />
-      <Route path="/settings" element={<PlaceholderPage title="Settings" />} />
+      {/* Admin Routes */}
+      <Route path="/admin" element={<AdminLayout title="Overview"><AdminOverview /></AdminLayout>} />
+      <Route path="/admin/restaurants" element={<AdminLayout title="Restaurants"><AdminPlaceholder page="Restaurants" /></AdminLayout>} />
+      <Route path="/admin/users" element={<AdminLayout title="Users"><AdminPlaceholder page="Users" /></AdminLayout>} />
+      <Route path="/admin/orders" element={<AdminLayout title="Orders"><AdminPlaceholder page="Orders" /></AdminLayout>} />
+      <Route path="/admin/reservations" element={<AdminLayout title="Reservations"><AdminPlaceholder page="Reservations" /></AdminLayout>} />
+      <Route path="/admin/revenue" element={<AdminLayout title="Revenue"><AdminPlaceholder page="Revenue" /></AdminLayout>} />
+      <Route path="/admin/analytics" element={<AdminLayout title="Analytics"><AdminAnalytics /></AdminLayout>} />
+      <Route path="/admin/reports" element={<AdminLayout title="Reports"><AdminPlaceholder page="Reports" /></AdminLayout>} />
+      <Route path="/admin/settings" element={<AdminLayout title="Settings"><AdminPlaceholder page="Settings" /></AdminLayout>} />
+
+      {/* Restaurant Admin Routes */}
+      <Route path="/restaurant" element={<RestaurantLayout title="Overview"><RestaurantOverview /></RestaurantLayout>} />
+      <Route path="/restaurant/orders" element={<RestaurantLayout title="Orders"><CustomerPlaceholder title="Orders" /></RestaurantLayout>} />
+      <Route path="/restaurant/reservations" element={<RestaurantLayout title="Reservations"><CustomerPlaceholder title="Reservations" /></RestaurantLayout>} />
+      <Route path="/restaurant/analytics" element={<RestaurantLayout title="Analytics"><RestaurantOverview /></RestaurantLayout>} />
+      <Route path="/restaurant/settings" element={<RestaurantLayout title="Settings"><CustomerPlaceholder title="Settings" /></RestaurantLayout>} />
 
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />

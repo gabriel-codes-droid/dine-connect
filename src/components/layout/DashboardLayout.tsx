@@ -5,24 +5,18 @@ import type { UserRole } from '../../types';
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  userRole?: UserRole;
-  userName?: string;
+  userRole: UserRole;
   title?: string;
 }
 
-export default function DashboardLayout({
-  children,
-  userRole = 'super-admin',
-  userName = 'John Doe',
-  title = 'Dashboard',
-}: DashboardLayoutProps) {
+export default function DashboardLayout({ children, userRole, title = 'Dashboard' }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen bg-bg-light">
+    <div className="flex h-screen bg-bg-light dark:bg-dark-bg">
       <Sidebar userRole={userRole} />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <Navbar userName={userName} userRole={userRole} title={title} />
+        <Navbar title={title} userRole={userRole} />
         <main className="flex-1 overflow-y-auto">
-          <div className="p-6">{children}</div>
+          <div className="p-6 max-w-[1600px] mx-auto">{children}</div>
         </main>
       </div>
     </div>
