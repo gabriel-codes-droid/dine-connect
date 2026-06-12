@@ -136,12 +136,13 @@ export function subscribeToAuth(callback: (user: UserProfile | null) => void) {
     return () => {};
   }
 
+  const firestore = db!;
   return onAuthStateChanged(auth, async (user: User | null) => {
     if (!user) {
       callback(null);
       return;
     }
-    const snap = await getDoc(doc(db, 'users', user.uid));
+    const snap = await getDoc(doc(firestore, 'users', user.uid));
     if (snap.exists()) {
       callback(snap.data() as UserProfile);
     } else {
