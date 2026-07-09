@@ -135,44 +135,44 @@ export default function Restaurants() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 text-white">
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-10 left-10 text-8xl">🍝</div>
-          <div className="absolute top-20 right-20 text-7xl">🍣</div>
-          <div className="absolute bottom-10 left-1/3 text-7xl">🥐</div>
-          <div className="absolute bottom-20 right-1/4 text-8xl">🍷</div>
+          <div className="absolute top-10 left-10 text-6xl sm:text-7xl md:text-8xl">🍝</div>
+          <div className="absolute top-20 right-20 text-5xl sm:text-6xl md:text-7xl">🍣</div>
+          <div className="absolute bottom-10 left-1/3 text-5xl sm:text-6xl md:text-7xl">🥐</div>
+          <div className="absolute bottom-20 right-1/4 text-6xl sm:text-7xl md:text-8xl">🍷</div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-6 py-20 sm:py-28 text-center">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur text-sm font-medium mb-6">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-28 text-center">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 rounded-full bg-white/15 backdrop-blur text-xs sm:text-sm font-medium mb-4 sm:mb-6">
             <Sparkles size={14} /> Over 1,200 restaurants · 12 cuisines
           </span>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4">
             Discover your next <span className="italic text-amber-300">favourite</span> table
           </h1>
-          <p className="text-lg sm:text-xl text-indigo-100 max-w-2xl mx-auto mb-10">
+          <p className="text-base sm:text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4">
             From neighbourhood gems to special-occasion splurges — browse, book, and
             taste your way through the city.
           </p>
 
-          <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-2 flex items-center gap-2">
+          <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-2 flex items-center gap-2 mx-4">
             <div className="flex items-center gap-2 flex-1 px-3">
-              <Search size={20} className="text-gray-400" />
+              <Search size={18} className="text-gray-400" />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search restaurants, cuisines, neighbourhoods…"
-                className="w-full py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none"
+                className="w-full py-2.5 sm:py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none text-sm sm:text-base"
               />
             </div>
-            <button className="hidden sm:inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
-              <Utensils size={18} /> Search
+            <button className="hidden sm:inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-colors text-sm">
+              <Utensils size={16} /> Search
             </button>
           </div>
         </div>
       </section>
 
       {/* Featured carousel-ish row */}
-      <section className="max-w-7xl mx-auto px-6 -mt-12 relative z-10 mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 sm:-mt-12 relative z-10 mb-12 sm:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {featured.map((r) => {
             const accent = accentMap[r.accent] ?? accentMap.amber;
             return (
@@ -182,7 +182,7 @@ export default function Restaurants() {
                 className={`group relative bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all ${accent.glow}`}
               >
                 <div className="flex items-stretch">
-                  <div className="relative w-32 flex-shrink-0 overflow-hidden">
+                  <div className="relative w-24 sm:w-32 flex-shrink-0 overflow-hidden">
                     <img
                       src={r.imageUrl}
                       alt={r.name}
@@ -190,24 +190,24 @@ export default function Restaurants() {
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   </div>
-                  <div className="flex-1 p-5 min-w-0">
+                  <div className="flex-1 p-4 sm:p-5 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
                       <Sparkles size={12} className="text-amber-500" />
                       <span className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
                         Featured
                       </span>
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-1 truncate group-hover:text-indigo-600">
+                    <h3 className="font-bold text-gray-900 mb-1 truncate group-hover:text-indigo-600 text-sm sm:text-base">
                       {r.name}
                     </h3>
-                    <p className="text-sm text-gray-500 mb-2 line-clamp-1">{r.tagline}</p>
-                    <div className="flex items-center gap-3 text-xs text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-2 line-clamp-1">{r.tagline}</p>
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600">
                       <span className="flex items-center gap-1">
                         <Star size={12} className="fill-amber-400 text-amber-400" />
                         <strong className="text-gray-900">{r.rating}</strong>
                       </span>
-                      <span>{r.cuisine}</span>
-                      <span>{r.priceRange}</span>
+                      <span className="hidden sm:inline">{r.cuisine}</span>
+                      <span className="hidden sm:inline">{r.priceRange}</span>
                     </div>
                   </div>
                 </div>
@@ -218,13 +218,13 @@ export default function Restaurants() {
       </section>
 
       {/* Filters + grid */}
-      <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">
               All restaurants
             </h2>
-            <p className="text-gray-500">{filtered.length} places to explore</p>
+            <p className="text-gray-500 text-sm sm:text-base">{filtered.length} places to explore</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -235,7 +235,7 @@ export default function Restaurants() {
             <select
               value={cuisine}
               onChange={(e) => setCuisine(e.target.value as 'All' | Cuisine)}
-              className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {cuisines.map((c) => (
                 <option key={c} value={c}>
@@ -247,7 +247,7 @@ export default function Restaurants() {
             <select
               value={price}
               onChange={(e) => setPrice(e.target.value as 'Any' | PriceRange)}
-              className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {priceRanges.map((p) => (
                 <option key={p} value={p}>
@@ -256,7 +256,7 @@ export default function Restaurants() {
               ))}
             </select>
 
-            <label className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50">
+            <label className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs sm:text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50">
               <input
                 type="checkbox"
                 checked={showOpenOnly}
@@ -269,12 +269,12 @@ export default function Restaurants() {
         </div>
 
         {/* Cuisine quick-chips */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-6 sm:mb-8">
           {cuisines.map((c) => (
             <button
               key={c}
               onClick={() => setCuisine(c)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 sm:px-4 rounded-full text-xs sm:text-sm font-medium transition-all ${
                 cuisine === c
                   ? 'bg-gray-900 text-white shadow-md'
                   : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-400'
@@ -287,16 +287,16 @@ export default function Restaurants() {
 
         {/* Grid */}
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filtered.map((r) => (
               <RestaurantCard key={r.id} id={r.id} />
             ))}
           </div>
         ) : (
-          <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-16 text-center">
-            <div className="text-6xl mb-4">🍽️</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">No matches yet</h3>
-            <p className="text-gray-500 mb-6">Try a different cuisine, or clear your filters.</p>
+          <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-8 sm:p-12 md:p-16 text-center">
+            <div className="text-4xl sm:text-5xl md:text-6xl mb-4">🍽️</div>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">No matches yet</h3>
+            <p className="text-gray-500 mb-6 text-sm sm:text-base">Try a different cuisine, or clear your filters.</p>
             <button
               onClick={() => {
                 setQuery('');
@@ -304,7 +304,7 @@ export default function Restaurants() {
                 setPrice('Any');
                 setShowOpenOnly(false);
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors text-sm"
             >
               Reset filters <ChevronRight size={16} />
             </button>
@@ -314,19 +314,19 @@ export default function Restaurants() {
 
       {/* CTA */}
       <section className="bg-gradient-to-br from-gray-900 to-indigo-900 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-20 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4">
             Own a restaurant?
           </h2>
-          <p className="text-indigo-200 text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-indigo-200 text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
             Join DineConnect to manage reservations, orders, and your reputation —
             all in one place.
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-7 py-3.5 rounded-xl hover:bg-gray-100 transition-colors shadow-xl"
+            className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-5 sm:px-6 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-xl hover:bg-gray-100 transition-colors shadow-xl text-sm sm:text-base"
           >
-            Get started free <ChevronRight size={18} />
+            Get started free <ChevronRight size={16} />
           </Link>
         </div>
       </section>
