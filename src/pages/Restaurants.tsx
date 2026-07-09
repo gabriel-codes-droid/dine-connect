@@ -38,13 +38,14 @@ function RestaurantCard({ id }: { id: string }) {
       to={`/restaurants/${r.id}`}
       className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
-      <div
-        className="relative h-48 flex items-center justify-center overflow-hidden"
-        style={{ background: r.heroImage }}
-      >
-        <span className="text-7xl drop-shadow-lg group-hover:scale-110 transition-transform duration-500">
-          {r.coverEmoji}
-        </span>
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={r.imageUrl}
+          alt={r.name}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0" />
 
         {r.featured && (
           <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur text-xs font-semibold text-gray-900 shadow-sm">
@@ -181,11 +182,13 @@ export default function Restaurants() {
                 className={`group relative bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all ${accent.glow}`}
               >
                 <div className="flex items-stretch">
-                  <div
-                    className="w-32 flex-shrink-0 flex items-center justify-center"
-                    style={{ background: r.heroImage }}
-                  >
-                    <span className="text-6xl">{r.coverEmoji}</span>
+                  <div className="relative w-32 flex-shrink-0 overflow-hidden">
+                    <img
+                      src={r.imageUrl}
+                      alt={r.name}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 p-5 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">

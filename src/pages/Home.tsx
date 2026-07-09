@@ -100,12 +100,32 @@ export default function Home() {
               to={`/restaurants/${r.id}`}
               className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all"
             >
-              <div
-                className="h-48 flex items-center justify-center"
-                style={{ background: r.heroImage }}
-              >
-                <span className="text-7xl group-hover:scale-110 transition-transform duration-500">
-                  {r.coverEmoji}
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={r.imageUrl}
+                  alt={r.name}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0" />
+                {r.featured && (
+                  <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur text-xs font-semibold text-gray-900 shadow-sm">
+                    <Sparkles size={12} className="text-amber-500" /> Featured
+                  </span>
+                )}
+
+                <span
+                  className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur ${
+                    r.openNow
+                      ? 'bg-emerald-500/90 text-white'
+                      : 'bg-gray-900/80 text-white'
+                  }`}
+                >
+                  {r.openNow ? 'Open Now' : 'Closed'}
+                </span>
+
+                <span className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur text-xs font-bold text-gray-900 shadow-sm">
+                  {r.priceRange}
                 </span>
               </div>
               <div className="p-5">

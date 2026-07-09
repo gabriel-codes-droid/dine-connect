@@ -39,10 +39,12 @@ export default function RestaurantDetail() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero */}
-      <section
-        className="relative h-[420px] flex items-end overflow-hidden"
-        style={{ background: r.heroImage }}
-      >
+      <section className="relative h-[420px] overflow-hidden">
+        <img
+          src={r.imageUrl}
+          alt={r.name}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
         <Link
@@ -65,13 +67,14 @@ export default function RestaurantDetail() {
           <Share2 size={18} />
         </button>
 
-        <div className="relative max-w-7xl mx-auto px-6 pb-10 w-full">
+        <div className="relative max-w-7xl mx-auto px-6 pb-10 w-full h-full flex items-end">
           <div className="flex items-end gap-6">
-            <div
-              className="w-28 h-28 rounded-2xl flex items-center justify-center shadow-2xl flex-shrink-0"
-              style={{ background: r.heroImage }}
-            >
-              <span className="text-6xl">{r.coverEmoji}</span>
+            <div className="w-28 h-28 rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-2 border-white/20">
+              <img
+                src={r.imageUrl}
+                alt={r.name}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="text-white min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -147,25 +150,29 @@ export default function RestaurantDetail() {
           {/* Gallery */}
           <section>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Gallery</h2>
-            <div
-              className="rounded-2xl overflow-hidden mb-3 h-80 flex items-center justify-center shadow-lg"
-              style={{ background: r.gallery[activeImage] }}
-            >
-              <span className="text-9xl drop-shadow-2xl">{r.coverEmoji}</span>
+            <div className="rounded-2xl overflow-hidden mb-3 h-80 bg-gray-100 shadow-lg">
+              <img
+                src={r.galleryImages[activeImage]}
+                alt={`${r.name} gallery ${activeImage + 1}`}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="grid grid-cols-3 gap-3">
-              {r.gallery.map((g, i) => (
+              {r.galleryImages.map((g, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
-                  className={`h-24 rounded-xl overflow-hidden flex items-center justify-center transition-all ${
+                  className={`h-24 rounded-xl overflow-hidden bg-gray-100 transition-all ${
                     activeImage === i
                       ? 'ring-4 ring-indigo-500 scale-95'
                       : 'hover:scale-95 opacity-80 hover:opacity-100'
                   }`}
-                  style={{ background: g }}
                 >
-                  <span className="text-4xl">{r.coverEmoji}</span>
+                  <img
+                    src={g}
+                    alt={`${r.name} gallery thumbnail ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>
@@ -196,12 +203,24 @@ export default function RestaurantDetail() {
               {filteredMenu.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow"
+                  className="bg-white border border-gray-200 rounded-xl p-3 hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-gray-900 mb-1">{item.name}</h3>
-                      <p className="text-sm text-gray-500">{item.description}</p>
+                  <div className="flex items-center gap-4">
+                    {item.image ? (
+                      <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-20 h-20 rounded-lg flex-shrink-0 bg-gray-100" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-900 mb-0.5">{item.name}</h3>
+                      <p className="text-sm text-gray-500 line-clamp-2">{item.description}</p>
                     </div>
                     <span className="font-bold text-indigo-600 text-lg flex-shrink-0">
                       ${item.price}
