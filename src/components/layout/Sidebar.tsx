@@ -54,12 +54,12 @@ function SidebarContent({
 
   return (
     <>
-      <div className={`h-16 px-6 flex items-center border-b border-gray-200 ${!onNavigate ? '' : 'mt-12'}`}>
+      <div className={`h-16 px-6 flex items-center border-b border-gray-200 dark:border-slate-800 ${!onNavigate ? '' : 'mt-12'}`}>
         <div className={`flex items-center gap-2 ${!isOpen && !onNavigate ? 'justify-center w-full' : ''}`}>
           <div className="w-8 h-8 bg-gradient-to-br from-primary to-indigo-500 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">DC</span>
           </div>
-          {(isOpen || onNavigate) && <span className="font-bold text-gray-900">DineConnect</span>}
+          {(isOpen || onNavigate) && <span className="font-bold text-gray-900 dark:text-white">DineConnect</span>}
         </div>
       </div>
 
@@ -76,8 +76,8 @@ function SidebarContent({
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive
-                      ? 'bg-indigo-50 text-primary border border-indigo-200'
-                      : 'text-gray-700 hover:bg-gray-50 border border-transparent'
+                      ? 'bg-indigo-50 dark:bg-indigo-900/20 text-primary border border-indigo-200 dark:border-indigo-800'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent'
                   }`
                 }
               >
@@ -92,7 +92,7 @@ function SidebarContent({
           <NavLink
             to="/restaurants"
             onClick={onNavigate}
-            className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50/60 hover:bg-indigo-100 border border-indigo-100"
+            className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50/60 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800"
           >
             <ExternalLink size={12} /> Public restaurant site
           </NavLink>
@@ -111,7 +111,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
       <button
         type="button"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 inline-flex items-center justify-center p-2 rounded-lg bg-white text-gray-900 border border-gray-200 shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 inline-flex items-center justify-center p-2 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-700 shadow-md"
         aria-label="Toggle menu"
       >
         {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -120,15 +120,15 @@ export default function Sidebar({ userRole }: SidebarProps) {
       <aside
         className={`${
           isCollapsed ? 'w-20' : 'w-64'
-        } bg-white border-r border-gray-200 h-screen sticky top-0 transition-all duration-300 hidden lg:flex flex-col`}
+        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 h-screen sticky top-0 transition-all duration-300 hidden lg:flex flex-col`}
       >
         <SidebarContent isOpen={!isCollapsed} userRole={userRole} />
 
-        <div className="border-t border-gray-200 p-4">
+        <div className="border-t border-gray-200 dark:border-slate-800 p-4">
           <button
             type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200"
           >
             {isCollapsed ? (
               <Menu size={18} />
@@ -151,7 +151,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-200 z-50 transform transition-transform duration-300 lg:hidden flex flex-col ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 z-50 transform transition-transform duration-300 lg:hidden flex flex-col ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

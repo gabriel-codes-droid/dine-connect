@@ -15,27 +15,35 @@ export default function Home() {
   const featured = restaurants.filter((r) => r.featured);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
       {/* Nav */}
-      <nav className="bg-white/80 backdrop-blur border-b border-gray-200 sticky top-0 z-30">
+      <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">DC</span>
             </div>
-            <span className="font-bold text-gray-900 text-sm sm:text-base">DineConnect</span>
+            <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base">DineConnect</span>
           </Link>
-          <div className="hidden sm:flex items-center gap-6 lg:gap-8 text-sm font-medium text-gray-700">
-            <Link to="/restaurants" className="hover:text-indigo-600">Restaurants</Link>
-            <a href="#how" className="hover:text-indigo-600">How it works</a>
-            <a href="#owners" className="hover:text-indigo-600">For owners</a>
+          <div className="hidden sm:flex items-center gap-6 lg:gap-8 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Link to="/restaurants" className="hover:text-indigo-600 dark:hover:text-indigo-400">Restaurants</Link>
+            <a href="#how" className="hover:text-indigo-600 dark:hover:text-indigo-400">How it works</a>
+            <a href="#owners" className="hover:text-indigo-600 dark:hover:text-indigo-400">For owners</a>
           </div>
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
-          >
-            Sign in
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/signup"
+              className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"
+            >
+              Sign up
+            </Link>
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
+            >
+              Sign in
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -67,10 +75,10 @@ export default function Home() {
               Explore restaurants <ArrowRight size={16} />
             </Link>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/signup')}
               className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/30 text-white font-semibold px-5 sm:px-6 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-xl hover:bg-white/25 transition-colors text-sm sm:text-base"
             >
-              Open dashboard
+              Create free account
             </button>
           </div>
         </div>
@@ -80,14 +88,14 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
               This week&apos;s standouts
             </h2>
-            <p className="text-gray-500 text-sm sm:text-base">Hand-picked favourites from our community</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">Hand-picked favourites from our community</p>
           </div>
           <Link
             to="/restaurants"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-700 self-start sm:self-auto"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 self-start sm:self-auto"
           >
             See all <ArrowRight size={14} />
           </Link>
@@ -98,7 +106,7 @@ export default function Home() {
             <Link
               key={r.id}
               to={`/restaurants/${r.id}`}
-              className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all"
+              className="group bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all"
             >
               <div className="relative h-40 sm:h-48 overflow-hidden">
                 <img
@@ -131,18 +139,18 @@ export default function Home() {
               <div className="p-4 sm:p-5">
                 <div className="flex items-center gap-1.5 mb-2 flex-wrap">
                   <Star size={14} className="fill-amber-400 text-amber-400" />
-                  <span className="text-sm font-bold text-gray-900">{r.rating}</span>
-                  <span className="text-sm text-gray-500">({r.reviewCount})</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{r.rating}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">({r.reviewCount})</span>
                   <span className="text-gray-300">·</span>
-                  <span className="text-sm text-gray-500">{r.cuisine}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{r.cuisine}</span>
                   <span className="text-gray-300">·</span>
-                  <span className="text-sm text-gray-500">{r.priceRange}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{r.priceRange}</span>
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-indigo-600 mb-1">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 mb-1">
                   {r.name}
                 </h3>
-                <p className="text-sm text-gray-500 mb-3 line-clamp-2">{r.tagline}</p>
-                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{r.tagline}</p>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                   <MapPin size={12} /> {r.city}
                 </div>
               </div>
@@ -152,13 +160,13 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section id="how" className="bg-white border-y border-gray-200">
+      <section id="how" className="bg-white dark:bg-slate-900 border-y border-gray-200 dark:border-slate-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
               How DineConnect works
             </h2>
-            <p className="text-gray-500 text-sm sm:text-base">Three roles. One seamless experience.</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">Three roles. One seamless experience.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -184,15 +192,15 @@ export default function Home() {
             ].map(({ icon: Icon, title, body, color }) => (
               <div
                 key={title}
-                className="bg-slate-50 border border-gray-200 rounded-2xl p-5 sm:p-7 hover:shadow-lg transition-shadow"
+                className="bg-slate-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-2xl p-5 sm:p-7 hover:shadow-lg transition-shadow"
               >
                 <div
                   className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 shadow-lg`}
                 >
                   <Icon size={22} className="text-white" />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: body }} />
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: body }} />
               </div>
             ))}
           </div>
