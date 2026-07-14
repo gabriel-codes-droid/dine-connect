@@ -1,20 +1,9 @@
-// Local auth "service" for the demo. No backend yet — uses localStorage.
-// Mirrors the shape of a real API so we can swap to fetch/axios later
-// without touching the pages.
-
+// Real auth service using backend API
 import type { UserRole } from '../types';
 
-const USERS_KEY = 'dineconnect_users';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const TOKEN_KEY = 'dineconnect_token';
 const SESSION_KEY = 'dineconnect_session';
-
-export interface StoredUser {
-  id: string;
-  username: string;
-  email: string;
-  password: string; // demo only — never do this in production
-  role: UserRole;
-  createdAt: string;
-}
 
 export interface Session {
   username: string;
@@ -23,32 +12,67 @@ export interface Session {
   authenticated: boolean;
 }
 
-function readUsers(): StoredUser[] {
-  try {
-    const raw = window.localStorage.getItem(USERS_KEY);
-    return raw ? (JSON.parse(raw) as StoredUser[]) : [];
-  } catch {
-    return [];
-  }
+// Helper to get token
+function getToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY);
 }
 
-function writeUsers(users: StoredUser[]) {
-  window.localStorage.setItem(USERS_KEY, JSON.stringify(users));
+// Helper to set token
+function setToken(token: string): void {
+  localStorage.setItem(TOKEN_KEY, token);
+}
+
+// Helper to clear token
+function clearToken(): void {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+// API helper with auth
+async function apiCall(endpoint: string, options: RequestInit = {}): Promise<Response> {
+  const token = getToken();
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(error.error || error.message || 'Request failed');
+  }
+
+  return response.json();
 }
 
 export const auth = {
   async checkEmail(email: string): Promise<{ exists: boolean }> {
     const e = email.toLowerCase().trim();
     if (!e) return { exists: false };
-    const users = readUsers();
-    return { exists: users.some((u) => u.email === e) };
+    try {
+      const data = await apiCall(`/auth/check-email?email=${encodeURIComponent(e)}`);
+      return data;
+    } catch {
+      return { exists: false };
+    }
   },
 
   async checkUsername(username: string): Promise<{ exists: boolean }> {
     const u = username.trim();
     if (!u) return { exists: false };
-    const users = readUsers();
-    return { exists: users.some((x) => x.username === u) };
+    try {
+      const data = await apiCall(`/auth/check-username?username=${encodeURIComponent(u)}`);
+      return data;
+    } catch {
+      return { exists: false };
+    }
   },
 
   async signup(input: {
@@ -68,64 +92,78 @@ export const auth = {
       throw new Error('Password must be at least 6 characters');
     }
 
-    const users = readUsers();
-    if (users.some((u) => u.email === email)) {
-      const err = new Error('That email is already registered. Try signing in instead.');
-      (err as Error & { field?: string }).field = 'email';
-      throw err;
-    }
-    if (users.some((u) => u.username === username)) {
-      const err = new Error('That username is already taken. Please choose another.');
-      (err as Error & { field?: string }).field = 'username';
-      throw err;
-    }
+    try {
+      const data = await apiCall('/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({ username, email, password, role }),
+      });
 
-    const newUser: StoredUser = {
-      id: `u_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
-      username,
-      email,
-      password,
-      role,
-      createdAt: new Date().toISOString(),
-    };
-    users.push(newUser);
-    writeUsers(users);
-
-    const session: Session = { username, email, role, authenticated: true };
-    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    // mirror keys the existing app already reads (Navbar / Sidebar)
-    window.sessionStorage.setItem('dineconnect_role', role);
-    window.sessionStorage.setItem('dineconnect_email', email);
-    window.sessionStorage.setItem('dineconnect_authenticated', 'true');
-    window.sessionStorage.setItem('dineconnect_username', username);
-    return session;
+      setToken(data.token);
+      
+      const session: Session = { 
+        username: data.user.username, 
+        email: data.user.email, 
+        role: data.user.role, 
+        authenticated: true 
+      };
+      
+      // Store session for compatibility
+      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      window.sessionStorage.setItem('dineconnect_role', data.user.role);
+      window.sessionStorage.setItem('dineconnect_email', data.user.email);
+      window.sessionStorage.setItem('dineconnect_authenticated', 'true');
+      window.sessionStorage.setItem('dineconnect_username', data.user.username);
+      
+      return session;
+    } catch (err) {
+      const error = err as Error & { field?: string };
+      if (error.message.includes('email')) {
+        (error as Error & { field?: string }).field = 'email';
+      } else if (error.message.includes('username')) {
+        (error as Error & { field?: string }).field = 'username';
+      }
+      throw error;
+    }
   },
 
   async login(input: { email: string; password: string; role: UserRole }): Promise<Session> {
     const email = input.email.toLowerCase().trim();
     const { password, role } = input;
+    
     if (!email || !password) {
       throw new Error('Email and password are required');
     }
-    const users = readUsers();
-    const user = users.find((u) => u.email === email);
-    if (!user) {
-      throw new Error('No account found with that email');
-    }
-    if (user.password !== password) {
-      throw new Error('Incorrect password. Please try again.');
-    }
 
-    const session: Session = { username: user.username, email: user.email, role, authenticated: true };
-    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    window.sessionStorage.setItem('dineconnect_role', role);
-    window.sessionStorage.setItem('dineconnect_email', email);
-    window.sessionStorage.setItem('dineconnect_authenticated', 'true');
-    window.sessionStorage.setItem('dineconnect_username', user.username);
-    return session;
+    try {
+      const data = await apiCall('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+
+      setToken(data.token);
+      
+      const session: Session = { 
+        username: data.user.username, 
+        email: data.user.email, 
+        role: data.user.role, 
+        authenticated: true 
+      };
+      
+      // Store session for compatibility
+      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      window.sessionStorage.setItem('dineconnect_role', data.user.role);
+      window.sessionStorage.setItem('dineconnect_email', data.user.email);
+      window.sessionStorage.setItem('dineconnect_authenticated', 'true');
+      window.sessionStorage.setItem('dineconnect_username', data.user.username);
+      
+      return session;
+    } catch (err) {
+      throw err;
+    }
   },
 
   logout() {
+    clearToken();
     window.sessionStorage.removeItem(SESSION_KEY);
     window.sessionStorage.removeItem('dineconnect_role');
     window.sessionStorage.removeItem('dineconnect_email');
