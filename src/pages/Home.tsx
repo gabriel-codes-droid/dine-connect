@@ -7,11 +7,15 @@ import {
   ArrowRight,
   Star,
   MapPin,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { restaurants } from '../data/restaurants';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const featured = restaurants.filter((r) => r.featured);
 
   return (
@@ -31,6 +35,13 @@ export default function Home() {
             <a href="#owners" className="hover:text-indigo-600 dark:hover:text-indigo-400">For owners</a>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <Link
               to="/signup"
               className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"

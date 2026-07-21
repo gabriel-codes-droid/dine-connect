@@ -9,6 +9,7 @@ import {
   Sparkles,
   ChevronRight,
   Utensils,
+  ArrowLeft,
 } from 'lucide-react';
 import {
   restaurants,
@@ -132,6 +133,18 @@ export default function Restaurants() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Back button */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition-colors"
+          >
+            <ArrowLeft size={16} /> Back to Home
+          </Link>
+        </div>
+      </div>
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 text-white">
         <div className="absolute inset-0 opacity-30">
