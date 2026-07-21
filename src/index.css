@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --text: #111827;
+  --text-secondary: #6B7280;
+  --bg: #F8FAFC;
+  --bg-white: #FFFFFF;
+  --border: #E5E7EB;
+  --primary: #6366F1;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+}
+
+.dark {
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --bg: #0F172A;
+  --bg-white: #1E293B;
+  --border: #334155;
+  --primary: #818CF8;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger: #F87171;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Recharts dark mode overrides */
+.dark .recharts-default-tooltip {
+  background-color: #1E293B !important;
+  border: 1px solid #334155 !important;
+  color: #F1F5F9 !important;
+}
+
+.dark .recharts-cartesian-axis-line,
+.dark .recharts-cartesian-axis-tick-line {
+  stroke: #334155 !important;
+}
+
+.dark .recharts-cartesian-grid-horizontal line,
+.dark .recharts-cartesian-grid-vertical line {
+  stroke: #334155 !important;
+}
+
+.dark .recharts-text {
+  fill: #94A3B8 !important;
+}
+
+.dark .recharts-legend-item-text {
+  color: #94A3B8 !important;
+}
+
+/* smooth theme transitions on common surfaces */
+.dark .card,
+.dark [class*="bg-white"]:not([class*="bg-gradient"]):not([class*="bg-white/"]):not([class*="from-"]):not([class*="to-"]) {
+  /* opt-in only — let specific components choose */
+}
