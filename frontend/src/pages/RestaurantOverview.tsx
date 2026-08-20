@@ -238,6 +238,7 @@ export default function RestaurantOverview() {
     }
 
     setLoading(true);
+    const safetyTimeout = setTimeout(() => setLoading(false), 8000);
     const unsubscribe = orderService.subscribeToRestaurantOrders(
       restaurant.id,
       (restaurantOrders) => {
@@ -287,7 +288,7 @@ export default function RestaurantOverview() {
       }
     );
 
-    return () => unsubscribe();
+    return () => { clearTimeout(safetyTimeout); unsubscribe(); };
   }, [restaurant]);
 
   if (!session || session.role !== 'restaurant-admin') {

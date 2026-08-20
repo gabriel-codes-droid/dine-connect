@@ -92,13 +92,18 @@ export default function CustomerOverview() {
       } catch (err) {
         console.error('Error loading customer data:', err);
         setError('Failed to load your data. Please try again.');
+      } finally {
         setLoading(false);
       }
     }
 
     loadCustomerData();
 
+    // Safety net: clear loading after 8s no matter what
+    const safetyTimeout = setTimeout(() => setLoading(false), 8000);
+
     return () => {
+      clearTimeout(safetyTimeout);
       if (unsubscribeOrders) {
         unsubscribeOrders();
       }

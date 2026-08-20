@@ -160,7 +160,8 @@ function CustomerAnalytics({ uid }: { uid: string }) {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    const safetyTimeout = setTimeout(() => { if (!cancelled) setLoading(false); }, 8000);
+    return () => { clearTimeout(safetyTimeout); cancelled = true; };
   }, [uid]);
 
   if (loading) {
@@ -282,7 +283,8 @@ function RestaurantOwnerAnalytics({ ownerId }: RestaurantOwnerAnalyticsProps) {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    const safetyTimeout = setTimeout(() => { if (!cancelled) setLoading(false); }, 8000);
+    return () => { clearTimeout(safetyTimeout); cancelled = true; };
   }, [ownerId, activeRestaurantId]);
 
   // Fetch orders for the active restaurant
@@ -489,7 +491,8 @@ function SuperAdminAnalytics() {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    const safetyTimeout = setTimeout(() => { if (!cancelled) setLoading(false); }, 8000);
+    return () => { clearTimeout(safetyTimeout); cancelled = true; };
   }, []);
 
   if (loading) {

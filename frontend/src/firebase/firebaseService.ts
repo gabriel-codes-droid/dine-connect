@@ -19,6 +19,24 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './config';
 import type { Restaurant, MenuItem } from '../data/restaurants';
 
+// ---------------------------------------------------------------------
+// Timeout wrapper — prevents Firestore calls from hanging forever when
+// Firebase is not configured or unreachable.
+// ---------------------------------------------------------------------
+const DEFAULT_FIRESTORE_TIMEOUT = 5000;
+
+async function withTimeout<T>(promise: Promise<T>, ms = DEFAULT_FIRESTORE_TIMEOUT): Promise<T> {
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`Firestore request timed out after ${ms}ms`)), ms);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer!);
+  }
+}
+
 // Order types
 export interface Order {
   id: string;
@@ -51,14 +69,14 @@ export const restaurantService = {
   // Get all restaurants
   async getAllRestaurants(): Promise<Restaurant[]> {
     const restaurantsRef = collection(db, 'restaurants');
-    const snapshot = await getDocs(restaurantsRef);
+    const snapshot = await withTimeout(getDocs(restaurantsRef));
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Restaurant));
   },
 
   // Get restaurant by ID
   async getRestaurantById(id: string): Promise<Restaurant | null> {
     const restaurantRef = doc(db, 'restaurants', id);
-    const snapshot = await getDoc(restaurantRef);
+    const snapshot = await withTimeout(getDoc(restaurantRef));
     if (snapshot.exists()) {
       return { id: snapshot.id, ...snapshot.data() } as Restaurant;
     }
@@ -74,6 +92,9 @@ export const restaurantService = {
       } else {
         callback(null);
       }
+    }, (error) => {
+      console.warn('[Firestore] onSnapshot error:', error);
+      callback(null);
     });
   },
 
@@ -97,7 +118,7 @@ export const restaurantService = {
   async getRestaurantsByOwner(ownerId: string): Promise<Restaurant[]> {
     const restaurantsRef = collection(db, 'restaurants');
     const q = query(restaurantsRef, where('ownerId', '==', ownerId));
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q));
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Restaurant));
   },
 
@@ -113,7 +134,7 @@ export const menuService = {
   // Get menu items for a restaurant
   async getMenuItems(restaurantId: string): Promise<MenuItem[]> {
     const restaurantRef = doc(db, 'restaurants', restaurantId);
-    const snapshot = await getDoc(restaurantRef);
+    const snapshot = await withTimeout(getDoc(restaurantRef));
     if (snapshot.exists()) {
       const data = snapshot.data();
       return data.menu || [];
@@ -124,7 +145,7 @@ export const menuService = {
   // Add menu item to restaurant
   async addMenuItem(restaurantId: string, menuItem: Omit<MenuItem, 'id'>): Promise<string> {
     const restaurantRef = doc(db, 'restaurants', restaurantId);
-    const snapshot = await getDoc(restaurantRef);
+    const snapshot = await withTimeout(getDoc(restaurantRef));
     
     if (snapshot.exists()) {
       const data = snapshot.data();
@@ -140,7 +161,7 @@ export const menuService = {
   // Update menu item
   async updateMenuItem(restaurantId: string, menuItemId: string, updates: Partial<MenuItem>): Promise<void> {
     const restaurantRef = doc(db, 'restaurants', restaurantId);
-    const snapshot = await getDoc(restaurantRef);
+    const snapshot = await withTimeout(getDoc(restaurantRef));
     
     if (snapshot.exists()) {
       const data = snapshot.data();
@@ -157,7 +178,7 @@ export const menuService = {
   // Delete menu item
   async deleteMenuItem(restaurantId: string, menuItemId: string): Promise<void> {
     const restaurantRef = doc(db, 'restaurants', restaurantId);
-    const snapshot = await getDoc(restaurantRef);
+    const snapshot = await withTimeout(getDoc(restaurantRef));
     
     if (snapshot.exists()) {
       const data = snapshot.data();
@@ -192,7 +213,7 @@ export const orderService = {
   // Get order by ID
   async getOrderById(id: string): Promise<Order | null> {
     const orderRef = doc(db, 'orders', id);
-    const snapshot = await getDoc(orderRef);
+    const snapshot = await withTimeout(getDoc(orderRef));
     if (snapshot.exists()) {
       return { id: snapshot.id, ...snapshot.data() } as Order;
     }
@@ -203,7 +224,7 @@ export const orderService = {
   async getCustomerOrders(customerId: string): Promise<Order[]> {
     const ordersRef = collection(db, 'orders');
     const q = query(ordersRef, where('customerId', '==', customerId), orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q));
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
   },
 
@@ -211,7 +232,7 @@ export const orderService = {
   async getRestaurantOrders(restaurantId: string): Promise<Order[]> {
     const ordersRef = collection(db, 'orders');
     const q = query(ordersRef, where('restaurantId', '==', restaurantId), orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q));
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
   },
 
@@ -222,6 +243,9 @@ export const orderService = {
     return onSnapshot(q, (snapshot) => {
       const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
       callback(orders);
+    }, (error) => {
+      console.warn('[Firestore] onSnapshot error:', error);
+      callback([]);
     });
   },
 
@@ -232,6 +256,9 @@ export const orderService = {
     return onSnapshot(q, (snapshot) => {
       const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
       callback(orders);
+    }, (error) => {
+      console.warn('[Firestore] onSnapshot error:', error);
+      callback([]);
     });
   },
 
@@ -239,7 +266,7 @@ export const orderService = {
   async getAllOrders(): Promise<Order[]> {
     const ordersRef = collection(db, 'orders');
     const q = query(ordersRef, orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q));
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
   },
 
@@ -250,6 +277,9 @@ export const orderService = {
     return onSnapshot(q, (snapshot) => {
       const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
       callback(orders);
+    }, (error) => {
+      console.warn('[Firestore] onSnapshot error:', error);
+      callback([]);
     });
   },
 
@@ -290,14 +320,14 @@ export const favoriteService = {
   async getCustomerFavorites(customerId: string): Promise<string[]> {
     const favoritesRef = collection(db, 'favorites');
     const q = query(favoritesRef, where('customerId', '==', customerId));
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q));
     return snapshot.docs.map(doc => doc.data().restaurantId);
   },
 
   // Check if restaurant is favorite
   async isFavorite(customerId: string, restaurantId: string): Promise<boolean> {
     const favoriteRef = doc(db, 'favorites', `${customerId}_${restaurantId}`);
-    const snapshot = await getDoc(favoriteRef);
+    const snapshot = await withTimeout(getDoc(favoriteRef));
     return snapshot.exists();
   }
 };
@@ -318,7 +348,7 @@ export const reviewService = {
   async getReviews(restaurantId: string): Promise<Review[]> {
     const reviewsRef = collection(db, 'reviews');
     const q = query(reviewsRef, where('restaurantId', '==', restaurantId), orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshot = await withTimeout(getDocs(q));
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Review));
   },
 
@@ -342,6 +372,9 @@ export const reviewService = {
     return onSnapshot(q, (snapshot) => {
       const reviews = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Review));
       callback(reviews);
+    }, (error) => {
+      console.warn('[Firestore] onSnapshot error:', error);
+      callback([]);
     });
   }
 };

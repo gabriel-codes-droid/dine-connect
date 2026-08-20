@@ -1,7 +1,7 @@
 // Real auth service using backend API
 import type { UserRole } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 const TOKEN_KEY = 'dineconnect_token';
 const SESSION_KEY = 'dineconnect_session';
 
@@ -10,6 +10,7 @@ export interface Session {
   email: string;
   role: UserRole;
   authenticated: boolean;
+  profilePicture?: string | null;
 }
 
 // Helper to get token
@@ -242,5 +243,46 @@ export const auth = {
     window.sessionStorage.setItem('dineconnect_username', data.user.username);
 
     return session;
+  },
+
+  // ---- email verification (change email) ----
+  async sendVerificationCode(newEmail: string): Promise<{ message: string }> {
+    const e = newEmail.toLowerCase().trim();
+    if (!e) throw new Error('Email is required');
+    return apiCall<{ message: string }>('/users/send-verification-code', {
+      method: 'POST',
+      body: JSON.stringify({ newEmail: e }),
+    });
+  },
+
+  async confirmEmailChange(code: string): Promise<{ email: string }> {
+    if (!code) throw new Error('Verification code is required');
+    const data = await apiCall<{ message: string; email: string; user: any }>(
+      '/users/confirm-email-change',
+      { method: 'POST', body: JSON.stringify({ code }) }
+    );
+    // Update session storage with new email
+    const session = auth.getSession();
+    if (session) {
+      session.email = data.email;
+      (session as any).profilePicture = data.user?.profilePicture ?? session.profilePicture;
+      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      window.sessionStorage.setItem('dineconnect_email', data.email);
+    }
+    return { email: data.email };
+  },
+
+  // ---- profile picture ----
+  async updateProfilePicture(url: string): Promise<void> {
+    if (!url) throw new Error('Picture URL is required');
+    const data = await apiCall<{ message: string; profilePicture: string }>(
+      '/users/me/profile-picture',
+      { method: 'PATCH', body: JSON.stringify({ url }) }
+    );
+    const session = auth.getSession();
+    if (session) {
+      session.profilePicture = data.profilePicture;
+      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    }
   },
 };

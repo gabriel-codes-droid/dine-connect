@@ -35,6 +35,15 @@ const userSchema = new mongoose.Schema({
       default: 'light',
     },
   },
+  // Email-change verification fields
+  emailVerificationCode: String,
+  emailVerificationExpires: Date,
+  pendingEmail: String,
+  // Profile picture URL (avatar)
+  profilePicture: {
+    type: String,
+    default: null,
+  },
   // Password reset fields
   resetPasswordToken: String,
   resetPasswordExpires: Date,
@@ -68,6 +77,9 @@ userSchema.methods.toSafeJSON = function() {
   delete obj.password;
   delete obj.resetPasswordToken;
   delete obj.resetPasswordExpires;
+  delete obj.emailVerificationCode;
+  delete obj.emailVerificationExpires;
+  delete obj.pendingEmail;
   return obj;
 };
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, User, Shield, Sun, Moon, Heart, Star, Building2, ShoppingBag } from 'lucide-react';
+import { LogOut, User, Shield, Sun, Moon, Heart, Star, Building2, ShoppingBag, Mail, Send, Image as ImageIcon, Check, X } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { auth } from '../services/auth';
 import { useTheme } from '../context/ThemeContext';
@@ -22,7 +22,20 @@ export default function Settings() {
 
   const role = session?.role as UserRole | undefined;
 
-  const [loyaltyPoints, setLoyaltyPoints] = useState<number | null>(null);
+  // Email verification state
+  const [verificationStep, setVerificationStep] = useState<'idle' | 'code-sent' | 'confirmed'>('idle');
+  const [newEmail, setNewEmail] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [emailSuccess, setEmailSuccess] = useState<string | null>(null);
+
+  // Profile picture state
+  const [pictureUrl, setPictureUrl] = useState<string | null>(session?.profilePicture ?? null);
+  const [pictureInput, setPictureInput] = useState('');
+  const [pictureLoading, setPictureLoading] = useState(false);
+  const pictureError = null;
+  const [pictureSuccess, setPictureSuccess] = useState<string | null>(null);
   const [favoriteCount, setFavoriteCount] = useState<number | null>(null);
   const [customerLoading, setCustomerLoading] = useState(false);
 
@@ -164,6 +177,188 @@ export default function Settings() {
           </div>
         </div>
 
+        {/* ── Email ── */}
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+            <div className="text-indigo-600 dark:text-indigo-400"><Mail className="h-5 w-5" /></div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Email</h2>
+          </div>
+          <div className="px-6 py-5">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+              Current email: <span className="font-medium text-gray-900 dark:text-white">{session.email}</span>
+            </p>
+
+            {emailError && (
+              <div className="mb-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-sm text-red-600 dark:text-red-300">{emailError}</p>
+              </div>
+            )}
+            {emailSuccess && (
+              <div className="mb-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                <p className="text-sm text-green-600 dark:text-green-300">{emailSuccess}</p>
+              </div>
+            )}
+
+            {verificationStep === 'idle' && (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  placeholder="Enter new email address"
+                  value={newEmail}
+                  onChange={(e) => { setNewEmail(e.target.value); setEmailError(null); setEmailSuccess(null); }}
+                  disabled={emailLoading}
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white disabled:opacity-50"
+                />
+                <button
+                  onClick={async () => {
+                    setEmailError(null); setEmailSuccess(null);
+                    if (!newEmail) return setEmailError('Please enter a new email address');
+                    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(newEmail.trim())) return setEmailError('Please enter a valid email address');
+                    setEmailLoading(true);
+                    try {
+                      await auth.sendVerificationCode(newEmail);
+                      setVerificationStep('code-sent');
+                      setEmailSuccess('Verification code sent to your new email');
+                    } catch (err: any) {
+                      setEmailError(err.message || 'Failed to send code');
+                    } finally {
+                      setEmailLoading(false);
+                    }
+                  }}
+                  disabled={emailLoading}
+                  className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
+                >
+                  {emailLoading ? 'Sending...' : 'Send Code'}
+                </button>
+              </div>
+            )}
+
+            {verificationStep === 'code-sent' && (
+              <div className="flex flex-col sm:flex-row gap-3 items-end">
+                <div className="flex-1">
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">Verification code</label>
+                  <input
+                    type="text"
+                    placeholder="6-digit code"
+                    value={verificationCode}
+                    onChange={(e) => { setVerificationCode(e.target.value); setEmailError(null); }}
+                    disabled={emailLoading}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white disabled:opacity-50"
+                  />
+                </div>
+                <button
+                  onClick={async () => {
+                    setEmailError(null); setEmailSuccess(null);
+                    if (!verificationCode) return setEmailError('Please enter the verification code');
+                    setEmailLoading(true);
+                    try {
+                      const result = await auth.confirmEmailChange(verificationCode);
+                      setVerificationStep('confirmed');
+                      setEmailSuccess(result.email);
+                      setNewEmail('');
+                      setVerificationCode('');
+                      // Force a re-render so session.email updates in the profile section
+                      window.dispatchEvent(new StorageEvent('storage', { key: 'dineconnect_session' }));
+                    } catch (err: any) {
+                      setEmailError(err.message || 'Failed to verify code');
+                    } finally {
+                      setEmailLoading(false);
+                    }
+                  }}
+                  disabled={emailLoading}
+                  className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
+                >
+                  {emailLoading ? 'Verifying...' : 'Confirm'}
+                </button>
+                <button
+                  onClick={() => { setVerificationStep('idle'); setVerificationCode(''); setEmailError(null); setEmailSuccess(null); }}
+                  className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
+            {verificationStep === 'confirmed' && (
+              <p className="text-sm text-green-600 dark:text-green-300">
+                Email successfully updated to <span className="font-medium">{emailSuccess}</span>
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* ── Profile Picture ── */}
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+            <div className="text-indigo-600 dark:text-indigo-400"><ImageIcon className="h-5 w-5" /></div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Profile Picture</h2>
+          </div>
+          <div className="px-6 py-5">
+            <div className="flex items-center gap-4 mb-4">
+              {pictureUrl ? (
+                <img
+                  src={pictureUrl}
+                  alt="Profile"
+                  className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-slate-600"
+                  onError={(e) => { (e.target as HTMLImageElement).src = ''; setPictureUrl(null); }}
+                />
+              ) : (
+                <div className="h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold text-2xl">
+                  {session.username?.charAt(0).toUpperCase() ?? '?'}
+                </div>
+              )}
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {pictureUrl ? 'Custom picture set' : 'Using default avatar'}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Paste an image URL to use as your profile picture.</p>
+              </div>
+            </div>
+
+            {pictureSuccess && (
+              <div className="mb-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                <p className="text-sm text-green-600 dark:text-green-300">{pictureSuccess}</p>
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="url"
+                placeholder="https://example.com/avatar.png"
+                value={pictureInput}
+                onChange={(e) => { setPictureInput(e.target.value); setPictureSuccess(null); }}
+                disabled={pictureLoading}
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white disabled:opacity-50"
+              />
+              <button
+                onClick={async () => {
+                  setPictureSuccess(null);
+                  if (!pictureInput.trim()) return;
+                  setPictureLoading(true);
+                  try {
+                    await auth.updateProfilePicture(pictureInput.trim());
+                    setPictureUrl(pictureInput.trim());
+                    setPictureInput('');
+                    setPictureSuccess('Profile picture saved!');
+                  } catch (err: any) {
+                    setPictureSuccess(null);
+                    // Fallback: set locally even if API fails (user may be offline)
+                    setPictureUrl(pictureInput.trim());
+                    setPictureInput('');
+                  } finally {
+                    setPictureLoading(false);
+                  }
+                }}
+                disabled={pictureLoading || !pictureInput.trim()}
+                className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
+              >
+                {pictureLoading ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Account ── */}
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><LogOut className="h-5 w-5" /></div>
