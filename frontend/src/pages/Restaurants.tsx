@@ -540,18 +540,18 @@ export default function Restaurants() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-br from-gray-900 to-indigo-900 text-white">
+      <section className="bg-[#202522] dark:bg-[#111512] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4">
             Own a restaurant?
           </h2>
-          <p className="text-indigo-200 text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
+          <p className="text-white/80 text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
             Join DineConnect to manage reservations, orders, and your reputation —
             all in one place.
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-5 sm:px-6 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-xl hover:bg-gray-100 transition-colors shadow-xl text-sm sm:text-base"
+            className="inline-flex items-center gap-2 bg-primary dark:bg-primary text-white font-semibold px-5 sm:px-6 md:px-7 py-2.5 sm:py-3 md:py-3.5 rounded-md hover:bg-[#8F462E] transition-colors shadow-card text-sm sm:text-base"
           >
             Get started free <ChevronRight size={16} />
           </Link>

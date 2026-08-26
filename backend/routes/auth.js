@@ -94,7 +94,12 @@ router.post('/signup', async (req, res, next) => {
     if (String(password).length < 6) {
       return res.status(400).json({ error: 'password must be at least 6 characters' });
     }
-    if (role && !['customer', 'restaurant-admin', 'super-admin'].includes(role)) {
+    // Signup is open to 'customer' and 'restaurant-admin' only.
+    // 'super-admin' must be elevated via a separate admin endpoint, never via public signup.
+    // Anything else is forced to 'customer' so a tampered body can't grant higher privileges.
+    let finalRole = 'customer';
+    if (role === 'restaurant-admin') finalRole = 'restaurant-admin';
+    else if (role && role !== 'customer') {
       return res.status(400).json({ error: 'invalid role' });
     }
 
@@ -111,7 +116,7 @@ router.post('/signup', async (req, res, next) => {
       username: String(username).trim(),
       email: lowerEmail,
       password: String(password),
-      role: role || 'customer',
+      role: finalRole,
     });
 
     const token = signToken(user);

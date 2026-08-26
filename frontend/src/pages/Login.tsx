@@ -18,6 +18,10 @@ import { auth } from '../services/auth';
 import { preferences } from '../services/preferences';
 import { useTheme } from '../context/ThemeContext';
 
+// Sign-in form lets the user pick which dashboard to land in for UX.
+// The server is the authority on the actual role — the picker only
+// affects the post-login redirect. The user's real role is read from
+// the session returned by /auth/login.
 const roles: { value: UserRole; label: string; description: string; icon: string }[] = [
   { value: 'customer', label: 'Customer', description: 'Browse & book tables', icon: '🍽️' },
   { value: 'restaurant-admin', label: 'Restaurant Admin', description: 'Manage a single venue', icon: '👨‍🍳' },
@@ -51,10 +55,11 @@ export default function Login() {
 
     setLoading(true);
     try {
-      await auth.login({ email, password, role: selectedRole });
+      const session = await auth.login({ email, password, role: selectedRole });
       const dbTheme = await preferences.getTheme();
       if (dbTheme) setTheme(dbTheme);
-      navigate(roleRoutes[selectedRole], { replace: true });
+      // Always navigate to the dashboard that matches the server's role
+      navigate(roleRoutes[session.role], { replace: true });
     } catch (err) {
       setError((err as Error).message || 'Login failed. Please try again.');
       setLoading(false);
@@ -145,6 +150,10 @@ export default function Login() {
             New here?{' '}
             <Link to="/signup" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
               Create an account
+            </Link>
+            {' · '}
+            <Link to="/forgot-password" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+              Forgot password?
             </Link>
           </p>
 

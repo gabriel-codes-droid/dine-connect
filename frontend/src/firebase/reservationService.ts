@@ -1,5 +1,22 @@
-import { collection, doc, getDoc, getDocs, updateDoc, addDoc, query, where, onSnapshot, serverTimestamp, Timestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+  type Timestamp,
+} from 'firebase/firestore';
 import { db } from './config';
+
+function requireFirestore() {
+  if (!db) throw new Error('Firebase is not configured.');
+  return db;
+}
 
 export interface Reservation {
   id: string;
@@ -22,7 +39,7 @@ export const reservationService = {
     date: string,
     time: string
   ): Promise<string> {
-    const reservationsRef = collection(db, 'reservations');
+    const reservationsRef = collection(requireFirestore(), 'reservations');
     const docRef = await addDoc(reservationsRef, {
       restaurantId,
       customerId,
@@ -38,7 +55,7 @@ export const reservationService = {
 
   // Get reservation by ID
   async getReservationById(id: string): Promise<Reservation | null> {
-    const reservationRef = doc(db, 'reservations', id);
+    const reservationRef = doc(requireFirestore(), 'reservations', id);
     const snapshot = await getDoc(reservationRef);
     if (snapshot.exists()) {
       return { id: snapshot.id, ...snapshot.data() } as Reservation;
@@ -48,7 +65,7 @@ export const reservationService = {
 
   // Get reservations by customer
   async getReservationsByCustomer(customerId: string): Promise<Reservation[]> {
-    const reservationsRef = collection(db, 'reservations');
+    const reservationsRef = collection(requireFirestore(), 'reservations');
     const q = query(reservationsRef, where('customerId', '==', customerId));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Reservation));
@@ -56,7 +73,7 @@ export const reservationService = {
 
   // Get reservations by restaurant
   async getReservationsByRestaurant(restaurantId: string): Promise<Reservation[]> {
-    const reservationsRef = collection(db, 'reservations');
+    const reservationsRef = collection(requireFirestore(), 'reservations');
     const q = query(reservationsRef, where('restaurantId', '==', restaurantId));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Reservation));
@@ -67,7 +84,7 @@ export const reservationService = {
     customerId: string,
     callback: (reservations: Reservation[]) => void
   ) {
-    const reservationsRef = collection(db, 'reservations');
+    const reservationsRef = collection(requireFirestore(), 'reservations');
     const q = query(reservationsRef, where('customerId', '==', customerId));
     return onSnapshot(q, (snapshot) => {
       const reservations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Reservation));
@@ -80,7 +97,7 @@ export const reservationService = {
     restaurantId: string,
     callback: (reservations: Reservation[]) => void
   ) {
-    const reservationsRef = collection(db, 'reservations');
+    const reservationsRef = collection(requireFirestore(), 'reservations');
     const q = query(reservationsRef, where('restaurantId', '==', restaurantId));
     return onSnapshot(q, (snapshot) => {
       const reservations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Reservation));
@@ -90,7 +107,7 @@ export const reservationService = {
 
   // Update reservation status
   async updateReservationStatus(id: string, status: Reservation['status']): Promise<void> {
-    const reservationRef = doc(db, 'reservations', id);
+    const reservationRef = doc(requireFirestore(), 'reservations', id);
     await updateDoc(reservationRef, {
       status,
       updatedAt: serverTimestamp(),

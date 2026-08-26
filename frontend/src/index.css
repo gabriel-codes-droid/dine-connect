@@ -3,27 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --text: #111827;
-  --text-secondary: #6B7280;
-  --bg: #F8FAFC;
+  --text: #202522;
+  --text-secondary: #746F67;
+  --bg: #F7F5F0;
   --bg-white: #FFFFFF;
-  --border: #E5E7EB;
-  --primary: #6366F1;
-  --success: #22C55E;
-  --warning: #F59E0B;
-  --danger: #EF4444;
+  --border: #E5E0D7;
+  --primary: #B85C38;
+  --secondary: #6F8068;
+  --success: #6F8068;
+  --warning: #D9A441;
+  --danger: #B94A48;
 }
 
 .dark {
-  --text: #F1F5F9;
-  --text-secondary: #94A3B8;
-  --bg: #0F172A;
-  --bg-white: #1E293B;
-  --border: #334155;
-  --primary: #818CF8;
-  --success: #34D399;
-  --warning: #FBBF24;
-  --danger: #F87171;
+  --text: #F5F1E8;
+  --text-secondary: #B8B6AA;
+  --bg: #1D211E;
+  --bg-white: #2B302C;
+  --border: #414941;
+  --primary: #D9855F;
+  --secondary: #9CAF93;
+  --success: #9CAF93;
+  --warning: #E5BE64;
+  --danger: #E58B86;
 }
 
 * {
@@ -49,6 +51,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg);
   color: var(--text);
+  letter-spacing: -0.005em;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -59,31 +62,80 @@ code {
 
 /* Recharts dark mode overrides */
 .dark .recharts-default-tooltip {
-  background-color: #1E293B !important;
-  border: 1px solid #334155 !important;
-  color: #F1F5F9 !important;
+  background-color: #2B302C !important;
+  border: 1px solid #414941 !important;
+  color: #F5F1E8 !important;
 }
 
 .dark .recharts-cartesian-axis-line,
 .dark .recharts-cartesian-axis-tick-line {
-  stroke: #334155 !important;
+  stroke: #414941 !important;
 }
 
 .dark .recharts-cartesian-grid-horizontal line,
 .dark .recharts-cartesian-grid-vertical line {
-  stroke: #334155 !important;
+  stroke: #414941 !important;
 }
 
 .dark .recharts-text {
-  fill: #94A3B8 !important;
+  fill: #B8B6AA !important;
 }
 
 .dark .recharts-legend-item-text {
-  color: #94A3B8 !important;
+  color: #B8B6AA !important;
 }
 
 /* smooth theme transitions on common surfaces */
 .dark .card,
 .dark [class*="bg-white"]:not([class*="bg-gradient"]):not([class*="bg-white/"]):not([class*="from-"]):not([class*="to-"]) {
   /* opt-in only — let specific components choose */
+}
+
+/* Catch-all: any hardcoded bg-white without a dark: variant → dark slate */
+.dark [class*="bg-white"]:not([class*="dark:"]):not([class*="bg-gradient"]):not([class*="from-"]):not([class*="to-"]) {
+  background-color: #2B302C !important;
+}
+
+/* Editorial hospitality rhythm */
+h1,
+h2,
+h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.02em;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: #E6C9B9;
+  color: #202522;
+}
+
+/* Button contrast: actions stay visible in both themes. */
+.dark button[class*="bg-white"],
+.dark a[class*="bg-white"] {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #FFFFFF !important;
+}
+
+.dark button[class*="bg-gray-"],
+.dark a[class*="bg-gray-"] {
+  color: #F5F1E8 !important;
+}
+
+button[class*="bg-primary"],
+button[class*="bg-indigo-"],
+button[class*="bg-blue-"],
+button[class*="bg-orange-"],
+a[class*="bg-primary"],
+a[class*="bg-indigo-"],
+a[class*="bg-blue-"],
+a[class*="bg-orange-"] {
+  color: #FFFFFF !important;
 }

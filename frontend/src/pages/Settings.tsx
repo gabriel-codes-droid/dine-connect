@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, User, Shield, Sun, Moon, Heart, Star, Building2, ShoppingBag, Mail, Send, Image as ImageIcon, Check, X } from 'lucide-react';
+import { LogOut, User, Shield, Sun, Moon, Heart, Star, Building2, ShoppingBag, Mail, Image as ImageIcon } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import DashboardPageHeader from '../components/layout/DashboardPageHeader';
+
 import { auth } from '../services/auth';
 import { useTheme } from '../context/ThemeContext';
 import { orderService, restaurantService, favoriteService } from '../firebase';
@@ -9,7 +11,31 @@ import type { Restaurant } from '../data/restaurants';
 import type { UserRole } from '../types';
 import InstallPrompt from '../pwa/InstallPrompt';
 
+function compressImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      const maxSize = 256;
+      const scale = Math.min(1, maxSize / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(objectUrl);
+      const compressed = canvas.toDataURL('image/jpeg', 0.78);
+      resolve(compressed.length > 90000 ? canvas.toDataURL('image/jpeg', 0.55) : compressed);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('The selected image could not be read.'));
+    };
+    image.src = objectUrl;
+  });
+}
+
 export default function Settings() {
+
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const session = auth.getSession();
@@ -18,7 +44,7 @@ export default function Settings() {
     if (!session?.authenticated) {
       navigate('/login', { replace: true });
     }
-  }, [session, navigate]);
+  }, [session?.authenticated, navigate]);
 
   const role = session?.role as UserRole | undefined;
 
@@ -32,11 +58,12 @@ export default function Settings() {
 
   // Profile picture state
   const [pictureUrl, setPictureUrl] = useState<string | null>(session?.profilePicture ?? null);
-  const [pictureInput, setPictureInput] = useState('');
+  const [pictureFile, setPictureFile] = useState<File | null>(null);
   const [pictureLoading, setPictureLoading] = useState(false);
-  const pictureError = null;
+
   const [pictureSuccess, setPictureSuccess] = useState<string | null>(null);
   const [favoriteCount, setFavoriteCount] = useState<number | null>(null);
+  const [loyaltyPoints, setLoyaltyPoints] = useState<number | null>(null);
   const [customerLoading, setCustomerLoading] = useState(false);
 
   const [adminRestaurant, setAdminRestaurant] = useState<Restaurant | null>(null);
@@ -118,12 +145,12 @@ export default function Settings() {
     <DashboardLayout userRole={role} userName={session.username} title="Settings">
       <InstallPrompt />
       <div className="max-w-3xl mx-auto space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Manage your account, preferences, and view your information.
-          </p>
-        </div>
+        <DashboardPageHeader
+          eyebrow="Account"
+          title="Settings"
+          subtitle="Manage your account, preferences, and profile photo."
+          icon={User}
+        />
 
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
@@ -311,7 +338,8 @@ export default function Settings() {
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   {pictureUrl ? 'Custom picture set' : 'Using default avatar'}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Paste an image URL to use as your profile picture.</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">Choose an image file. It will be resized securely for your profile.</p>
+
               </div>
             </div>
 
@@ -321,40 +349,49 @@ export default function Settings() {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="url"
-                placeholder="https://example.com/avatar.png"
-                value={pictureInput}
-                onChange={(e) => { setPictureInput(e.target.value); setPictureSuccess(null); }}
-                disabled={pictureLoading}
-                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white disabled:opacity-50"
-              />
+                        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+              <label className="flex-1 flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-gray-200 cursor-pointer hover:border-indigo-400 transition-colors">
+                <ImageIcon className="h-5 w-5 text-indigo-500 shrink-0" />
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium truncate">{pictureFile ? pictureFile.name : 'Choose an image file'}</span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400">PNG, JPG, or WEBP · up to 10 MB</span>
+                </span>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0] ?? null;
+                    setPictureFile(file);
+                    setPictureSuccess(null);
+                  }}
+                  disabled={pictureLoading}
+                  className="sr-only"
+                />
+              </label>
               <button
                 onClick={async () => {
+                  if (!pictureFile) return;
                   setPictureSuccess(null);
-                  if (!pictureInput.trim()) return;
                   setPictureLoading(true);
                   try {
-                    await auth.updateProfilePicture(pictureInput.trim());
-                    setPictureUrl(pictureInput.trim());
-                    setPictureInput('');
-                    setPictureSuccess('Profile picture saved!');
+                    const compressedImage = await compressImage(pictureFile);
+                    await auth.updateProfilePicture(compressedImage);
+                    setPictureUrl(compressedImage);
+                    setPictureFile(null);
+                    setPictureSuccess('Profile picture uploaded successfully.');
                   } catch (err: any) {
-                    setPictureSuccess(null);
-                    // Fallback: set locally even if API fails (user may be offline)
-                    setPictureUrl(pictureInput.trim());
-                    setPictureInput('');
+                    setPictureSuccess(err?.message || 'Could not upload the profile picture.');
                   } finally {
                     setPictureLoading(false);
                   }
                 }}
-                disabled={pictureLoading || !pictureInput.trim()}
-                className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
+                disabled={pictureLoading || !pictureFile}
+                className="px-4 py-3 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
               >
-                {pictureLoading ? 'Saving...' : 'Save'}
+                {pictureLoading ? 'Uploading...' : 'Upload photo'}
               </button>
             </div>
+
           </div>
         </div>
 

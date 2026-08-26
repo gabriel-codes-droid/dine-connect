@@ -17,7 +17,7 @@ export default function DashboardLayout({
   title = 'Dashboard',
 }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen bg-bg-light dark:bg-slate-950 transition-colors">
+    <div className="flex h-screen bg-ivory dark:bg-dark-bg transition-colors">
       <Sidebar userRole={userRole} />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Navbar userName={userName} userRole={userRole} title={title} />

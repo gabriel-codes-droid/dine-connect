@@ -29,42 +29,32 @@ export function RevenueChart({ data, height = 280 }: RevenueChartProps) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <AreaChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-        <defs>
-          <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#6366F1" stopOpacity={0.45} />
-            <stop offset="100%" stopColor="#6366F1" stopOpacity={0.02} />
-          </linearGradient>
-          <linearGradient id="commissionFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.35} />
-            <stop offset="100%" stopColor="#8B5CF6" stopOpacity={0.02} />
-          </linearGradient>
-        </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
         <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
         <YAxis tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
         <Tooltip
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #E5E7EB',
-            borderRadius: '12px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid #E5E0D7',
+            borderRadius: '6px',
             fontSize: '12px',
-            color: '#111827',
+            color: '#202522',
           }}
         />
         <Area
           type="monotone"
           dataKey="revenue"
-          stroke="#6366F1"
+          stroke="#B85C38"
           strokeWidth={2.5}
-          fill="url(#revenueFill)"
+          fill="#B85C38"
           name="Revenue"
         />
         <Area
           type="monotone"
           dataKey="commission"
-          stroke="#8B5CF6"
+          stroke="#6F8068"
           strokeWidth={2.5}
-          fill="url(#commissionFill)"
+          fill="#6F8068"
           name="Commission"
         />
       </AreaChart>
@@ -81,25 +71,19 @@ export function OrdersBarChart({ data, height = 280 }: { data: OrderRow[]; heigh
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-        <defs>
-          <linearGradient id="ordersFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22C55E" stopOpacity={0.95} />
-            <stop offset="100%" stopColor="#22C55E" stopOpacity={0.6} />
-          </linearGradient>
-        </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
         <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
         <YAxis tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
         <Tooltip
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #E5E7EB',
-            borderRadius: '12px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid #E5E0D7',
+            borderRadius: '6px',
             fontSize: '12px',
-            color: '#111827',
+            color: '#202522',
           }}
         />
-        <Bar dataKey="orders" fill="url(#ordersFill)" radius={[8, 8, 0, 0]} name="Orders" />
+        <Bar dataKey="orders" fill="#6F8068" radius={[4, 4, 0, 0]} name="Orders" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -131,11 +115,11 @@ export function DonutChart({ data, height = 240 }: { data: DonutSlice[]; height?
         </Pie>
         <Tooltip
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #E5E7EB',
-            borderRadius: '12px',
+            backgroundColor: '#FFFFFF',
+            border: '1px solid #E5E0D7',
+            borderRadius: '6px',
             fontSize: '12px',
-            color: '#111827',
+            color: '#202522',
           }}
         />
         <Legend
@@ -171,8 +155,8 @@ export const defaultOrders: OrderRow[] = [
 ];
 
 export const defaultOrderMix: DonutSlice[] = [
-  { name: 'Dine-in', value: 48, color: '#6366F1' },
-  { name: 'Takeaway', value: 24, color: '#22C55E' },
-  { name: 'Delivery', value: 20, color: '#F59E0B' },
-  { name: 'Catering', value: 8, color: '#8B5CF6' },
+  { name: 'Dine-in', value: 48, color: '#B85C38' },
+  { name: 'Takeaway', value: 24, color: '#6F8068' },
+  { name: 'Delivery', value: 20, color: '#D9A441' },
+  { name: 'Catering', value: 8, color: '#7F725F' },
 ];

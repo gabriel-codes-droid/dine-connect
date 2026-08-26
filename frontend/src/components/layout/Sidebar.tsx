@@ -56,7 +56,7 @@ function SidebarContent({
     <>
       <div className={`h-16 px-6 flex items-center border-b border-gray-200 dark:border-slate-800 ${!onNavigate ? '' : 'mt-12'}`}>
         <div className={`flex items-center gap-2 ${!isOpen && !onNavigate ? 'justify-center w-full' : ''}`}>
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-indigo-500 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-sm">DC</span>
           </div>
           {(isOpen || onNavigate) && <span className="font-bold text-gray-900 dark:text-white">DineConnect</span>}
@@ -76,8 +76,8 @@ function SidebarContent({
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive
-                      ? 'bg-indigo-50 dark:bg-indigo-900/20 text-primary border border-indigo-200 dark:border-indigo-800'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent'
+                      ? 'bg-[#F5E7DF] dark:bg-[#392B25] text-primary border border-[#E6C9B9] dark:border-[#6F493A]'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] border border-transparent'
                   }`
                 }
               >
@@ -92,7 +92,7 @@ function SidebarContent({
           <NavLink
             to="/restaurants"
             onClick={onNavigate}
-            className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50/60 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800"
+            className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-primary dark:text-[#D9855F] bg-[#F5E7DF]/70 dark:bg-[#392B25] hover:bg-[#F0DCD1] dark:hover:bg-[#4A342B] border border-[#E6C9B9] dark:border-[#6F493A]"
           >
             <ExternalLink size={12} /> Public restaurant site
           </NavLink>

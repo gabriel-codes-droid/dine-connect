@@ -21,10 +21,9 @@ import type { UserRole } from '../../types';
 import { auth } from '../../services/auth';
 import { useTheme } from '../../context/ThemeContext';
 
-const roles: { value: UserRole; label: string; description: string; icon: string }[] = [
+const roles: { value: Exclude<UserRole, 'super-admin'>; label: string; description: string; icon: string }[] = [
   { value: 'customer', label: 'Customer', description: 'Browse & book tables', icon: '🍽️' },
   { value: 'restaurant-admin', label: 'Restaurant Admin', description: 'Manage a single venue', icon: '👨‍🍳' },
-  { value: 'super-admin', label: 'Super Admin', description: 'Platform-wide oversight', icon: '🛡️' },
 ];
 
 const roleRoutes: Record<UserRole, string> = {
@@ -58,7 +57,7 @@ export default function Signup() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
-  const [selectedRole, setSelectedRole] = useState<UserRole>('customer');
+  const [selectedRole, setSelectedRole] = useState<Exclude<UserRole, 'super-admin'>>('customer');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -151,8 +150,9 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      await auth.signup({ username: username.trim(), email: email.trim(), password, role: selectedRole });
-      navigate(roleRoutes[selectedRole], { replace: true });
+      const session = await auth.signup({ username: username.trim(), email: email.trim(), password, role: selectedRole });
+      // Always trust the role returned by the server, not the picker
+      navigate(roleRoutes[session.role], { replace: true });
     } catch (err) {
       const reason = (err as Error).message || 'Signup failed. Please try again.';
       setError(reason);

@@ -1,5 +1,6 @@
 // MoMo Payment Configuration
 // Get your MoMo API credentials from: https://business.momo.vn
+import { HmacSHA256, enc } from 'crypto-js';
 
 export interface MoMoConfig {
   partnerCode: string;
@@ -26,8 +27,7 @@ export function generateMoMoSignature(params: Record<string, string>, secretKey:
     .join('&');
   
   // Use crypto-js for HMAC SHA256
-  const CryptoJS = require('crypto-js');
-  return CryptoJS.HmacSHA256(sortedParams, secretKey).toString(CryptoJS.enc.Hex);
+  return HmacSHA256(sortedParams, secretKey).toString(enc.Hex);
 }
 
 // Helper function to generate order ID

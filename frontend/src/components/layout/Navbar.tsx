@@ -68,14 +68,14 @@ export default function Navbar({
           type="button"
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200"
+          className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
         >
           {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
         <button
           type="button"
-          className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200"
+          className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
           aria-label="Notifications"
         >
           <Bell size={20} />
@@ -84,7 +84,7 @@ export default function Navbar({
 
         <button
           type="button"
-          className="hidden sm:inline-flex p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200"
+          className="hidden sm:inline-flex p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
           aria-label="Settings"
         >
           <SettingsIcon size={20} />
@@ -96,9 +96,9 @@ export default function Navbar({
           <button
             type="button"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
+            className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg hover:bg-[#F5F0E8] dark:hover:bg-[#303831] transition-all duration-200"
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-semibold">
                 {displayName.charAt(0).toUpperCase()}
               </span>
@@ -116,18 +116,18 @@ export default function Navbar({
           </button>
 
           {isProfileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 shadow-lg py-1 z-50">
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg border border-border dark:border-dark-border shadow-card py-1 z-50">
               <button
                 type="button"
                 onClick={() => setIsProfileOpen(false)}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2"
+                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] flex items-center gap-2"
               >
                 <User size={16} /> Profile
               </button>
               <button
                 type="button"
                 onClick={() => setIsProfileOpen(false)}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-2"
+                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] flex items-center gap-2"
               >
                 <SettingsIcon size={16} /> Settings
               </button>

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import KPICard from '../components/cards/KPICard';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import DashboardPageHeader from '../components/layout/DashboardPageHeader';
+import CreateReservationForm from '../components/reservations/CreateReservationForm';
 import { auth } from '../services/auth';
 import { reservationService } from '../firebase/reservationService';
 import { restaurantService } from '../firebase';
@@ -61,12 +63,16 @@ export default function Reservations() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'upcoming' | 'past' | 'all'>('upcoming');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [restaurantNames, setRestaurantNames] = useState<Record<string, string>>({});
 
   const session = auth.getSession();
+  const sessionUsername = session?.username;
+  const sessionRole = session?.role;
+  const sessionAuthenticated = session?.authenticated;
 
   // --- Data loading --------------------------------------------------------
   useEffect(() => {
-    if (!session?.authenticated) {
+    if (!sessionAuthenticated) {
       setLoading(false);
       return;
     }
@@ -74,23 +80,23 @@ export default function Reservations() {
     let unsubscribe: (() => void) | null = null;
 
     async function loadReservations() {
-      if (!session) return;
+      if (!sessionUsername || !sessionRole) return;
       try {
         setLoading(true);
         setError(null);
 
-        if (session.role === 'customer') {
+        if (sessionRole === 'customer') {
           // Customer: subscribe to own reservations
           unsubscribe = reservationService.subscribeToReservationsByCustomer(
-            session.username,
+            sessionUsername,
             (res) => {
               setReservations(res);
               setLoading(false);
             }
           );
-        } else if (session.role === 'restaurant-admin') {
+        } else if (sessionRole === 'restaurant-admin') {
           // Restaurant-admin: find owned restaurant, then subscribe
-          const owned = await restaurantService.getRestaurantsByOwner(session.username);
+          const owned = await restaurantService.getRestaurantsByOwner(sessionUsername);
           if (!owned || owned.length === 0) {
             setError('No restaurant found. Please create one first.');
             setLoading(false);
@@ -104,19 +110,34 @@ export default function Reservations() {
               setLoading(false);
             }
           );
-        } else if (session.role === 'super-admin') {
+        } else if (sessionRole === 'super-admin') {
           // Super-admin: subscribe to ALL reservations
-          const { db } = await import('../firebase/config');
-          const { collection, query, orderBy, onSnapshot } = await import('firebase/firestore');
-          const q = query(collection(db, 'reservations'), orderBy('createdAt', 'desc'));
-          unsubscribe = onSnapshot(q, (snapshot) => {
-            const all = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            } as Reservation));
-            setReservations(all);
+          try {
+            const { db } = await import('../firebase/config');
+            const { collection, query, orderBy, onSnapshot } = await import('firebase/firestore');
+            if (!db) {
+              setReservations([]);
+              setLoading(false);
+              return;
+            }
+            const q = query(collection(db, 'reservations'), orderBy('createdAt', 'desc'));
+            unsubscribe = onSnapshot(q, (snapshot) => {
+              const all = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              } as Reservation));
+              setReservations(all);
+              setLoading(false);
+            }, (error) => {
+              console.error('Firestore snapshot error:', error);
+              setReservations([]);
+              setLoading(false);
+            });
+          } catch (firebaseError) {
+            console.error('Firebase import error:', firebaseError);
+            setReservations([]);
             setLoading(false);
-          });
+          }
         }
       } catch (err) {
         console.error('Error loading reservations:', err);
@@ -130,7 +151,39 @@ export default function Reservations() {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [session]);
+  }, [sessionUsername, sessionRole, sessionAuthenticated]);
+
+  // Resolve restaurant names before the auth guard so hooks always run in a stable order.
+  useEffect(() => {
+    if (reservations.length === 0) return;
+    const ids = [...new Set(reservations.map((r) => r.restaurantId))];
+    if (ids.length === 0) return;
+
+    let cancelled = false;
+    (async () => {
+      const names: Record<string, string> = {};
+      for (const id of ids) {
+        try {
+          const r = await restaurantService.getRestaurantById(id);
+          if (!cancelled && r) names[id] = r.name;
+        } catch {
+          // Leave unavailable names blank.
+        }
+      }
+      if (!cancelled) {
+        setRestaurantNames((current) => {
+          const currentKeys = Object.keys(current);
+          const nextKeys = Object.keys(names);
+          const unchanged = currentKeys.length === nextKeys.length &&
+            nextKeys.every((key) => current[key] === names[key]);
+          return unchanged ? current : names;
+        });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [reservations]);
 
   // --- Auth guard ----------------------------------------------------------
   if (!session?.authenticated) {
@@ -209,36 +262,6 @@ export default function Reservations() {
     return a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
   });
 
-  // --- Resolve restaurant names (cached per render) -----------------------
-  // Build a map of restaurantId -> name by fetching in parallel when needed.
-  // We do this inside a useEffect to avoid blocking render.
-  const [restaurantNames, setRestaurantNames] = useState<
-    Record<string, string>
-  >({});
-
-  useEffect(() => {
-    if (reservations.length === 0) return;
-    const ids = [...new Set(reservations.map((r) => r.restaurantId))];
-    if (ids.length === 0) return;
-
-    let cancelled = false;
-    (async () => {
-      const names: Record<string, string> = {};
-      for (const id of ids) {
-        try {
-          const r = await restaurantService.getRestaurantById(id);
-          if (!cancelled && r) names[id] = r.name;
-        } catch {
-          // leave blank
-        }
-      }
-      if (!cancelled) setRestaurantNames(names);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [reservations]);
-
   const getRestaurantName = (id: string) => restaurantNames[id] || 'Restaurant';
 
   // --- Page title ----------------------------------------------------------
@@ -281,13 +304,14 @@ export default function Reservations() {
       title={pageTitle}
     >
       <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {pageTitle}
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400">{pageSubtitle}</p>
-        </div>
+        <DashboardPageHeader
+          eyebrow="Reservations"
+          title={pageTitle}
+          subtitle={pageSubtitle}
+          icon={Calendar}
+        />
+
+        {session.role === 'customer' && <CreateReservationForm session={session} />}
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">

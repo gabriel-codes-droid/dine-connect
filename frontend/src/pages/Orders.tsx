@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import KPICard from '../components/cards/KPICard';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import DashboardPageHeader from '../components/layout/DashboardPageHeader';
+import CreateOrderForm from '../components/orders/CreateOrderForm';
 import { auth } from '../services/auth';
 import { orderService, restaurantService } from '../firebase';
 import type { Order } from '../firebase';
@@ -13,7 +15,8 @@ interface KPIData {
   value: string;
   change?: number;
   icon: React.ReactNode;
-  bgColor: string;
+  bgColor?: string;
+  accent?: 'indigo' | 'green' | 'purple' | 'amber' | 'sky' | 'rose' | 'emerald' | 'orange';
 }
 
 function isOrderActive(status: Order['status']): boolean {
@@ -101,25 +104,25 @@ export default function Orders() {
                   title: 'Total Orders',
                   value: totalOrders.toString(),
                   icon: <ShoppingBag size={24} className="text-primary" />,
-                  bgColor: 'bg-indigo-50',
+                  accent: 'indigo',
                 },
                 {
                   title: 'Total Spent',
                   value: `$${totalSpent.toFixed(2)}`,
                   icon: <DollarSign size={24} className="text-success" />,
-                  bgColor: 'bg-green-50',
+                  accent: 'green',
                 },
                 {
                   title: 'Active Orders',
                   value: customerOrders.filter(o => isOrderActive(o.status)).length.toString(),
                   icon: <Clock size={24} className="text-warning" />,
-                  bgColor: 'bg-amber-50',
+                  accent: 'amber',
                 },
                 {
                   title: 'Loyalty Points',
                   value: loyaltyPoints.toLocaleString(),
                   icon: <ShoppingBag size={24} className="text-purple-600" />,
-                  bgColor: 'bg-purple-50',
+                  accent: 'purple',
                 },
               ]);
               setLoading(false);
@@ -157,70 +160,69 @@ export default function Orders() {
                   title: "Today's Orders",
                   value: todayOrders.length.toString(),
                   icon: <ShoppingCart size={24} className="text-primary" />,
-                  bgColor: 'bg-indigo-50',
+                  accent: 'indigo',
                 },
                 {
                   title: 'Active Orders',
                   value: restaurantOrders.filter(o => isOrderActive(o.status)).length.toString(),
                   icon: <Clock size={24} className="text-success" />,
-                  bgColor: 'bg-green-50',
+                  accent: 'green',
                 },
                 {
                   title: 'Active Customers',
                   value: activeCustomers.toString(),
                   icon: <Users size={24} className="text-purple-600" />,
-                  bgColor: 'bg-purple-50',
+                  accent: 'purple',
                 },
                 {
                   title: "Today's Revenue",
                   value: `$${todayRevenue.toFixed(0)}`,
                   icon: <DollarSign size={24} className="text-warning" />,
-                  bgColor: 'bg-amber-50',
+                  accent: 'amber',
                 },
               ]);
               setLoading(false);
             }
           );
         } else if (session.role === 'super-admin') {
-          // Super-admin: show all orders
-          unsubscribeOrders = orderService.subscribeToAllOrders((allOrders) => {
-            setOrders(allOrders);
+          // Super-admin: fetch all orders
+          const allOrders = await orderService.getAllOrders();
+          setOrders(allOrders);
 
-            const totalOrders = allOrders.length;
-            const totalRevenue = allOrders
-              .filter(o => o.status !== 'cancelled')
-              .reduce((sum, order) => sum + order.total, 0);
-            const activeCustomers = new Set(allOrders.map(o => o.customerId)).size;
-            const activeCount = allOrders.filter(o => isOrderActive(o.status)).length;
+          const totalOrders = allOrders.length;
+          const totalRevenue = allOrders
+            .filter(o => o.status !== 'cancelled')
+            .reduce((sum, order) => sum + order.total, 0);
+          const activeCustomers = new Set(allOrders.map(o => o.customerId)).size;
+          const activeCount = allOrders.filter(o => isOrderActive(o.status)).length;
 
-            setKpiData([
-              {
-                title: 'Total Orders',
-                value: totalOrders.toString(),
-                icon: <ShoppingCart size={24} className="text-primary" />,
-                bgColor: 'bg-indigo-50',
-              },
-              {
-                title: 'Total Revenue',
-                value: `$${totalRevenue.toFixed(2)}`,
-                icon: <DollarSign size={24} className="text-success" />,
-                bgColor: 'bg-green-50',
-              },
-              {
-                title: 'Active Customers',
-                value: activeCustomers.toString(),
-                icon: <Users size={24} className="text-purple-600" />,
-                bgColor: 'bg-purple-50',
-              },
-              {
-                title: 'Active Orders',
-                value: activeCount.toString(),
-                icon: <Clock size={24} className="text-warning" />,
-                bgColor: 'bg-amber-50',
-              },
-            ]);
-            setLoading(false);
-          });
+          setKpiData([
+            {
+              title: 'Total Orders',
+              value: totalOrders.toString(),
+              icon: <ShoppingCart size={24} className="text-primary" />,
+              accent: 'indigo',
+            },
+            {
+              title: 'Total Revenue',
+              value: `$${totalRevenue.toFixed(2)}`,
+              icon: <DollarSign size={24} className="text-success" />,
+              accent: 'green',
+            },
+            {
+              title: 'Active Customers',
+              value: activeCustomers.toString(),
+              icon: <Users size={24} className="text-purple-600" />,
+              accent: 'purple',
+            },
+            {
+              title: 'Active Orders',
+              value: activeCount.toString(),
+              icon: <Clock size={24} className="text-warning" />,
+              accent: 'amber',
+            },
+          ]);
+          setLoading(false);
         }
       } catch (err) {
         console.error('Error loading orders:', err);
@@ -236,7 +238,7 @@ export default function Orders() {
         unsubscribeOrders();
       }
     };
-  }, [session]);
+  }, [session?.username, session?.role]);
 
   // Redirect if not authenticated or wrong role for this page
   if (!session?.authenticated) {
@@ -274,16 +276,20 @@ export default function Orders() {
   return (
     <DashboardLayout userRole={session.role} userName={session.username} title={pageTitle}>
       <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{pageTitle}</h2>
-          <p className="text-gray-500 dark:text-gray-400">
-            {session.role === 'customer'
-              ? 'Track your order history and spending.'
+        <DashboardPageHeader
+          eyebrow="Order centre"
+          title={pageTitle}
+          subtitle={
+            session.role === 'customer'
+              ? 'Track your order history and place a new meal order.'
               : session.role === 'restaurant-admin'
               ? 'Monitor incoming orders for your restaurant.'
-              : 'View and manage all orders across the platform.'}
-          </p>
-        </div>
+              : 'View and manage all orders across the platform.'
+          }
+          icon={ShoppingCart}
+        />
+
+        {session.role === 'customer' && <CreateOrderForm session={session} />}
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">

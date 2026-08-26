@@ -24,3 +24,10 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# secrets & build
+scripts/service-account.json
+scripts/*.json.tmp
+frontend/dist
+backend/.env
+frontend/.env

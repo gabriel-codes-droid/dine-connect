@@ -14,118 +14,103 @@ interface KPIData {
 }
 
 export default function CustomerOverview() {
-  const [kpiData, setKpiData] = useState<KPIData[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [favoriteCount, setFavoriteCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const session = auth.getSession();
+  // Safe string primitive extraction to prevent object reference loops
+  const username = session?.username; 
 
+  // 1. Manage real-time orders subscription
   useEffect(() => {
-    if (!session) {
+    if (!username) {
       setLoading(false);
       return;
     }
 
-    let unsubscribeOrders: (() => void) | null = null;
+    setLoading(true);
+    setError(null);
 
-    async function loadCustomerData() {
-      if (!session) return;
-      
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Subscribe to real-time orders
-        unsubscribeOrders = orderService.subscribeToCustomerOrders(
-          session.username, // Using username as customer ID
-          (customerOrders) => {
-            setOrders(customerOrders);
-            
-            // Calculate KPI data
-            const totalOrders = customerOrders.length;
-            const totalSpent = customerOrders
-              .filter(o => o.status === 'delivered')
-              .reduce((sum, order) => sum + order.total, 0);
-            
-            // Calculate loyalty points (10 points per $1 spent)
-            const loyaltyPoints = Math.floor(totalSpent * 10);
-
-            setKpiData([
-              {
-                title: 'Total Orders',
-                value: totalOrders.toString(),
-                icon: <ShoppingBag size={24} className="text-primary" />,
-                bgColor: 'bg-indigo-50',
-              },
-              {
-                title: 'Favorite Restaurants',
-                value: favoriteCount.toString(),
-                icon: <Heart size={24} className="text-danger" />,
-                bgColor: 'bg-red-50',
-              },
-              {
-                title: 'Active Orders',
-                value: customerOrders.filter(o => 
-                  ['placed', 'confirmed', 'preparing', 'out_for_delivery'].includes(o.status)
-                ).length.toString(),
-                icon: <Clock size={24} className="text-warning" />,
-                bgColor: 'bg-amber-50',
-              },
-              {
-                title: 'Loyalty Points',
-                value: loyaltyPoints.toLocaleString(),
-                icon: <Star size={24} className="text-success" />,
-                bgColor: 'bg-green-50',
-              },
-            ]);
-          }
-        );
-
-        // Load favorites count
-        if (session) {
-          const favorites = await favoriteService.getCustomerFavorites(session.username);
-          setFavoriteCount(favorites.length);
-        }
-
-      } catch (err) {
-        console.error('Error loading customer data:', err);
-        setError('Failed to load your data. Please try again.');
-      } finally {
+    const unsubscribeOrders = orderService.subscribeToCustomerOrders(
+      username,
+      (customerOrders) => {
+        setOrders(customerOrders);
         setLoading(false);
-      }
-    }
-
-    loadCustomerData();
-
-    // Safety net: clear loading after 8s no matter what
-    const safetyTimeout = setTimeout(() => setLoading(false), 8000);
+      },
+    );
 
     return () => {
-      clearTimeout(safetyTimeout);
-      if (unsubscribeOrders) {
-        unsubscribeOrders();
-      }
+      if (unsubscribeOrders) unsubscribeOrders();
     };
-  }, [session, favoriteCount]);
+  }, [username]);
+
+  // 2. Fetch favorites count separately (only runs when username changes)
+  useEffect(() => {
+    if (!username) return;
+
+        const customerId = username;
+    async function loadFavorites() {
+      try {
+        const favorites = await favoriteService.getCustomerFavorites(customerId);
+
+        setFavoriteCount(favorites.length);
+      } catch (err) {
+        console.error('Error loading favorites:', err);
+      }
+    }
+    loadFavorites();
+  }, [username]);
+
+  // 🚀 CRITICAL FIX: Calculate KPIs instantly on the fly during render!
+  // No setKpiData states needed, eliminating loop triggers.
+  const totalOrders = orders.length;
+  const totalSpent = orders
+    .filter(o => o.status === 'delivered')
+    .reduce((sum, order) => sum + order.total, 0);
+  
+  const loyaltyPoints = Math.floor(totalSpent * 10);
+  const activeOrdersCount = orders.filter(o => 
+    ['placed', 'confirmed', 'preparing', 'out_for_delivery'].includes(o.status)
+  ).length;
+
+  const kpiData: KPIData[] = [
+    {
+      title: 'Total Orders',
+      value: totalOrders.toString(),
+      icon: <ShoppingBag size={24} className="text-primary" />,
+      bgColor: 'bg-indigo-50',
+    },
+    {
+      title: 'Favorite Restaurants',
+      value: favoriteCount.toString(),
+      icon: <Heart size={24} className="text-danger" />,
+      bgColor: 'bg-red-50',
+    },
+    {
+      title: 'Active Orders',
+      value: activeOrdersCount.toString(),
+      icon: <Clock size={24} className="text-warning" />,
+      bgColor: 'bg-amber-50',
+    },
+    {
+      title: 'Loyalty Points',
+      value: loyaltyPoints.toLocaleString(),
+      icon: <Star size={24} className="text-success" />,
+      bgColor: 'bg-green-50',
+    },
+  ];
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
-      case 'delivered':
-        return 'bg-green-50 text-success';
-      case 'cancelled':
-        return 'bg-red-50 text-danger';
-      case 'placed':
-        return 'bg-blue-50 text-primary';
-      case 'confirmed':
-        return 'bg-indigo-50 text-indigo-600';
-      case 'preparing':
-        return 'bg-amber-50 text-warning';
-      case 'out_for_delivery':
-        return 'bg-purple-50 text-purple-600';
-      default:
-        return 'bg-gray-50 text-gray-600';
+      case 'delivered': return 'bg-green-50 text-success';
+      case 'cancelled': return 'bg-red-50 text-danger';
+      case 'placed': return 'bg-blue-50 text-primary';
+      case 'confirmed': return 'bg-indigo-50 text-indigo-600';
+      case 'preparing': return 'bg-amber-50 text-warning';
+      case 'out_for_delivery': return 'bg-purple-50 text-purple-600';
+      default: return 'bg-gray-50 text-gray-600';
     }
   };
 

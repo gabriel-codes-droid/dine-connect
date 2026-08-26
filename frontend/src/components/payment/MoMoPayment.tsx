@@ -15,7 +15,6 @@ export default function MoMoPayment({
   amount,
   orderInfo,
   orderId,
-  onSuccess,
   onCancel,
   onError,
 }: MoMoPaymentProps) {

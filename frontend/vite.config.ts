@@ -9,10 +9,11 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] })
   ],
   server: {
-    port: 5173,
+    // 자동 포트 할당 (5173이 막히면 다음 avail 포트 사용)
+    strictPort: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:8001',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       },
     },

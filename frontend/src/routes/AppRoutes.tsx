@@ -18,6 +18,7 @@ import Reports from '../pages/Reports';
 import Settings from '../pages/Settings';
 import type { UserRole } from '../types';
 import { auth } from '../services/auth';
+import Customers from '../pages/Customers';
 
 function getStoredRole(): UserRole | null {
   const session = auth.getSession();
@@ -43,7 +44,8 @@ function ProtectedDashboard({
 }) {
   const storedRole = getStoredRole();
   if (!storedRole) return <Navigate to="/login" replace />;
-  if (storedRole !== role) return <Navigate to="/login" replace />;
+  // Wrong role but still authenticated — send home, NOT to /login (which would log them out)
+  if (storedRole !== role) return <Navigate to="/" replace />;
 
   return (
     <DashboardLayout userRole={role} userName={getStoredName()} title={title}>
@@ -131,6 +133,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['restaurant-admin', 'super-admin']}>
             <Reports />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/customers" 
+        element={
+          <ProtectedRoute allowedRoles={['restaurant-admin', 'super-admin']}>
+            <Customers />
           </ProtectedRoute>
         } 
       />

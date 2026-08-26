@@ -5,8 +5,10 @@ import {
   Building2,
   ShoppingCart,
   Package,
+  BarChart3,
 } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import DashboardPageHeader from '../components/layout/DashboardPageHeader';
 import { auth } from '../services/auth';
 import { orderService, restaurantService } from '../firebase';
 import type { Order } from '../firebase';
@@ -538,6 +540,9 @@ export default function Reports() {
   const [platformOrders, setPlatformOrders] = useState<Order[]>([]);
 
   const session = auth.getSession();
+  const sessionUsername = session?.username;
+  const sessionRole = session?.role;
+  const sessionAuthenticated = session?.authenticated;
 
   useEffect(() => {
     if (!session?.authenticated) {
@@ -590,7 +595,7 @@ export default function Reports() {
     return () => {
       cancelled = true;
     };
-  }, [session]);
+  }, [sessionUsername, sessionRole, sessionAuthenticated]);
 
   // Redirect if not authenticated
   if (!session?.authenticated) {
@@ -620,17 +625,18 @@ export default function Reports() {
   return (
     <DashboardLayout userRole={session.role} userName={session.username} title={pageTitle}>
       <div className="space-y-6">
-        {/* Page header */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{pageTitle}</h2>
-          <p className="text-gray-500 dark:text-gray-400">
-            {session.role === 'customer'
-              ? 'A complete history of every order you&apos;ve placed.'
+        <DashboardPageHeader
+          eyebrow="Insights"
+          title={pageTitle}
+          subtitle={
+            session.role === 'customer'
+              ? 'A complete history of every order you have placed.'
               : session.role === 'restaurant-admin'
               ? 'Track and manage all orders for your restaurant.'
-              : 'Full platform overview — restaurants, orders, and revenue.'}
-          </p>
-        </div>
+              : 'Full platform overview — restaurants, orders, and revenue.'
+          }
+          icon={BarChart3}
+        />
 
         {/* Role-specific report */}
         {session.role === 'customer' && (
