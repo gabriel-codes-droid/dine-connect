@@ -85,17 +85,6 @@ code {
   color: #B8B6AA !important;
 }
 
-/* smooth theme transitions on common surfaces */
-.dark .card,
-.dark [class*="bg-white"]:not([class*="bg-gradient"]):not([class*="bg-white/"]):not([class*="from-"]):not([class*="to-"]) {
-  /* opt-in only — let specific components choose */
-}
-
-/* Catch-all: any hardcoded bg-white without a dark: variant → dark slate */
-.dark [class*="bg-white"]:not([class*="dark:"]):not([class*="bg-gradient"]):not([class*="from-"]):not([class*="to-"]) {
-  background-color: #2B302C !important;
-}
-
 /* Editorial hospitality rhythm */
 h1,
 h2,
@@ -116,17 +105,36 @@ textarea {
   color: #202522;
 }
 
-/* Button contrast: actions stay visible in both themes. */
-.dark button[class*="bg-white"],
-.dark a[class*="bg-white"] {
-  background-color: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: #FFFFFF !important;
+/* Semantic action contract: use these classes on new controls. */
+.action-primary {
+  background: var(--primary);
+  color: #FFFFFF;
 }
 
-.dark button[class*="bg-gray-"],
-.dark a[class*="bg-gray-"] {
-  color: #F5F1E8 !important;
+.action-primary:hover {
+  background: #8F462E;
+}
+
+.action-secondary {
+  background: var(--bg-white);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.dark .action-secondary {
+  background: var(--bg-white);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Legacy action fallback: only controls with explicit button/link backgrounds are affected. */
+.dark button[class*="bg-white"]:not([class*="dark:bg-"]),
+.dark a[class*="bg-white"]:not([class*="dark:bg-"]),
+.dark button[class*="bg-gray-"]:not([class*="dark:bg-"]),
+.dark a[class*="bg-gray-"]:not([class*="dark:bg-"]) {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #FFFFFF;
 }
 
 button[class*="bg-primary"],
@@ -137,5 +145,5 @@ a[class*="bg-primary"],
 a[class*="bg-indigo-"],
 a[class*="bg-blue-"],
 a[class*="bg-orange-"] {
-  color: #FFFFFF !important;
+  color: #FFFFFF;
 }

@@ -60,7 +60,7 @@ export default function Navbar({
   }, [isProfileOpen]);
 
   return (
-    <nav className="h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between px-6 sticky top-0 z-30 transition-colors">
+    <nav className="h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between pl-20 pr-4 sm:px-6 sticky top-0 z-30 transition-colors">
       <h1 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h1>
 
       <div className="flex items-center gap-2 sm:gap-3">
@@ -84,6 +84,7 @@ export default function Navbar({
 
         <button
           type="button"
+          onClick={() => navigate('/settings')}
           className="hidden sm:inline-flex p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
           aria-label="Settings"
         >
@@ -119,14 +120,14 @@ export default function Navbar({
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg border border-border dark:border-dark-border shadow-card py-1 z-50">
               <button
                 type="button"
-                onClick={() => setIsProfileOpen(false)}
+                onClick={() => { setIsProfileOpen(false); navigate('/settings'); }}
                 className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] flex items-center gap-2"
               >
                 <User size={16} /> Profile
               </button>
               <button
                 type="button"
-                onClick={() => setIsProfileOpen(false)}
+                onClick={() => { setIsProfileOpen(false); navigate('/settings'); }}
                 className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] flex items-center gap-2"
               >
                 <SettingsIcon size={16} /> Settings

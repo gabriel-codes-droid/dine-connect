@@ -33,6 +33,12 @@ function getStoredName(): string {
   return auth.getSession()?.username || 'Sarah Anderson';
 }
 
+function getDashboardPath(role: UserRole): string {
+  if (role === 'super-admin') return '/admin';
+  if (role === 'restaurant-admin') return '/restaurant';
+  return '/customer';
+}
+
 function ProtectedDashboard({
   role,
   title,
@@ -44,8 +50,8 @@ function ProtectedDashboard({
 }) {
   const storedRole = getStoredRole();
   if (!storedRole) return <Navigate to="/login" replace />;
-  // Wrong role but still authenticated — send home, NOT to /login (which would log them out)
-  if (storedRole !== role) return <Navigate to="/" replace />;
+  // Keep authenticated users inside their own dashboard when a role-specific route is opened.
+  if (storedRole !== role) return <Navigate to={getDashboardPath(storedRole)} replace />;
 
   return (
     <DashboardLayout userRole={role} userName={getStoredName()} title={title}>
@@ -63,7 +69,7 @@ function ProtectedRoute({
 }) {
   const storedRole = getStoredRole();
   if (!storedRole) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(storedRole)) return <Navigate to="/" replace />;
+  if (!allowedRoles.includes(storedRole)) return <Navigate to={getDashboardPath(storedRole)} replace />;
 
   return <>{children}</>;
 }
@@ -131,7 +137,7 @@ export default function AppRoutes() {
       <Route 
         path="/reports" 
         element={
-          <ProtectedRoute allowedRoles={['restaurant-admin', 'super-admin']}>
+          <ProtectedRoute allowedRoles={['customer', 'restaurant-admin', 'super-admin']}>
             <Reports />
           </ProtectedRoute>
         } 

@@ -22,7 +22,7 @@ export default function DashboardLayout({
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Navbar userName={userName} userRole={userRole} title={title} />
         <main className="flex-1 overflow-y-auto">
-          <div className="p-6 text-gray-900 dark:text-gray-100">{children}</div>
+          <div className="p-4 sm:p-6 text-gray-900 dark:text-gray-100">{children}</div>
         </main>
       </div>
     </div>

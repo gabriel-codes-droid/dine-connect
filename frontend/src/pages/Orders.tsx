@@ -257,22 +257,6 @@ export default function Orders() {
       ? 'Restaurant Orders'
       : 'All Orders';
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-primary" size={32} />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 dark:border-red-800 rounded-lg p-4">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
-      </div>
-    );
-  }
-
   return (
     <DashboardLayout userRole={session.role} userName={session.username} title={pageTitle}>
       <div className="space-y-6">
@@ -287,9 +271,35 @@ export default function Orders() {
               : 'View and manage all orders across the platform.'
           }
           icon={ShoppingCart}
+          action={session.role === 'customer' ? (
+            <a href="#new-order" className="action-primary inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold transition-colors">
+              Place an order
+            </a>
+          ) : undefined}
         />
 
-        {session.role === 'customer' && <CreateOrderForm session={session} />}
+        {session.role === 'customer' ? (
+          <div id="new-order" className="scroll-mt-24">
+            <CreateOrderForm session={session} />
+          </div>
+        ) : (
+          <div className="rounded-md border border-border bg-white p-4 text-sm text-gray-700 dark:border-dark-border dark:bg-dark-card dark:text-gray-200">
+            This is a management view. Place-order checkout is available from a customer account, while this page shows orders for your role.
+          </div>
+        )}
+
+        {error && (
+          <div className="rounded-md border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+          </div>
+        )}
+
+        {loading && (
+          <div className="flex items-center gap-2 rounded-md border border-border bg-white p-4 text-sm text-gray-700 dark:border-dark-border dark:bg-dark-card dark:text-gray-200">
+            <Loader2 className="animate-spin text-primary" size={18} />
+            Loading order history…
+          </div>
+        )}
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">

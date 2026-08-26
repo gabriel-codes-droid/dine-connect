@@ -32,7 +32,7 @@ function getMenuItems(role: UserRole) {
     { icon: ShoppingCart, label: 'Orders', path: '/orders' },
     { icon: Calendar, label: 'Reservations', path: '/reservations' },
     { icon: Users, label: 'Customers', path: '/customers', roles: ['super-admin', 'restaurant-admin'] as UserRole[] },
-    { icon: TrendingUp, label: 'Analytics', path: '/analytics' },
+    { icon: TrendingUp, label: 'Analytics', path: '/analytics', roles: ['restaurant-admin', 'super-admin'] as UserRole[] },
     { icon: FileText, label: 'Reports', path: '/reports' },
     { icon: SettingsIcon, label: 'Settings', path: '/settings' },
   ];

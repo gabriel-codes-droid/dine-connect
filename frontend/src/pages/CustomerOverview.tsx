@@ -1,6 +1,10 @@
 import { ShoppingBag, Heart, Clock, Star, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import KPICard from '../components/cards/KPICard';
+import DashboardPageHeader from '../components/layout/DashboardPageHeader';
+
 import { auth } from '../services/auth';
 import { orderService, favoriteService } from '../firebase';
 import type { Order } from '../firebase';
@@ -138,33 +142,35 @@ export default function CustomerOverview() {
   if (!session) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Please log in to view your dashboard.</p>
+        <p className="text-gray-700 dark:text-gray-300">Please log in to view your dashboard.</p>
       </div>
     );
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-primary" size={32} />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-600">{error}</p>
-      </div>
-    );
-  }
+  
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">My Dashboard</h2>
-        <p className="text-gray-500">Track your orders, reservations, and rewards.</p>
-      </div>
+      <DashboardPageHeader
+        eyebrow="Your account"
+        title="My Dashboard"
+        subtitle="Track your orders, reservations, and rewards."
+        icon={ShoppingBag}
+        action={<Link to="/orders#new-order" className="action-primary inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold transition-colors">Create an order</Link>}
+      />
+
+      {loading && (
+        <div className="flex items-center gap-2 rounded-md border border-border bg-white p-4 text-sm text-gray-700 dark:border-dark-border dark:bg-dark-card dark:text-gray-200">
+          <Loader2 className="animate-spin text-primary" size={18} />
+          Loading your activity…
+        </div>
+      )}
+
+      {error && (
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         {kpiData.map((kpi) => (
@@ -172,26 +178,27 @@ export default function CustomerOverview() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Order History</h3>
+      <div className="bg-white dark:bg-dark-card rounded-lg border border-border dark:border-dark-border overflow-hidden">
+<div className="px-6 py-4 border-b border-border dark:border-dark-border">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Order History</h3>
         </div>
         {orders.length === 0 ? (
           <div className="px-6 py-12 text-center">
             <ShoppingBag className="mx-auto text-gray-300 mb-4" size={48} />
-            <p className="text-gray-500">No orders yet. Start ordering to see your history here!</p>
+            <p className="text-gray-600 dark:text-gray-300">No orders yet. Start ordering to see your history here!</p>
+            <Link to="/orders" className="inline-flex items-center mt-4 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-[#8F462E] transition-colors">Create an order</Link>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-border dark:divide-dark-border">
             {orders.map((order) => (
-              <div key={order.id} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:bg-gray-50">
+              <div key={order.id} className="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:bg-[#F5F0E8] dark:hover:bg-[#303831]">
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900">{order.restaurantName}</p>
-                  <p className="text-sm text-gray-500">{formatItems(order.items)}</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{order.restaurantName}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{formatItems(order.items)}</p>
                   <p className="text-xs text-gray-400 mt-1">{formatDate(order.createdAt)}</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="font-semibold text-gray-900">${order.total.toFixed(2)}</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">${order.total.toFixed(2)}</span>
                   <span
                     className={`text-xs font-medium px-2.5 py-1 rounded-full ${getStatusColor(order.status)}`}
                   >
