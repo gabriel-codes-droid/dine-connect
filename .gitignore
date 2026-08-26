@@ -31,3 +31,5 @@ scripts/*.json.tmp
 frontend/dist
 backend/.env
 frontend/.env
+
+backend/nul
