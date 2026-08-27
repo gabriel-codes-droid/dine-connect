@@ -12,7 +12,7 @@ export default function ResetPassword() {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const token = params.get('token') || '';
+  const token = params.get('oobCode') || params.get('token') || '';
   const email = params.get('email') || '';
 
   const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ export default function ResetPassword() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!token || !email) {
+    if (!token) {
       setError('Invalid or missing reset link. Request a new one from the forgot password page.');
     }
   }, [token, email]);
@@ -32,7 +32,7 @@ export default function ResetPassword() {
     e.preventDefault();
     setError('');
 
-    if (!token || !email) return;
+    if (!token) return;
 
     if (!password) {
       setError('Please enter a new password');
@@ -49,7 +49,7 @@ export default function ResetPassword() {
 
     setLoading(true);
     try {
-      await auth.resetPassword({ email: email.toLowerCase(), token, newPassword: password });
+      await auth.resetPassword({ email: email ? email.toLowerCase() : undefined, token, newPassword: password });
       setDone(true);
     } catch (err) {
       setError((err as Error).message || 'Reset failed. The link may have expired.');
@@ -133,7 +133,7 @@ export default function ResetPassword() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="new-password"
-                      disabled={!token || !email}
+                      disabled={!token}
                       className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition disabled:opacity-60"
                       placeholder="At least 6 characters"
                     />
@@ -162,7 +162,7 @@ export default function ResetPassword() {
                       value={confirm}
                       onChange={(e) => setConfirm(e.target.value)}
                       autoComplete="new-password"
-                      disabled={!token || !email}
+                      disabled={!token}
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition disabled:opacity-60"
                       placeholder="Repeat password"
                     />
@@ -178,7 +178,7 @@ export default function ResetPassword() {
 
                 <button
                   type="submit"
-                  disabled={loading || !token || !email}
+                  disabled={loading || !token}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
                   {loading && <Loader2 size={16} className="animate-spin" />}

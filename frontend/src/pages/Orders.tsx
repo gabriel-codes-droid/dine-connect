@@ -89,7 +89,7 @@ export default function Orders() {
         if (session.role === 'customer') {
           // Customer: show own orders
           unsubscribeOrders = orderService.subscribeToCustomerOrders(
-            session.username,
+            session.uid,
             (customerOrders) => {
               setOrders(customerOrders);
 
@@ -130,7 +130,7 @@ export default function Orders() {
           );
         } else if (session.role === 'restaurant-admin') {
           // Restaurant-admin: resolve restaurant first, then subscribe
-          const owned = await restaurantService.getRestaurantsByOwner(session.username);
+          const owned = await restaurantService.getRestaurantsByOwner(session.uid);
           if (!owned || owned.length === 0) {
             setError('No restaurant found. Please create one first.');
             setLoading(false);
@@ -238,7 +238,7 @@ export default function Orders() {
         unsubscribeOrders();
       }
     };
-  }, [session?.username, session?.role]);
+  }, [session?.uid, session?.username, session?.role]);
 
   // Redirect if not authenticated or wrong role for this page
   if (!session?.authenticated) {

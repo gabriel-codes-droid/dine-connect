@@ -66,7 +66,7 @@ export default function Reservations() {
   const [restaurantNames, setRestaurantNames] = useState<Record<string, string>>({});
 
   const session = auth.getSession();
-  const sessionUsername = session?.username;
+  const sessionUid = session?.uid;
   const sessionRole = session?.role;
   const sessionAuthenticated = session?.authenticated;
 
@@ -80,7 +80,7 @@ export default function Reservations() {
     let unsubscribe: (() => void) | null = null;
 
     async function loadReservations() {
-      if (!sessionUsername || !sessionRole) return;
+      if (!sessionUid || !sessionRole) return;
       try {
         setLoading(true);
         setError(null);
@@ -88,7 +88,7 @@ export default function Reservations() {
         if (sessionRole === 'customer') {
           // Customer: subscribe to own reservations
           unsubscribe = reservationService.subscribeToReservationsByCustomer(
-            sessionUsername,
+            sessionUid,
             (res) => {
               setReservations(res);
               setLoading(false);
@@ -96,7 +96,7 @@ export default function Reservations() {
           );
         } else if (sessionRole === 'restaurant-admin') {
           // Restaurant-admin: find owned restaurant, then subscribe
-          const owned = await restaurantService.getRestaurantsByOwner(sessionUsername);
+          const owned = await restaurantService.getRestaurantsByOwner(sessionUid);
           if (!owned || owned.length === 0) {
             setError('No restaurant found. Please create one first.');
             setLoading(false);
@@ -151,7 +151,7 @@ export default function Reservations() {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [sessionUsername, sessionRole, sessionAuthenticated]);
+  }, [sessionUid, sessionRole, sessionAuthenticated]);
 
   // Resolve restaurant names before the auth guard so hooks always run in a stable order.
   useEffect(() => {

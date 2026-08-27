@@ -558,10 +558,10 @@ export default function Reports() {
         setError(null);
 
         if (session.role === 'customer') {
-          const orders = await orderService.getCustomerOrders(session.username);
+          const orders = await orderService.getCustomerOrders(session.uid);
           if (!cancelled) setCustomerOrders(orders);
         } else if (session.role === 'restaurant-admin') {
-          const owned = await restaurantService.getRestaurantsByOwner(session.username);
+          const owned = await restaurantService.getRestaurantsByOwner(session.uid);
           if (!cancelled) {
             if (!owned || owned.length === 0) {
               setError('No restaurant found. Please create one first.');

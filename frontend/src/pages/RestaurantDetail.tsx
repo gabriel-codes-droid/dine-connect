@@ -188,11 +188,11 @@ export default function RestaurantDetail() {
       return;
     }
     favoriteService
-      .isFavorite(session.username, id)
+      .isFavorite(session.uid, id)
       .then((v) => { if (active) setIsFav(v); })
       .catch(() => { if (active) setIsFav(false); });
     return () => { active = false; };
-  }, [id, isAuthed, session?.username]);
+  }, [id, isAuthed, session?.uid]);
 
   const handleToggleFavorite = async () => {
     if (!isAuthed) {
@@ -203,11 +203,11 @@ export default function RestaurantDetail() {
     setFavLoading(true);
     try {
       if (isFav) {
-        await favoriteService.removeFavorite(session.username, id);
+        await favoriteService.removeFavorite(session.uid, id);
         setIsFav(false);
         toast.success('Removed from favorites');
       } else {
-        await favoriteService.addFavorite(session.username, id);
+        await favoriteService.addFavorite(session.uid, id);
         setIsFav(true);
         toast.success('Added to favorites');
       }

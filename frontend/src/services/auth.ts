@@ -1,11 +1,31 @@
-// Real auth service using backend API
+import {
+  confirmPasswordReset,
+  createUserWithEmailAndPassword,
+  reload,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  updatePassword as firebaseUpdatePassword,
+  updateProfile,
+  verifyBeforeUpdateEmail,
+  verifyPasswordResetCode,
+  type User as FirebaseUser,
+} from 'firebase/auth';
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import type { UserRole } from '../types';
+import { auth as firebaseAuth, db, storage } from '../firebase/config';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
-const TOKEN_KEY = 'dineconnect_token';
 const SESSION_KEY = 'dineconnect_session';
+const PENDING_EMAIL_KEY = 'dineconnect_pending_email';
 
 export interface Session {
+  uid: string;
   username: string;
   email: string;
   role: UserRole;
@@ -13,67 +33,107 @@ export interface Session {
   profilePicture?: string | null;
 }
 
-// Helper to get token
-function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
+const validRoles: UserRole[] = ['customer', 'restaurant-admin', 'super-admin'];
+
+function requireFirebaseAuth() {
+  if (!firebaseAuth) {
+    throw new Error('Firebase Authentication is not configured. Add the Firebase web-app values to frontend/.env.');
+  }
+  return firebaseAuth;
 }
 
-// Helper to set token
-function setToken(token: string): void {
-  localStorage.setItem(TOKEN_KEY, token);
+function requireFirestore() {
+  if (!db) {
+    throw new Error('Firestore is not configured. Check the Firebase web-app values and enable Firestore.');
+  }
+  return db;
 }
 
-// Helper to clear token
-function clearToken(): void {
-  localStorage.removeItem(TOKEN_KEY);
+function persistSession(session: Session): Session {
+  window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  window.sessionStorage.setItem('dineconnect_uid', session.uid);
+  window.sessionStorage.setItem('dineconnect_role', session.role);
+  window.sessionStorage.setItem('dineconnect_email', session.email);
+  window.sessionStorage.setItem('dineconnect_authenticated', 'true');
+  window.sessionStorage.setItem('dineconnect_username', session.username);
+  return session;
 }
 
-// API helper with auth
-async function apiCall<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = getToken();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string> || {}),
-  };
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+function clearSession() {
+  window.sessionStorage.removeItem(SESSION_KEY);
+  window.sessionStorage.removeItem('dineconnect_uid');
+  window.sessionStorage.removeItem('dineconnect_role');
+  window.sessionStorage.removeItem('dineconnect_email');
+  window.sessionStorage.removeItem('dineconnect_authenticated');
+  window.sessionStorage.removeItem('dineconnect_username');
+  window.sessionStorage.removeItem(PENDING_EMAIL_KEY);
+}
+
+function getDefaultUsername(user: FirebaseUser): string {
+  return user.displayName?.trim() || user.email?.split('@')[0] || 'customer';
+}
+
+async function sessionFromFirebaseUser(user: FirebaseUser, fallback?: Partial<Session>): Promise<Session> {
+  const firestore = requireFirestore();
+  const userRef = doc(firestore, 'users', user.uid);
+  const snapshot = await getDoc(userRef);
+  const profile = snapshot.exists() ? snapshot.data() : {};
+  const role = validRoles.includes(profile.role as UserRole) ? profile.role as UserRole : fallback?.role || 'customer';
+  const username = String(profile.username || fallback?.username || getDefaultUsername(user));
+  const email = user.email || String(profile.email || fallback?.email || '');
+  const profilePicture = profile.profilePicture ?? null;
+
+  if (!snapshot.exists()) {
+    await setDoc(userRef, {
+      username,
+      email,
+      role,
+      profilePicture,
+      preferences: { theme: 'light' },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers,
+  return persistSession({
+    uid: user.uid,
+    username,
+    email,
+    role,
+    authenticated: true,
+    profilePicture,
   });
+}
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(error.error || error.message || 'Request failed');
-  }
-
-  return response.json();
+function firebaseErrorMessage(error: unknown): string {
+  const code = (error as { code?: string })?.code || '';
+  const messages: Record<string, string> = {
+    'auth/invalid-credential': 'Invalid email or password.',
+    'auth/invalid-login-credentials': 'Invalid email or password.',
+    'auth/email-already-in-use': 'An account with that email already exists.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/user-not-found': 'Invalid email or password.',
+    'auth/too-many-requests': 'Too many attempts. Please wait and try again.',
+    'auth/requires-recent-login': 'For security, sign in again before changing this account detail.',
+    'auth/expired-action-code': 'This reset or verification link has expired. Request a new one.',
+    'auth/invalid-action-code': 'This reset or verification link is invalid. Request a new one.',
+  };
+  if (messages[code]) return messages[code];
+  return error instanceof Error ? error.message : 'Authentication request failed.';
 }
 
 export const auth = {
-  async checkEmail(email: string): Promise<{ exists: boolean }> {
-    const e = email.toLowerCase().trim();
-    if (!e) return { exists: false };
-    try {
-      const data = await apiCall<{ exists: boolean }>(`/auth/check-email?email=${encodeURIComponent(e)}`);
-      return data;
-    } catch {
-      return { exists: false };
-    }
+  async checkEmail(_email: string): Promise<{ exists: boolean }> {
+    // Firebase Auth intentionally does not expose account existence to unauthenticated callers.
+    return { exists: false };
   },
 
   async checkUsername(username: string): Promise<{ exists: boolean }> {
-    const u = username.trim();
-    if (!u) return { exists: false };
-    try {
-      const data = await apiCall<{ exists: boolean }>(`/auth/check-username?username=${encodeURIComponent(u)}`);
-      return data;
-    } catch {
-      return { exists: false };
-    }
+    const cleanUsername = username.trim();
+    if (!cleanUsername || !db) return { exists: false };
+    const snapshot = await getDoc(doc(db, 'usernames', cleanUsername));
+    return { exists: snapshot.exists() };
   },
 
   async signup(input: {
@@ -84,205 +144,180 @@ export const auth = {
   }): Promise<Session> {
     const username = input.username.trim();
     const email = input.email.toLowerCase().trim();
-    const { password, role } = input;
-
-    if (!username || !email || !password) {
-      throw new Error('Username, email, and password are required');
+    if (!username || !email || !input.password) {
+      throw new Error('Username, email, and password are required.');
     }
-    if (password.length < 6) {
-      throw new Error('Password must be at least 6 characters');
+    if (input.password.length < 6) {
+      throw new Error('Password must be at least 6 characters.');
     }
 
+    const firebase = requireFirebaseAuth();
+    const firestore = requireFirestore();
     try {
-      const data = await apiCall<{ token: string; user: { username: string; email: string; role: UserRole } }>('/auth/signup', {
-        method: 'POST',
-        body: JSON.stringify({ username, email, password, role }),
-      });
-
-      setToken(data.token);
-      
-      const session: Session = { 
-        username: data.user.username, 
-        email: data.user.email, 
-        role: data.user.role, 
-        authenticated: true 
-      };
-      
-      // Store session for compatibility
-      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      window.sessionStorage.setItem('dineconnect_role', data.user.role);
-      window.sessionStorage.setItem('dineconnect_email', data.user.email);
-      window.sessionStorage.setItem('dineconnect_authenticated', 'true');
-      window.sessionStorage.setItem('dineconnect_username', data.user.username);
-      
-      return session;
-    } catch (err) {
-      const error = err as Error & { field?: string };
-      if (error.message.includes('email')) {
-        (error as Error & { field?: string }).field = 'email';
-      } else if (error.message.includes('username')) {
-        (error as Error & { field?: string }).field = 'username';
+      const usernameRef = doc(firestore, 'usernames', username);
+      const usernameSnapshot = await getDoc(usernameRef);
+      if (usernameSnapshot.exists()) {
+        const duplicate = new Error('That username is already taken.') as Error & { field?: string };
+        duplicate.field = 'username';
+        throw duplicate;
       }
-      throw error;
+
+      const credential = await createUserWithEmailAndPassword(firebase, email, input.password);
+      await updateProfile(credential.user, { displayName: username });
+      const role: UserRole = input.role === 'restaurant-admin' ? input.role : 'customer';
+      await setDoc(doc(firestore, 'users', credential.user.uid), {
+        username,
+        email,
+        role,
+        profilePicture: null,
+        preferences: { theme: 'light' },
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      await setDoc(usernameRef, { uid: credential.user.uid, createdAt: serverTimestamp() });
+      return sessionFromFirebaseUser(credential.user, { username, email, role });
+    } catch (error) {
+      const wrapped = error as Error & { field?: string };
+      if (!wrapped.field && (error as { code?: string })?.code === 'auth/email-already-in-use') {
+        wrapped.field = 'email';
+      }
+      throw new Error(firebaseErrorMessage(wrapped), { cause: wrapped });
     }
   },
 
   async login(input: { email: string; password: string; role: UserRole }): Promise<Session> {
     const email = input.email.toLowerCase().trim();
-    const { password } = input;
-    
-    if (!email || !password) {
-      throw new Error('Email and password are required');
+    if (!email || !input.password) {
+      throw new Error('Email and password are required.');
     }
 
     try {
-      const data = await apiCall<{ token: string; user: { username: string; email: string; role: UserRole } }>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      });
-
-      setToken(data.token);
-      
-      const session: Session = { 
-        username: data.user.username, 
-        email: data.user.email, 
-        role: data.user.role, 
-        authenticated: true 
-      };
-      
-      // Store session for compatibility
-      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      window.sessionStorage.setItem('dineconnect_role', data.user.role);
-      window.sessionStorage.setItem('dineconnect_email', data.user.email);
-      window.sessionStorage.setItem('dineconnect_authenticated', 'true');
-      window.sessionStorage.setItem('dineconnect_username', data.user.username);
-      
-      return session;
-    } catch (err) {
-      throw err;
+      const credential = await signInWithEmailAndPassword(requireFirebaseAuth(), email, input.password);
+      return await sessionFromFirebaseUser(credential.user);
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error), { cause: error });
     }
   },
 
   logout() {
-    clearToken();
-    window.sessionStorage.removeItem(SESSION_KEY);
-    window.sessionStorage.removeItem('dineconnect_role');
-    window.sessionStorage.removeItem('dineconnect_email');
-    window.sessionStorage.removeItem('dineconnect_authenticated');
-    window.sessionStorage.removeItem('dineconnect_username');
+    if (firebaseAuth) void firebaseSignOut(firebaseAuth);
+    clearSession();
   },
 
   getSession(): Session | null {
     try {
       const raw = window.sessionStorage.getItem(SESSION_KEY);
-      return raw ? (JSON.parse(raw) as Session) : null;
+      const session = raw ? JSON.parse(raw) as Partial<Session> : null;
+      return session?.authenticated && session.uid && session.username && session.role
+        ? session as Session
+        : null;
     } catch {
       return null;
     }
   },
 
-  // --- password reset ---
-
   async forgotPassword(email: string): Promise<void> {
-    const e = email.toLowerCase().trim();
-    if (!e) throw new Error('Email is required');
-    // Don't use apiCall here — we want the 404 to bubble up so the UI can decide
-    // whether to swallow it (we don't want to leak account existence to random
-    // visitors, but we also want the user to know "no such account" when they
-    // typed it themselves intentionally).
-    const res = await fetch(`${API_BASE}/auth/forgot-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: e }),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Request failed' }));
-      throw new Error(err.error || 'Request failed');
+    const cleanEmail = email.toLowerCase().trim();
+    if (!cleanEmail) throw new Error('Email is required.');
+    try {
+      await sendPasswordResetEmail(requireFirebaseAuth(), cleanEmail, {
+        url: `${window.location.origin}/reset-password`,
+        handleCodeInApp: true,
+      });
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error), { cause: error });
     }
   },
 
-  async resetPassword(input: {
-    email: string;
-    token: string;
-    newPassword: string;
-  }): Promise<Session> {
-    const e = input.email.toLowerCase().trim();
-    if (!e || !input.token || !input.newPassword) {
-      throw new Error('Email, token, and new password are required');
+  async resetPassword(input: { email?: string; token: string; newPassword: string }): Promise<Session> {
+    if (!input.token || !input.newPassword) {
+      throw new Error('The reset link or new password is missing.');
     }
     if (input.newPassword.length < 6) {
-      throw new Error('Password must be at least 6 characters');
+      throw new Error('Password must be at least 6 characters.');
     }
 
-    const data = await apiCall<{ token: string; user: { username: string; email: string; role: UserRole } }>(
-      '/auth/reset-password',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          email: e,
-          token: input.token,
-          newPassword: input.newPassword,
-        }),
-      },
-    );
-
-    // Server returns a fresh JWT on successful reset, so log the user in immediately
-    setToken(data.token);
-
-    const session: Session = {
-      username: data.user.username,
-      email: data.user.email,
-      role: data.user.role,
-      authenticated: true,
-    };
-
-    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    window.sessionStorage.setItem('dineconnect_role', data.user.role);
-    window.sessionStorage.setItem('dineconnect_email', data.user.email);
-    window.sessionStorage.setItem('dineconnect_authenticated', 'true');
-    window.sessionStorage.setItem('dineconnect_username', data.user.username);
-
-    return session;
+    const firebase = requireFirebaseAuth();
+    try {
+      const resetEmail = input.email?.toLowerCase().trim() || await verifyPasswordResetCode(firebase, input.token);
+      await confirmPasswordReset(firebase, input.token, input.newPassword);
+      const credential = await signInWithEmailAndPassword(firebase, resetEmail, input.newPassword);
+      return sessionFromFirebaseUser(credential.user);
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error), { cause: error });
+    }
   },
 
-  // ---- email verification (change email) ----
   async sendVerificationCode(newEmail: string): Promise<{ message: string }> {
-    const e = newEmail.toLowerCase().trim();
-    if (!e) throw new Error('Email is required');
-    return apiCall<{ message: string }>('/users/send-verification-code', {
-      method: 'POST',
-      body: JSON.stringify({ newEmail: e }),
-    });
-  },
+    const cleanEmail = newEmail.toLowerCase().trim();
+    const firebase = requireFirebaseAuth();
+    const currentUser = firebase.currentUser;
+    if (!currentUser) throw new Error('Please sign in again before changing your email.');
+    if (!cleanEmail) throw new Error('Email is required.');
 
-  async confirmEmailChange(code: string): Promise<{ email: string }> {
-    if (!code) throw new Error('Verification code is required');
-    const data = await apiCall<{ message: string; email: string; user: any }>(
-      '/users/confirm-email-change',
-      { method: 'POST', body: JSON.stringify({ code }) }
-    );
-    // Update session storage with new email
-    const session = auth.getSession();
-    if (session) {
-      session.email = data.email;
-      (session as any).profilePicture = data.user?.profilePicture ?? session.profilePicture;
-      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      window.sessionStorage.setItem('dineconnect_email', data.email);
+    try {
+      await verifyBeforeUpdateEmail(currentUser, cleanEmail, {
+        url: `${window.location.origin}/settings`,
+        handleCodeInApp: true,
+      });
+      window.sessionStorage.setItem(PENDING_EMAIL_KEY, cleanEmail);
+      return { message: 'Verification link sent. Open it from your email, then return here and refresh the status.' };
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error), { cause: error });
     }
-    return { email: data.email };
   },
 
-  // ---- profile picture ----
-  async updateProfilePicture(url: string): Promise<void> {
-    if (!url) throw new Error('Picture URL is required');
-    const data = await apiCall<{ message: string; profilePicture: string }>(
-      '/users/me/profile-picture',
-      { method: 'PATCH', body: JSON.stringify({ url }) }
-    );
+  async confirmEmailChange(_code: string): Promise<{ email: string }> {
+    const firebase = requireFirebaseAuth();
+    const currentUser = firebase.currentUser;
+    if (!currentUser) throw new Error('Please sign in again before confirming your email.');
+    const pendingEmail = window.sessionStorage.getItem(PENDING_EMAIL_KEY);
+    await reload(currentUser);
+    const refreshedEmail = firebase.currentUser?.email || currentUser.email || '';
+    if (!pendingEmail || refreshedEmail.toLowerCase() !== pendingEmail.toLowerCase()) {
+      throw new Error('Open the verification link sent to your new email, then try again.');
+    }
+
+    if (db) {
+      await setDoc(doc(db, 'users', currentUser.uid), {
+        email: refreshedEmail,
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+    }
     const session = auth.getSession();
-    if (session) {
-      session.profilePicture = data.profilePicture;
-      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    if (session) persistSession({ ...session, email: refreshedEmail });
+    window.sessionStorage.removeItem(PENDING_EMAIL_KEY);
+    return { email: refreshedEmail };
+  },
+
+  async updateProfilePicture(dataUrl: string): Promise<void> {
+    const firebase = requireFirebaseAuth();
+    const currentUser = firebase.currentUser;
+    if (!currentUser) throw new Error('Please sign in again before updating your profile picture.');
+    if (!storage || !db) throw new Error('Firebase Storage is not configured. Enable Storage and check the Firebase web-app values.');
+
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    const pictureRef = ref(storage, `profile-images/${currentUser.uid}/profile.jpg`);
+    await uploadBytes(pictureRef, blob, { contentType: blob.type || 'image/jpeg' });
+    const url = await getDownloadURL(pictureRef);
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      profilePicture: url,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
+
+    const session = auth.getSession();
+    if (session) persistSession({ ...session, profilePicture: url });
+  },
+
+  async updatePassword(newPassword: string): Promise<void> {
+    if (!newPassword || newPassword.length < 6) throw new Error('Password must be at least 6 characters.');
+    const currentUser = requireFirebaseAuth().currentUser;
+    if (!currentUser) throw new Error('Please sign in again before changing your password.');
+    try {
+      await firebaseUpdatePassword(currentUser, newPassword);
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error), { cause: error });
     }
   },
 };

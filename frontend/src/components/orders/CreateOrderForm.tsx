@@ -77,7 +77,7 @@ export default function CreateOrderForm({ session }: CreateOrderFormProps) {
     setFeedback(null);
     try {
       await orderService.createOrder({
-        customerId: session.username,
+        customerId: session.uid,
         customerName: session.username,
         customerEmail: session.email,
         restaurantId: restaurant.id,

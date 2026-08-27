@@ -174,6 +174,7 @@ export default function RestaurantOverview() {
   const [activeTab, setActiveTab] = useState<'overview' | 'menu'>('overview');
 
   const session = auth.getSession();
+  const sessionUid = session?.uid;
 
   // Compute chart data from orders
   const dailyOrdersData = (() => {
@@ -205,14 +206,14 @@ export default function RestaurantOverview() {
 
   // Step 1: find the restaurant owned by this admin (or none yet)
   useEffect(() => {
-    if (!session || session.role !== 'restaurant-admin') {
+    if (!sessionUid || !session || session.role !== 'restaurant-admin') {
       setResolvingRestaurant(false);
       return;
     }
     let cancelled = false;
     (async () => {
       try {
-        const owned = await restaurantService.getRestaurantsByOwner(session.username);
+        const owned = await restaurantService.getRestaurantsByOwner(sessionUid);
         if (!cancelled) {
           setRestaurant(owned[0] ?? null);
           setResolvingRestaurant(false);
@@ -226,7 +227,7 @@ export default function RestaurantOverview() {
       }
     })();
     return () => { cancelled = true; };
-  }, [session]);
+  }, [sessionUid, session?.role]);
 
   const handleCreated = useCallback((r: Restaurant) => setRestaurant(r), []);
 

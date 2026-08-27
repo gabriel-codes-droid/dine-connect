@@ -8,6 +8,7 @@ const router = express.Router();
 
 const USERNAME_RE = /^[a-zA-Z0-9]{3,30}$/;
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^\s@]+$/;
+const frontendUrl = process.env.FRONTEND_URL || 'https://dineconnect-36bc7.web.app';
 
 function signToken(user) {
   return jwt.sign(
@@ -37,7 +38,7 @@ router.post('/forgot-password', async (req, res, next) => {
     const resetToken = user.setPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
     await sendEmail({ to: email, subject: 'reset your password', text: `click to reset: ${resetLink}` });
 
     return res.json({ message: 'reset email sent' });

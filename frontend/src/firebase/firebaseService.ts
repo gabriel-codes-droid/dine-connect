@@ -16,7 +16,7 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from './config';
+import { auth as firebaseAuth, db, storage } from './config';
 import type { Restaurant, MenuItem } from '../data/restaurants';
 import { restaurants } from '../data/restaurants';
 
@@ -437,6 +437,7 @@ export interface Review {
   rating: number;
   comment: string;
   avatarColor: string;
+  authorId?: string;
   createdAt: Timestamp;
 }
 
@@ -461,9 +462,12 @@ export const reviewService = {
     review: { author: string; rating: number; comment: string; avatarColor: string }
   ): Promise<void> {
     if (!db) throw new Error('Firebase not configured');
+    const authorId = firebaseAuth?.currentUser?.uid;
+    if (!authorId) throw new Error('You must be signed in to add a review.');
     const reviewsRef = collection(db, 'reviews');
     await addDoc(reviewsRef, {
       restaurantId,
+      authorId,
       ...review,
       createdAt: serverTimestamp()
     });

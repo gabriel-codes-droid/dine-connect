@@ -51,7 +51,7 @@ export default function Settings() {
   // Email verification state
   const [verificationStep, setVerificationStep] = useState<'idle' | 'code-sent' | 'confirmed'>('idle');
   const [newEmail, setNewEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+  
   const [emailLoading, setEmailLoading] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [emailSuccess, setEmailSuccess] = useState<string | null>(null);
@@ -79,12 +79,12 @@ export default function Settings() {
     (async () => {
       setCustomerLoading(true);
       try {
-        const orders = await orderService.getCustomerOrders(session.username);
+        const orders = await orderService.getCustomerOrders(session.uid);
         const deliveredTotal = orders
           .filter((o) => o.status === 'delivered')
           .reduce((sum, o) => sum + o.total, 0);
         if (!cancelled) setLoyaltyPoints(Math.floor(deliveredTotal * 10));
-        const favs = await favoriteService.getCustomerFavorites(session.username);
+        const favs = await favoriteService.getCustomerFavorites(session.uid);
         if (!cancelled) setFavoriteCount(favs.length);
       } catch (err) {
         console.error('Error loading customer data:', err);
@@ -101,7 +101,7 @@ export default function Settings() {
     (async () => {
       setAdminLoading(true);
       try {
-        const restaurants = await restaurantService.getRestaurantsByOwner(session.username);
+        const restaurants = await restaurantService.getRestaurantsByOwner(session.uid);
         if (!cancelled) {
           setAdminRestaurant(restaurants.length > 0 ? restaurants[0] : null);
         }
@@ -261,48 +261,40 @@ export default function Settings() {
             )}
 
             {verificationStep === 'code-sent' && (
-              <div className="flex flex-col sm:flex-row gap-3 items-end">
-                <div className="flex-1">
-                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">Verification code</label>
-                  <input
-                    type="text"
-                    placeholder="6-digit code"
-                    value={verificationCode}
-                    onChange={(e) => { setVerificationCode(e.target.value); setEmailError(null); }}
-                    disabled={emailLoading}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white disabled:opacity-50"
-                  />
+              <div className="space-y-3">
+                <div className="rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/20 px-4 py-3">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">Check your new email address</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                    Open the Firebase verification link we sent to {newEmail}, then return here and refresh the status.
+                  </p>
                 </div>
-                <button
-                  onClick={async () => {
-                    setEmailError(null); setEmailSuccess(null);
-                    if (!verificationCode) return setEmailError('Please enter the verification code');
-                    setEmailLoading(true);
-                    try {
-                      const result = await auth.confirmEmailChange(verificationCode);
-                      setVerificationStep('confirmed');
-                      setEmailSuccess(result.email);
-                      setNewEmail('');
-                      setVerificationCode('');
-                      // Force a re-render so session.email updates in the profile section
-                      window.dispatchEvent(new StorageEvent('storage', { key: 'dineconnect_session' }));
-                    } catch (err: any) {
-                      setEmailError(err.message || 'Failed to verify code');
-                    } finally {
-                      setEmailLoading(false);
-                    }
-                  }}
-                  disabled={emailLoading}
-                  className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
-                >
-                  {emailLoading ? 'Verifying...' : 'Confirm'}
-                </button>
-                <button
-                  onClick={() => { setVerificationStep('idle'); setVerificationCode(''); setEmailError(null); setEmailSuccess(null); }}
-                  className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                >
-                  Cancel
-                </button>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={async () => {
+                      setEmailError(null); setEmailSuccess(null); setEmailLoading(true);
+                      try {
+                        const result = await auth.confirmEmailChange('');
+                        setVerificationStep('confirmed');
+                        setEmailSuccess(result.email);
+                        setNewEmail('');
+                      } catch (err: any) {
+                        setEmailError(err.message || 'The email is not verified yet.');
+                      } finally {
+                        setEmailLoading(false);
+                      }
+                    }}
+                    disabled={emailLoading}
+                    className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
+                  >
+                    {emailLoading ? 'Checking...' : 'Refresh status'}
+                  </button>
+                  <button
+                    onClick={() => { setVerificationStep('idle'); setEmailError(null); setEmailSuccess(null); }}
+                    className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             )}
 

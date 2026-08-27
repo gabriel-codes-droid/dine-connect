@@ -25,11 +25,12 @@ export default function CustomerOverview() {
 
   const session = auth.getSession();
   // Safe string primitive extraction to prevent object reference loops
-  const username = session?.username; 
+  const uid = session?.uid;
+
 
   // 1. Manage real-time orders subscription
   useEffect(() => {
-    if (!username) {
+    if (!uid) {
       setLoading(false);
       return;
     }
@@ -38,7 +39,7 @@ export default function CustomerOverview() {
     setError(null);
 
     const unsubscribeOrders = orderService.subscribeToCustomerOrders(
-      username,
+      uid,
       (customerOrders) => {
         setOrders(customerOrders);
         setLoading(false);
@@ -48,13 +49,13 @@ export default function CustomerOverview() {
     return () => {
       if (unsubscribeOrders) unsubscribeOrders();
     };
-  }, [username]);
+  }, [uid]);
 
-  // 2. Fetch favorites count separately (only runs when username changes)
+  // 2. Fetch favorites count separately (only runs when uid changes)
   useEffect(() => {
-    if (!username) return;
+    if (!uid) return;
 
-        const customerId = username;
+        const customerId = uid;
     async function loadFavorites() {
       try {
         const favorites = await favoriteService.getCustomerFavorites(customerId);
@@ -65,7 +66,7 @@ export default function CustomerOverview() {
       }
     }
     loadFavorites();
-  }, [username]);
+  }, [uid]);
 
   // 🚀 CRITICAL FIX: Calculate KPIs instantly on the fly during render!
   // No setKpiData states needed, eliminating loop triggers.

@@ -90,7 +90,7 @@ export default function CreateReservationForm({ session }: CreateReservationForm
     try {
       await reservationService.createReservation(
         restaurantId,
-        session.username,
+        session.uid,
         partySize,
         date,
         time,

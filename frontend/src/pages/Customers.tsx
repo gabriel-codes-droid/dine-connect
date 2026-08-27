@@ -85,7 +85,7 @@ export default function Customers() {
           if (!cancelled) setOrders(all);
         } else if (session.role === 'restaurant-admin') {
           // Restaurant-admin: customers who ordered from THEIR restaurant only
-          const owned = await restaurantService.getRestaurantsByOwner(session.username);
+          const owned = await restaurantService.getRestaurantsByOwner(session.uid);
           if (!cancelled) setOwnedRestaurants(owned);
           if (owned.length === 0) {
             if (!cancelled) setOrders([]);
