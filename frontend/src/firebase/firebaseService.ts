@@ -491,3 +491,96 @@ export const reviewService = {
     });
   },
 };
+
+// User issue reports
+export type ReportCategory = 'restaurant' | 'order' | 'reservation' | 'account' | 'technical' | 'other';
+export type ReportStatus = 'open' | 'in_review' | 'resolved';
+
+export interface IssueReport {
+  id: string;
+  reporterId: string;
+  reporterName: string;
+  reporterEmail: string;
+  category: ReportCategory;
+  subject: string;
+  description: string;
+  restaurantId?: string;
+  restaurantName?: string;
+  status: ReportStatus;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+function reportDate(value: unknown): number {
+  if (!value) return 0;
+  if (typeof (value as { toMillis?: () => number }).toMillis === 'function') {
+    return (value as { toMillis: () => number }).toMillis();
+  }
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+}
+
+const REPORT_LAST_SEEN_KEY = 'dineconnect:reports:last-seen:';
+
+export const reportService = {
+  getLastSeenAt(reporterId: string): number {
+    try {
+      const stored = window.localStorage.getItem(`${REPORT_LAST_SEEN_KEY}${reporterId}`);
+      if (stored) return Number(stored) || 0;
+      const now = Date.now();
+      window.localStorage.setItem(`${REPORT_LAST_SEEN_KEY}${reporterId}`, String(now));
+      return now;
+    } catch {
+      return 0;
+    }
+  },
+
+  markSeen(reporterId: string): void {
+    try {
+      window.localStorage.setItem(`${REPORT_LAST_SEEN_KEY}${reporterId}`, String(Date.now()));
+    } catch {
+      // Local storage may be unavailable in private browsing; notifications still work for this session.
+    }
+  },
+
+  async createReport(input: Omit<IssueReport, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    if (!db) throw new Error('Firebase not configured');
+    const reportRef = await addDoc(collection(db, 'reports'), {
+      ...input,
+      status: 'open',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return reportRef.id;
+  },
+
+  subscribeToReports(reporterId: string | null, callback: (reports: IssueReport[]) => void) {
+    if (!db) {
+      callback([]);
+      return () => {};
+    }
+
+    const reportsRef = collection(db, 'reports');
+    const reportsQuery = reporterId
+      ? query(reportsRef, where('reporterId', '==', reporterId))
+      : query(reportsRef, orderBy('createdAt', 'desc'));
+
+    return onSnapshot(reportsQuery, (snapshot) => {
+      const reports = snapshot.docs
+        .map((report) => ({ id: report.id, ...report.data() } as IssueReport))
+        .sort((a, b) => reportDate(b.createdAt) - reportDate(a.createdAt));
+      callback(reports);
+    }, (error) => {
+      console.warn('[Firestore] reports subscription failed:', error);
+      callback([]);
+    });
+  },
+
+  async updateStatus(reportId: string, status: ReportStatus): Promise<void> {
+    if (!db) throw new Error('Firebase not configured');
+    await updateDoc(doc(db, 'reports', reportId), {
+      status,
+      updatedAt: serverTimestamp(),
+    });
+  },
+};

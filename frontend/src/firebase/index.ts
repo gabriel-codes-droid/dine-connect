@@ -6,8 +6,9 @@ export {
   menuService, 
   orderService, 
   favoriteService,
-  reviewService 
+  reviewService,
+  reportService
 } from './firebaseService';
 export { reservationService } from './reservationService';
-export type { Order, OrderItem, Review } from './firebaseService';
+export type { Order, OrderItem, Review, IssueReport, ReportCategory, ReportStatus } from './firebaseService';
 export type { Reservation } from './reservationService';

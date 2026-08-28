@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
   Loader2,
@@ -28,6 +28,7 @@ import {
 import { restaurantService } from '../firebase';
 import { useTheme } from '../context/ThemeContext';
 import RestaurantMap from '../components/map/RestaurantMap';
+import PublicAccountControls from '../components/layout/PublicAccountControls';
 
 const accentMap: Record<string, { ring: string; chip: string; glow: string }> = {
   amber: { ring: 'ring-amber-200 dark:ring-amber-800', chip: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800', glow: 'shadow-amber-100 dark:shadow-amber-900/20' },
@@ -124,6 +125,8 @@ function RestaurantCard({ restaurant, distance }: { restaurant: Restaurant; dist
 
 export default function Restaurants() {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+
   const [query, setQuery] = useState('');
   const [cuisine, setCuisine] = useState<'All' | Cuisine>('All');
   const [price, setPrice] = useState<'Any' | PriceRange>('Any');
@@ -261,13 +264,16 @@ export default function Restaurants() {
           >
             <ArrowLeft size={16} /> Back to Home
           </Link>
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <PublicAccountControls />
+          </div>
         </div>
       </div>
 
@@ -512,7 +518,7 @@ export default function Restaurants() {
                   userLocation={userLocation}
                   onRestaurantClick={(restaurant) => {
                     // Navigate to restaurant detail page
-                    window.location.href = `/restaurants/${restaurant.id}`;
+                    navigate(`/restaurants/${restaurant.id}`);
                   }}
                 />
               </div>

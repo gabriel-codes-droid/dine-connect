@@ -99,5 +99,15 @@ service cloud.firestore {
       allow create: if signedIn() && request.resource.data.authorId == request.auth.uid;
       allow update, delete: if isSuperAdmin() || (signedIn() && resource.data.authorId == request.auth.uid);
     }
+
+    match /reports/{reportId} {
+      allow read: if signedIn()
+        && (isSuperAdmin() || resource.data.reporterId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.status == 'open';
+      allow update: if isSuperAdmin();
+      allow delete: if isSuperAdmin();
+    }
   }
 }

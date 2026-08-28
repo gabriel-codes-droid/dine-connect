@@ -1,5 +1,6 @@
 import {
   confirmPasswordReset,
+  onAuthStateChanged,
   createUserWithEmailAndPassword,
   reload,
   sendPasswordResetEmail,
@@ -214,6 +215,27 @@ export const auth = {
     } catch {
       return null;
     }
+  },
+
+  subscribeToAuthState(callback: (session: Session | null) => void): () => void {
+    if (!firebaseAuth) {
+      callback(this.getSession());
+      return () => {};
+    }
+
+    return onAuthStateChanged(firebaseAuth, async (user) => {
+      if (!user) {
+        clearSession();
+        callback(null);
+        return;
+      }
+      try {
+        callback(await sessionFromFirebaseUser(user, this.getSession() || undefined));
+      } catch (error) {
+        console.warn('Unable to restore Firebase session:', error);
+        callback(this.getSession());
+      }
+    }, () => callback(this.getSession()));
   },
 
   async forgotPassword(email: string): Promise<void> {

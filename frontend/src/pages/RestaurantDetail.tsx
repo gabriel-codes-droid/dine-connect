@@ -29,6 +29,7 @@ import {
 import { auth } from '../services/auth';
 import { Timestamp } from 'firebase/firestore';
 import { useTheme } from '../context/ThemeContext';
+import PublicAccountControls from '../components/layout/PublicAccountControls';
 
 const AVATAR_COLORS = [
   'bg-rose-500', 'bg-amber-500', 'bg-emerald-500', 'bg-teal-500',
@@ -281,8 +282,13 @@ export default function RestaurantDetail() {
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
+                <div className="absolute top-20 right-6 z-10 rounded-xl bg-white/90 p-1 shadow-lg backdrop-blur dark:bg-slate-900/90">
+          <PublicAccountControls />
+        </div>
+
         <button
           onClick={handleToggleFavorite}
+
           disabled={favLoading}
           className="absolute top-6 right-20 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur hover:bg-white dark:hover:bg-slate-900 transition-colors shadow-lg disabled:opacity-50"
           aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}

@@ -14,6 +14,9 @@ import {
 } from 'lucide-react';
 import type { Restaurant } from '../data/restaurants';
 import { restaurantService } from '../firebase';
+import { auth } from '../services/auth';
+import type { UserRole } from '../types';
+
 import { useTheme } from '../context/ThemeContext';
 
 export default function Home() {
@@ -21,9 +24,13 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(() => auth.getSession());
+
+    useEffect(() => auth.subscribeToAuthState(setSession), []);
 
   useEffect(() => {
     let active = true;
+
     restaurantService
       .getAllRestaurants()
       .then((data) => {
@@ -41,6 +48,7 @@ export default function Home() {
   }, []);
 
   const featured = restaurants.filter((r) => r.featured);
+  const dashboardPath = (role: UserRole) => role === 'super-admin' ? '/admin' : role === 'restaurant-admin' ? '/restaurant' : '/customer';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
@@ -66,18 +74,37 @@ export default function Home() {
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <Link
-              to="/signup"
-              className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"
-            >
-              Sign up
-            </Link>
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
-            >
-              Sign in
-            </button>
+            {session ? (
+              <>
+                <Link
+                  to={dashboardPath(session.role)}
+                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => { auth.logout(); setSession(null); navigate('/'); }}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signup"
+                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"
+                >
+                  Sign up
+                </Link>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
+                >
+                  Sign in
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>

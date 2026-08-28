@@ -17,6 +17,8 @@ import type { UserRole } from '../../types';
 
 interface SidebarProps {
   userRole: UserRole;
+  unreadReports?: number;
+  onReportsOpened?: () => void;
 }
 
 const overviewPaths: Record<UserRole, string> = {
@@ -42,10 +44,14 @@ function SidebarContent({
   isOpen,
   userRole,
   onNavigate,
+  unreadReports = 0,
+  onReportsOpened,
 }: {
   isOpen: boolean;
   userRole: UserRole;
   onNavigate?: () => void;
+  unreadReports?: number;
+  onReportsOpened?: () => void;
 }) {
   const menuItems = getMenuItems(userRole);
   const filteredItems = menuItems.filter(
@@ -71,7 +77,10 @@ function SidebarContent({
               <NavLink
                 key={item.path}
                 to={item.path}
-                onClick={onNavigate}
+                onClick={() => {
+                  onNavigate?.();
+                  if (item.label === 'Reports') onReportsOpened?.();
+                }}
                 end={item.label === 'Overview'}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
@@ -82,7 +91,16 @@ function SidebarContent({
                 }
               >
                 <Icon size={20} className="flex-shrink-0" />
-                {(isOpen || onNavigate) && <span className="text-sm font-medium">{item.label}</span>}
+                {(isOpen || onNavigate) && (
+                  <span className="flex min-w-0 flex-1 items-center justify-between gap-2 text-sm font-medium">
+                    <span>{item.label}</span>
+                    {item.label === 'Reports' && unreadReports > 0 && (
+                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-[11px] font-bold leading-none text-white" aria-label={`${unreadReports} unread reports`}>
+                        {unreadReports > 99 ? '99+' : unreadReports}
+                      </span>
+                    )}
+                  </span>
+                )}
               </NavLink>
             );
           })}
@@ -102,7 +120,7 @@ function SidebarContent({
   );
 }
 
-export default function Sidebar({ userRole }: SidebarProps) {
+export default function Sidebar({ userRole, unreadReports = 0, onReportsOpened }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -122,7 +140,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
           isCollapsed ? 'w-20' : 'w-64'
         } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 h-screen sticky top-0 transition-all duration-300 hidden lg:flex flex-col`}
       >
-        <SidebarContent isOpen={!isCollapsed} userRole={userRole} />
+        <SidebarContent isOpen={!isCollapsed} userRole={userRole} unreadReports={unreadReports} onReportsOpened={onReportsOpened} />
 
         <div className="border-t border-gray-200 dark:border-slate-800 p-4">
           <button
@@ -158,6 +176,8 @@ export default function Sidebar({ userRole }: SidebarProps) {
         <SidebarContent
           isOpen
           userRole={userRole}
+          unreadReports={unreadReports}
+          onReportsOpened={onReportsOpened}
           onNavigate={() => setIsMobileOpen(false)}
         />
       </aside>
