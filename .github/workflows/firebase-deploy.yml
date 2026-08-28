@@ -1,0 +1,52 @@
+name: Deploy DineConnect to Firebase
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-production
+  cancel-in-progress: true
+
+env:
+  FIREBASE_PROJECT_ID: dineconnect-36bc7
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy Firebase services
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DINECONNECT_36BC7 }}'
+
+      - name: Set up Firebase CLI
+        run: npm install --global firebase-tools
+
+      - name: Deploy Hosting, Firestore, and Storage
+        run: firebase deploy --only hosting,firestore,storage --project "$FIREBASE_PROJECT_ID" --non-interactive
