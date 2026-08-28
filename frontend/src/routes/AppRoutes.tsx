@@ -74,16 +74,21 @@ function ProtectedRoute({
   return <>{children}</>;
 }
 
+// Public route that preserves authentication when navigating from protected areas
+function PublicRoute({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/restaurants" element={<Restaurants />} />
-      <Route path="/restaurants/:id" element={<RestaurantDetail />} />
+      <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+      <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+      <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+      <Route path="/restaurants" element={<PublicRoute><Restaurants /></PublicRoute>} />
+      <Route path="/restaurants/:id" element={<PublicRoute><RestaurantDetail /></PublicRoute>} />
 
       <Route
         path="/admin"

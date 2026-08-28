@@ -64,12 +64,12 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen bg-ivory text-gray-900 transition-colors dark:bg-dark-bg dark:text-gray-100">
-      <div className="flex min-h-screen min-w-0">
+    <div className="min-h-screen bg-ivory text-gray-900 transition-colors dark:bg-dark-bg dark:text-gray-100 overflow-hidden">
+      <div className="flex h-screen min-w-0">
         <Sidebar userRole={userRole} unreadReports={unreadReports} onReportsOpened={handleReportsOpened} />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <Navbar userName={userName} userRole={userRole} title={title} />
-          <main className="min-w-0 flex-1">
+          <main className="min-w-0 flex-1 overflow-y-auto">
             <div className="min-h-full p-4 pb-10 sm:p-6 sm:pb-12">{children}</div>
           </main>
         </div>

@@ -107,13 +107,15 @@ function SidebarContent({
         </div>
 
         {(isOpen || onNavigate) && (
-          <NavLink
-            to="/restaurants"
+          <a
+            href="/restaurants"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={onNavigate}
             className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-primary dark:text-[#D9855F] bg-[#F5E7DF]/70 dark:bg-[#392B25] hover:bg-[#F0DCD1] dark:hover:bg-[#4A342B] border border-[#E6C9B9] dark:border-[#6F493A]"
           >
             <ExternalLink size={12} /> Public restaurant site
-          </NavLink>
+          </a>
         )}
       </nav>
     </>
