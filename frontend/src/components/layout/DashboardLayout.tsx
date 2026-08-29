@@ -65,7 +65,7 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-ivory text-gray-900 transition-colors dark:bg-dark-bg dark:text-gray-100">
-      <div className="flex min-h-screen min-w-0 items-start">
+      <div className="flex min-h-screen min-w-0">
         <Sidebar userRole={userRole} unreadReports={unreadReports} onReportsOpened={handleReportsOpened} />
         <div className="flex min-w-0 flex-1 flex-col">
           <Navbar userName={userName} userRole={userRole} title={title} />

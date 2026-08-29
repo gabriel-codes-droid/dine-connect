@@ -107,15 +107,13 @@ function SidebarContent({
         </div>
 
         {(isOpen || onNavigate) && (
-          <a
-            href="/restaurants"
-            target="_blank"
-            rel="noopener noreferrer"
+          <NavLink
+            to="/restaurants"
             onClick={onNavigate}
             className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-primary dark:text-[#D9855F] bg-[#F5E7DF]/70 dark:bg-[#392B25] hover:bg-[#F0DCD1] dark:hover:bg-[#4A342B] border border-[#E6C9B9] dark:border-[#6F493A]"
           >
             <ExternalLink size={12} /> Public restaurant site
-          </a>
+          </NavLink>
         )}
       </nav>
     </>
@@ -140,7 +138,7 @@ export default function Sidebar({ userRole, unreadReports = 0, onReportsOpened }
       <aside
         className={`${
           isCollapsed ? 'w-20' : 'w-64'
-        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 min-h-screen sticky top-0 transition-all duration-300 hidden lg:flex flex-col`}
+        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 sticky top-0 h-screen self-start transition-all duration-300 hidden lg:flex flex-col`}
       >
         <SidebarContent isOpen={!isCollapsed} userRole={userRole} unreadReports={unreadReports} onReportsOpened={onReportsOpened} />
 
