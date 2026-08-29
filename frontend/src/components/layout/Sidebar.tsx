@@ -69,7 +69,7 @@ function SidebarContent({
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-8 overflow-y-auto">
+      <nav className="flex-1 px-4 py-8">
         <div className="space-y-1">
           {filteredItems.map((item) => {
             const Icon = item.icon;
@@ -140,7 +140,7 @@ export default function Sidebar({ userRole, unreadReports = 0, onReportsOpened }
       <aside
         className={`${
           isCollapsed ? 'w-20' : 'w-64'
-        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 h-screen sticky top-0 transition-all duration-300 hidden lg:flex flex-col`}
+        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 min-h-screen sticky top-0 transition-all duration-300 hidden lg:flex flex-col`}
       >
         <SidebarContent isOpen={!isCollapsed} userRole={userRole} unreadReports={unreadReports} onReportsOpened={onReportsOpened} />
 
