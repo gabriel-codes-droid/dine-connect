@@ -48,15 +48,9 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
 
-      - name: Set up Firebase CLI
-        run: npm install --global firebase-tools
-
-      - name: Verify Firebase CLI access
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
-        run: firebase projects:list --project "$FIREBASE_PROJECT_ID" --non-interactive
-
-      - name: Deploy Hosting, Firestore, and Storage
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
-        run: firebase deploy --only hosting,firestore,storage --project "$FIREBASE_PROJECT_ID" --non-interactive
+      - name: Deploy frontend to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DINECONNECT_36BC7 }}'
+          projectId: '${{ env.FIREBASE_PROJECT_ID }}'
+          channelId: live
