@@ -48,9 +48,5 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
 
-      - name: Deploy frontend to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DINECONNECT_36BC7 }}'
-          projectId: '${{ env.FIREBASE_PROJECT_ID }}'
-          channelId: live
+      - name: Deploy Firebase services
+        run: firebase deploy --only hosting,functions,firestore --project "$FIREBASE_PROJECT_ID" --non-interactive
