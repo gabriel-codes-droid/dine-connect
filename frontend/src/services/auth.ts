@@ -225,8 +225,20 @@ export const auth = {
 
     return onAuthStateChanged(firebaseAuth, async (user) => {
       if (!user) {
-        clearSession();
-        callback(null);
+        // Firebase reports no current user. This can be a genuine sign-out,
+        // but it can also fire this way on the very first auth check in a
+        // session (e.g. landing straight on a public page) before persisted
+        // auth state has settled. An explicit sign-out already clears the
+        // session directly via auth.logout() — so here we only clear it if
+        // there wasn't a locally persisted session to begin with. This
+        // avoids wiping a valid, already-persisted session on an ambiguous
+        // "no user yet" signal.
+        if (!this.getSession()) {
+          clearSession();
+          callback(null);
+        } else {
+          callback(this.getSession());
+        }
         return;
       }
       try {
