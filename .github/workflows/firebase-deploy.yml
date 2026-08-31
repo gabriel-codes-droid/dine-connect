@@ -48,5 +48,8 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
 
+      - name: Install Firebase CLI
+        run: npm install --global firebase-tools
+
       - name: Deploy Firebase services
         run: firebase deploy --only hosting,firestore --project "$FIREBASE_PROJECT_ID" --non-interactive
