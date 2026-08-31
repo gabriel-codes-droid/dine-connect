@@ -1,170 +1,189 @@
 # DineConnect
 
-Restaurant discovery, reservations, and order management. Three roles: **customer**, **restaurant-admin**, **super-admin**.
+A modern restaurant ordering and management platform built with React, TypeScript, and Firebase.
 
-- **Frontend** — React + Vite + TypeScript + Tailwind, deployed to **Firebase Hosting**.
-- **Backend API** — Node + Express + MongoDB, deployed to **Firebase Cloud Functions** (or any Node host).
-- **Data** — Firestore (restaurants, orders, reservations, favorites) for realtime updates; MongoDB (users, auth) for the auth flow.
+## 🎯 What It Does
 
-## Architecture
+DineConnect is a comprehensive restaurant management system that connects three key user types:
 
+- **Customers**: Browse restaurants, view menus, place orders, make reservations, track order status
+- **Restaurant Owners**: Manage menus, receive orders, track reservations, view analytics
+- **Super Admins**: Oversee platform operations, manage restaurants, view overall analytics
+
+## 🛠 Tech Stack
+
+### Frontend
+- **React 19** - UI framework
+- **TypeScript 6** - Type safety
+- **Vite 8** - Build tool and dev server
+- **React Router DOM 6** - Client-side routing
+- **Tailwind CSS** - Styling
+- **Leaflet + React Leaflet** - Maps and geolocation
+- **Recharts** - Analytics charts
+- **React Hot Toast** - Notifications
+
+### Backend Services
+- **Firebase Auth** - User authentication (sign up, login, password reset)
+- **Firestore** - Real-time database for orders, restaurants, reservations
+- **Firebase Hosting** - Static site hosting (free tier)
+- **MoMo Payment** - Payment integration (Vietnam)
+
+### Not Currently Used
+- **Express + MongoDB** - Moved to `legacy/` folder (not deployed)
+- **Firebase Storage** - Disabled (requires Blaze plan)
+- **Cloud Functions** - Not deployed (using client SDK only)
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Firebase account
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/gabriel-codes-droid/dine-connect.git
+   cd dineconnect
+   ```
+
+2. **Install frontend dependencies**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` with your Firebase configuration:
+   ```env
+   VITE_FIREBASE_API_KEY=your_firebase_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. **Run locally**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:5173`
+
+## 📦 Deployment
+
+### Quick Deploy
+```bash
+cd frontend
+npm run build
+cd ..
+firebase deploy --only hosting,firestore
 ```
-┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-│   Browser    │ ───▶ │  Firebase    │      │   MongoDB    │
-│  (React UI)  │      │  Hosting     │      │  (Users)     │
-│              │ ───▶ │  (static)    │      └──────────────┘
-│              │      └──────────────┘
-│              │ ────────────────────────────▶ ┌──────────────┐
-│              │      /api/* (Cloud Function)  │  Express     │
-│              │                               │  Backend     │
-└──────────────┘                               └──────┬───────┘
-       │                                             │
-       │  ───▶ Firestore (restaurants, orders,       │
-       │       reservations, favorites) directly     │
-       │       for realtime updates                 │
-       │                                             │
-       │                                       Resend (email)
-       ▼
-  Firestore SDK
-```
 
-## Project layout
+### Auto-Deploy
+GitHub Actions is configured for automatic deployment when pushing to the `main` branch. Requires the `FIREBASE_SERVICE_ACCOUNT_DINECONNECT_36BC7` secret to be configured in GitHub repository settings.
+
+### Live Site
+**https://dineconnect-36bc7.web.app**
+
+## 🔧 Firebase Configuration
+
+### Current Firebase Services
+- ✅ **Hosting** - Deployed and active
+- ✅ **Firestore** - Active with rules and indexes
+- ✅ **Authentication** - Configured and working
+- ❌ **Storage** - Disabled (requires Blaze plan)
+- ❌ **Cloud Functions** - Not deployed (using client SDK)
+
+### Free Tier Limits
+- **Hosting**: 10GB storage, 10GB/month bandwidth
+- **Firestore**: 1GB storage, 50K reads/day, 20K writes/day
+- **Authentication**: Free tier included
+
+## 📁 Project Structure
 
 ```
 dineconnect/
-├── backend/         # Node + Express API
-│   ├── routes/      # /api/auth, /api/users
-│   ├── models/      # Mongoose User model
-│   ├── services/    # email (Resend)
-│   └── server.js
-├── frontend/        # Vite + React app
-│   └── src/
-│       ├── pages/   # 15+ pages, role-aware
-│       ├── firebase/  # Firestore services
-│       └── services/  # auth, preferences
-├── scripts/
-│   └── seed-firestore.js   # seeds restaurants from local fixtures
-└── .gitignore
+├── frontend/           # React application
+│   ├── src/
+│   │   ├── components/  # UI components
+│   │   ├── pages/       # Page components
+│   │   ├── firebase/    # Firebase services
+│   │   ├── services/    # API services
+│   │   └── routes/      # Route configuration
+│   ├── public/          # Static assets
+│   └── dist/            # Build output
+├── legacy/             # Legacy Express backend (not used)
+│   └── backend/        # Old Express + MongoDB setup
+├── .firebase/          # Firebase configuration
+├── .github/            # GitHub Actions workflows
+└── firebase.json       # Firebase deployment config
 ```
 
-## Local dev
+## 🔐 Authentication
 
-```bash
-# Terminal 1 — backend
-cd backend
-npm install
-cp .env.example .env   # then edit .env with real values
-npm run dev            # http://localhost:5000
+The app uses Firebase Authentication with three user roles:
+- **customer** - Regular restaurant users
+- **restaurant-admin** - Restaurant owners/managers
+- **super-admin** - Platform administrators
 
-# Terminal 2 — frontend
-cd frontend
-npm install
-cp .env.example .env   # then edit .env with real Firebase config
-npm run dev            # http://localhost:5173
-```
+## 🍽️ Key Features
 
-You need:
-- **MongoDB** running locally (or update `MONGO_URI` in `backend/.env`).
-- **Firebase project** with Firestore + Storage enabled. Put the SDK config in `frontend/.env`.
+### For Customers
+- Browse restaurants with search and filters
+- View restaurant menus and details
+- Place orders with item customization
+- Make table reservations
+- Track order status in real-time
+- View order history and favorites
 
-## Seeding Firestore
+### For Restaurant Owners
+- Manage restaurant profile and menu
+- Receive and process orders
+- Manage reservations
+- View sales analytics and reports
+- Track restaurant performance
 
-The frontend falls back to local fixture data when Firestore is empty, but you'll want real data:
+### For Super Admins
+- Overview of all platform activity
+- Manage restaurant accounts
+- View platform-wide analytics
+- Monitor system performance
 
-```bash
-npm install firebase-admin
-# In Firebase Console → Project Settings → Service Accounts → Generate new private key.
-# Save the JSON as scripts/service-account.json (gitignored).
-node scripts/seed-firestore.js
-```
+## 🌍 Features Implemented
 
-Re-running is safe — it uses `set(..., { merge: true })`.
+✅ User authentication (Firebase Auth)
+✅ Restaurant browsing and search
+✅ Menu management (CRUD operations)
+✅ Order placement and tracking
+✅ Table reservations
+✅ Real-time updates (Firestore)
+✅ Role-based access control
+✅ Analytics and reporting
+✅ Geolocation and map view
+✅ Payment integration (MoMo)
+✅ Responsive design
+✅ Dark mode support
 
-## Deploying to Firebase
+## 🚧 Current Limitations
 
-### 1. Frontend → Firebase Hosting
+- **Profile Pictures**: Disabled (Firebase Storage requires Blaze plan)
+- **Image Uploads**: Not available (Storage not enabled)
+- **Express Backend**: Not deployed (using Firebase client SDK only)
 
-```bash
-cd frontend
-npm run build         # produces dist/
-firebase init hosting   # first time only
-firebase deploy --only hosting
-```
+## 📄 License
 
-### 2. Backend → Firebase Cloud Functions (or anywhere)
+This project is for demonstration purposes.
 
-Easiest: keep the existing `backend/` as-is and deploy to **Render / Railway / Fly.io / your own VPS**. The frontend is already set up to talk to `/api/*` via Vite's dev proxy and a same-origin rewrite in production.
+## 🤝 Contributing
 
-If you specifically want Cloud Functions:
+This is a portfolio project. Feel free to fork and experiment!
 
-```bash
-cd backend
-# rename server.js → index.js and wrap with `exports.api = functions.https.onRequest(app)`
-firebase init functions
-firebase deploy --only functions
-```
+## 📞 Support
 
-The frontend expects the API at `/api/*` (configured via `VITE_API_URL`).
-
-### 3. Firestore security rules
-
-Default to **test mode** during development, then lock down:
-
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Restaurants: public read, owner/admin write
-    match /restaurants/{id} {
-      allow read: if true;
-      allow write: if request.auth != null;  // tighten further for restaurant-admin ownership
-    }
-    // Orders: only the customer who placed it, or the restaurant, or a super-admin
-    match /orders/{id} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null;
-    }
-    // Favorites / reservations: owner only
-    match /favorites/{id} { allow read, write: if request.auth != null; }
-    match /reservations/{id} { allow read, write: if request.auth != null; }
-  }
-}
-```
-
-## Environment variables
-
-| Var                          | Where        | Purpose                          |
-| ---------------------------- | ------------ | -------------------------------- |
-| `PORT`                       | backend      | Express port (default 5000)      |
-| `MONGO_URI`                  | backend      | MongoDB connection               |
-| `JWT_SECRET`                 | backend      | Token signing key                |
-| `JWT_EXPIRES_IN`             | backend      | Token lifetime (default `7d`)    |
-| `FRONTEND_URL`               | backend      | Reset-link base URL              |
-| `RESEND_API_KEY`             | backend      | Email service                    |
-| `EMAIL_FROM`                 | backend      | Verified sender address          |
-| `VITE_API_URL`               | frontend     | Backend base URL (`/api`)        |
-| `VITE_FIREBASE_API_KEY`      | frontend     | Firebase SDK                     |
-| `VITE_FIREBASE_AUTH_DOMAIN`  | frontend     | Firebase SDK                     |
-| `VITE_FIREBASE_PROJECT_ID`   | frontend     | Firebase SDK                     |
-| `VITE_FIREBASE_STORAGE_BUCKET` | frontend    | Firebase SDK                     |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | frontend | Firebase SDK                |
-| `VITE_FIREBASE_APP_ID`       | frontend     | Firebase SDK                     |
-
-## Roles
-
-- **Customer** — sign up, browse restaurants, place orders, make reservations, save favorites, view own history.
-- **Restaurant admin** — own ONE restaurant (created on first login), manage menu, see incoming orders + reservations.
-- **Super admin** — see every restaurant, every order, every customer, platform-wide metrics.
-
-`super-admin` cannot be self-assigned on signup. Promote users via a one-off Mongo command:
-
-```js
-db.users.updateOne({ username: "yourname" }, { $set: { role: "super-admin" } })
-```
-
-## Scripts
-
-- `node scripts/seed-firestore.js` — push local restaurant fixtures to Firestore.
-- `node scripts/seed-firestore.js --dry-run` — preview without writing.
-- `node scripts/seed-firestore.js --out=restaurants.json` — dump parsed fixtures.
+For issues or questions, please open an issue on GitHub.

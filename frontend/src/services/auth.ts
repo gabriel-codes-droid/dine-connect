@@ -325,23 +325,9 @@ export const auth = {
   },
 
   async updateProfilePicture(dataUrl: string): Promise<void> {
-    const firebase = requireFirebaseAuth();
-    const currentUser = firebase.currentUser;
-    if (!currentUser) throw new Error('Please sign in again before updating your profile picture.');
-    if (!storage || !db) throw new Error('Firebase Storage is not configured. Enable Storage and check the Firebase web-app values.');
-
-    const response = await fetch(dataUrl);
-    const blob = await response.blob();
-    const pictureRef = ref(storage, `profile-images/${currentUser.uid}/profile.jpg`);
-    await uploadBytes(pictureRef, blob, { contentType: blob.type || 'image/jpeg' });
-    const url = await getDownloadURL(pictureRef);
-    await setDoc(doc(db, 'users', currentUser.uid), {
-      profilePicture: url,
-      updatedAt: serverTimestamp(),
-    }, { merge: true });
-
-    const session = auth.getSession();
-    if (session) persistSession({ ...session, profilePicture: url });
+    // Firebase Storage is not enabled for this project (requires Blaze plan)
+    // Profile picture upload is disabled for free tier deployment
+    throw new Error('Profile picture upload is currently disabled. Firebase Storage requires the Blaze plan (billing enabled). Please contact the administrator to enable this feature.');
   },
 
   async updatePassword(newPassword: string): Promise<void> {
