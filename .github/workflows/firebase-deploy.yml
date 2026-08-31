@@ -40,13 +40,9 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Install Firebase CLI
-        run: npm install --global firebase-tools
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
+      - name: Deploy frontend to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DINECONNECT_36BC7 }}
-
-      - name: Deploy Firebase services
-        run: firebase deploy --only hosting,firestore --project "$FIREBASE_PROJECT_ID" --non-interactive
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DINECONNECT_36BC7 }}'
+          projectId: '${{ env.FIREBASE_PROJECT_ID }}'
+          channelId: live
