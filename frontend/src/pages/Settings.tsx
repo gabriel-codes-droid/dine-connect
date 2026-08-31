@@ -55,6 +55,12 @@ export default function Settings() {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [emailSuccess, setEmailSuccess] = useState<string | null>(null);
 
+  // Password reset state
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
+
   // Profile picture state
   const [pictureUrl, setPictureUrl] = useState<string | null>(session?.profilePicture ?? null);
   const [pictureFile, setPictureFile] = useState<File | null>(null);
@@ -474,19 +480,83 @@ export default function Settings() {
             <div className="text-indigo-600 dark:text-indigo-400"><Key className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Security</h2>
           </div>
-          <div className="px-6 py-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-900 dark:text-gray-100">Password</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Reset your password via email</p>
+          <div className="px-6 py-5 space-y-4">
+            {/* Password Reset Section */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-gray-100">Password</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Reset your password via email</p>
+                </div>
+                <button
+                  onClick={() => setResetEmail(session?.email || '')}
+                  className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-medium"
+                >
+                  Reset Password
+                </button>
               </div>
-              <Link 
-                to="/forgot-password" 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
-              >
-                <Key className="h-4 w-4" />
-                Reset Password
-              </Link>
+
+              {resetEmail && (
+                <div className="bg-gray-50 dark:bg-slate-900 rounded-lg p-4 space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      disabled={resetLoading}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white disabled:opacity-50"
+                    />
+                  </div>
+
+                  {resetError && (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                      <p className="text-sm text-red-600 dark:text-red-300">{resetError}</p>
+                    </div>
+                  )}
+
+                  {resetSuccess && (
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                      <p className="text-sm text-green-600 dark:text-green-300">{resetSuccess}</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={async () => {
+                        setResetError(null);
+                        setResetSuccess(null);
+                        if (!resetEmail || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(resetEmail.trim())) {
+                          return setResetError('Please enter a valid email address');
+                        }
+                        setResetLoading(true);
+                        try {
+                          await auth.forgotPassword(resetEmail.trim());
+                          setResetSuccess('Password reset link sent to your email. Check your inbox and follow the instructions.');
+                          setResetEmail('');
+                        } catch (err: any) {
+                          setResetError(err.message || 'Failed to send reset link');
+                        } finally {
+                          setResetLoading(false);
+                        }
+                      }}
+                      disabled={resetLoading}
+                      className="flex-1 px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium disabled:opacity-50 transition-colors"
+                    >
+                      {resetLoading ? 'Sending...' : 'Send Reset Link'}
+                    </button>
+                    <button
+                      onClick={() => setResetEmail('')}
+                      disabled={resetLoading}
+                      className="px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 font-medium disabled:opacity-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
