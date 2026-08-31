@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, User, Shield, Sun, Moon, Heart, Star, Building2, ShoppingBag, Mail, Image as ImageIcon } from 'lucide-react';
+import { LogOut, User, Shield, Sun, Moon, Heart, Star, Building2, ShoppingBag, Mail, Image as ImageIcon, Key } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import DashboardPageHeader from '../components/layout/DashboardPageHeader';
 
@@ -9,7 +9,6 @@ import { useTheme } from '../context/ThemeContext';
 import { orderService, restaurantService, favoriteService } from '../firebase';
 import type { Restaurant } from '../data/restaurants';
 import type { UserRole } from '../types';
-import InstallPrompt from '../pwa/InstallPrompt';
 
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -143,7 +142,6 @@ export default function Settings() {
 
   return (
     <DashboardLayout userRole={role} userName={session.username} title="Settings">
-      <InstallPrompt />
       <div className="max-w-3xl mx-auto space-y-6">
         <DashboardPageHeader
           eyebrow="Account"
@@ -470,6 +468,28 @@ export default function Settings() {
             </div>
           </div>
         )}
+
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+            <div className="text-indigo-600 dark:text-indigo-400"><Key className="h-5 w-5" /></div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Security</h2>
+          </div>
+          <div className="px-6 py-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-gray-900 dark:text-gray-100">Password</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Reset your password via email</p>
+              </div>
+              <Link 
+                to="/forgot-password" 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
+              >
+                <Key className="h-4 w-4" />
+                Reset Password
+              </Link>
+            </div>
+          </div>
+        </div>
 
         {role === 'super-admin' && (
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">

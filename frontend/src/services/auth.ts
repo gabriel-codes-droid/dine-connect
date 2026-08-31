@@ -18,9 +18,8 @@ import {
   serverTimestamp,
   setDoc,
 } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import type { UserRole } from '../types';
-import { auth as firebaseAuth, db, storage } from '../firebase/config';
+import { auth as firebaseAuth, db } from '../firebase/config';
 
 const SESSION_KEY = 'dineconnect_session';
 const PENDING_EMAIL_KEY = 'dineconnect_pending_email';
@@ -324,7 +323,7 @@ export const auth = {
     return { email: refreshedEmail };
   },
 
-  async updateProfilePicture(dataUrl: string): Promise<void> {
+  async updateProfilePicture(_dataUrl: string): Promise<void> {
     // Firebase Storage is not enabled for this project (requires Blaze plan)
     // Profile picture upload is disabled for free tier deployment
     throw new Error('Profile picture upload is currently disabled. Firebase Storage requires the Blaze plan (billing enabled). Please contact the administrator to enable this feature.');
