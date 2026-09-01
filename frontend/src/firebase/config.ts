@@ -5,7 +5,14 @@ import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { getAuth, type Auth } from 'firebase/auth';
 
 const RAW_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
-const isPlaceholderKey = !RAW_API_KEY || RAW_API_KEY.startsWith('YOUR_') || RAW_API_KEY.includes('YOUR_PROJECT_ID');
+console.log('Firebase config loaded:', {
+  apiKey: RAW_API_KEY?.substring(0, 10) + '...',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  hasApiKey: !!RAW_API_KEY
+});
+
+const isPlaceholderKey = !RAW_API_KEY || RAW_API_KEY.startsWith('YOUR_') || RAW_API_KEY.includes('YOUR_PROJECT_ID') || RAW_API_KEY.length < 20;
 
 const firebaseConfig = {
   apiKey: RAW_API_KEY || "YOUR_API_KEY",
@@ -34,8 +41,9 @@ if (typeof window !== 'undefined') {
       db = getFirestore(app);
       storage = getStorage(app);
       auth = getAuth(app);
+      console.log('Firebase initialized successfully');
     } else {
-      console.debug('Firebase: placeholder config detected — Firestore disabled, using mock data');
+      console.warn('Firebase: placeholder config detected — Auth disabled, using mock data');
     }
   } catch (error) {
     console.error('Firebase initialization failed:', error);

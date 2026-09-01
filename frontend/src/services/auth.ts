@@ -37,6 +37,7 @@ const validRoles: UserRole[] = ['customer', 'restaurant-admin', 'super-admin'];
 
 function requireFirebaseAuth() {
   if (!firebaseAuth) {
+    console.error('Firebase Auth not available. Check config.ts and .env file.');
     throw new Error('Firebase Authentication is not configured. Add the Firebase web-app values to frontend/.env.');
   }
   return firebaseAuth;

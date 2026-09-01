@@ -1,9 +1,7 @@
 # DineConnect
 
-A modern restaurant ordering and management platform built with React, TypeScript, and Firebase.
-
 ## 🎯 What It Does
-
+wk
 DineConnect is a comprehensive restaurant management system that connects three key user types:
 
 - **Customers**: Browse restaurants, view menus, place orders, make reservations, track order status
