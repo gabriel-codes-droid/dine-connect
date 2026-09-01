@@ -5,12 +5,15 @@ import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { getAuth, type Auth } from 'firebase/auth';
 
 const RAW_API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
-console.log('Firebase config loaded:', {
-  apiKey: RAW_API_KEY?.substring(0, 10) + '...',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  hasApiKey: !!RAW_API_KEY
+console.log('=== Firebase Config Debug ===');
+console.log('RAW_API_KEY type:', typeof RAW_API_KEY);
+console.log('RAW_API_KEY value:', RAW_API_KEY);
+console.log('All env vars:', {
+  VITE_FIREBASE_API_KEY: import.meta.env.VITE_FIREBASE_API_KEY,
+  VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 });
+console.log('===========================');
 
 const isPlaceholderKey = !RAW_API_KEY || RAW_API_KEY.startsWith('YOUR_') || RAW_API_KEY.includes('YOUR_PROJECT_ID') || RAW_API_KEY.length < 20;
 
