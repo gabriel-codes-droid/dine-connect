@@ -157,6 +157,7 @@ export const restaurantService = {
     }
   },
 
+  
   // Delete restaurant
   async deleteRestaurant(id: string): Promise<void> {
     if (!db) throw new Error('Firebase not configured');
