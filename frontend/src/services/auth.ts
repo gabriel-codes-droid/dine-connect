@@ -258,6 +258,7 @@ export const auth = {
         handleCodeInApp: true,
       });
     } catch (error) {
+      console.error('Firebase Auth error:', error);
       throw new Error(firebaseErrorMessage(error), { cause: error });
     }
   },
