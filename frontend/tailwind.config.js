@@ -7,9 +7,9 @@ export default {
       colors: {
         // ── Pure orange brand ──────────────────────────────────────────
         primary: {
-          DEFAULT: '#EA580C',   // orange-600  — main brand accent
+          DEFAULT: '#D96815',   // toned orange — main brand accent
           light:   '#FDBA74',   // orange-300  — light accent / active tints
-          dark:    '#C2410C',   // orange-700  — hover / pressed
+          dark:    '#BF5B12',   // toned orange — hover / pressed
           50:      '#FFF7ED',   // orange-50   — subtle bg tint (light mode)
           100:     '#FFEDD5',   // orange-100
           200:     '#FED7AA',   // orange-200

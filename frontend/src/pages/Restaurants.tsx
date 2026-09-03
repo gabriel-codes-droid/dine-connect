@@ -278,7 +278,7 @@ export default function Restaurants() {
       </div>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-orange-300 via-orange-400 to-orange-500 text-gray-950">
+      <section className="relative overflow-hidden bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 text-gray-950">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-10 left-10 text-6xl sm:text-7xl md:text-8xl">🍝</div>
           <div className="absolute top-20 right-20 text-5xl sm:text-6xl md:text-7xl">🍣</div>
@@ -308,7 +308,7 @@ export default function Restaurants() {
                 className="w-full py-2.5 sm:py-3 bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none text-sm sm:text-base"
               />
             </div>
-            <button className="hidden sm:inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-md transition-colors text-sm">
+            <button className="hidden sm:inline-flex items-center gap-2 bg-orange-700 hover:bg-orange-800 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-md transition-colors text-sm">
               <Utensils size={16} /> Search
             </button>
           </div>

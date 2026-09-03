@@ -62,7 +62,7 @@ function SidebarContent({
     <>
       <div className={`h-14 px-5 flex items-center border-b border-gray-200 dark:border-[#2b2e33] ${!onNavigate ? '' : 'mt-12'}`}>
         <div className={`flex items-center gap-2 ${!isOpen && !onNavigate ? 'justify-center w-full' : ''}`}>
-          <div className="w-8 h-8 bg-orange-600 rounded-md flex items-center justify-center">
+          <div className="w-8 h-8 bg-orange-700 rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-sm">DC</span>
           </div>
           {(isOpen || onNavigate) && <span className="font-bold text-gray-900 dark:text-white">DineConnect</span>}
@@ -85,7 +85,7 @@ function SidebarContent({
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
                     isActive
-                      ? 'bg-orange-500 text-white border border-orange-500'
+                      ? 'bg-orange-700 text-white border border-orange-700'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#24272b] border border-transparent'
                   }`
                 }

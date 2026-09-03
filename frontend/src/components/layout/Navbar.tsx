@@ -99,7 +99,7 @@ export default function Navbar({
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="flex items-center gap-3 px-2 sm:px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#24272b] transition-colors"
           >
-            <div className="w-7 h-7 bg-orange-500 rounded-md flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 bg-orange-700 rounded-md flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-semibold">
                 {displayName.charAt(0).toUpperCase()}
               </span>
