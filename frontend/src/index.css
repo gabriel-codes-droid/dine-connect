@@ -18,8 +18,8 @@
 .dark {
   --text: #ffffff;
   --text-secondary: #b3b3b3;
-  --bg: #0b0c0d;
-  --bg-white: #17191c;
+  --bg: #000000;
+  --bg-white: #000000;
   --border: #2a2a2a;
   --primary: #d96815;
   --secondary: #e07a22;
@@ -70,7 +70,7 @@ code {
 .dark .bg-dark-surface,
 .dark .bg-dark-card,
 .dark .bg-white {
-  background-color: #17191c !important;
+  background-color: #000000 !important;
 }
 
 .dark .border-slate-800,
