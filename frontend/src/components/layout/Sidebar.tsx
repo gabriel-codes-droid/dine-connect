@@ -60,7 +60,7 @@ function SidebarContent({
 
   return (
     <>
-      <div className={`h-16 px-6 flex items-center border-b border-gray-200 dark:border-slate-800 ${!onNavigate ? '' : 'mt-12'}`}>
+      <div className={`h-14 px-5 flex items-center border-b border-gray-200 dark:border-[#2b2e33] ${!onNavigate ? '' : 'mt-12'}`}>
         <div className={`flex items-center gap-2 ${!isOpen && !onNavigate ? 'justify-center w-full' : ''}`}>
           <div className="w-8 h-8 bg-orange-600 rounded-md flex items-center justify-center">
             <span className="text-white font-bold text-sm">DC</span>
@@ -69,7 +69,7 @@ function SidebarContent({
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-8">
+      <nav className="flex-1 px-3 py-5">
         <div className="space-y-1">
           {filteredItems.map((item) => {
             const Icon = item.icon;
@@ -83,10 +83,10 @@ function SidebarContent({
                 }}
                 end={item.label === 'Overview'}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  `flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
                     isActive
-                      ? 'bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-200 border border-orange-200 dark:border-orange-800/50'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 border border-transparent'
+                      ? 'bg-orange-500 text-white border border-orange-500'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#24272b] border border-transparent'
                   }`
                 }
               >
@@ -110,7 +110,7 @@ function SidebarContent({
           <NavLink
             to="/restaurants"
             onClick={onNavigate}
-            className="mt-6 mx-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-orange-600 bg-orange-50 hover:bg-orange-100 border border-orange-200 dark:text-orange-400 dark:bg-orange-950/40 dark:hover:bg-orange-950/60 dark:border-orange-800/50"
+            className="mt-5 mx-1 flex items-center gap-2 px-3 py-2 rounded-md text-xs font-semibold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-[#24272b] hover:bg-orange-100 dark:hover:bg-[#2b2e33] border border-orange-200 dark:border-[#3a2a20]"
           >
             <ExternalLink size={12} /> Public restaurant site
           </NavLink>
@@ -137,12 +137,12 @@ export default function Sidebar({ userRole, unreadReports = 0, onReportsOpened }
 
       <aside
       className={`${
-        isCollapsed ? 'w-20' : 'w-64'
+        isCollapsed ? 'w-20' : 'w-56'
       } bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 sticky top-0 h-screen self-start transition-all duration-300 hidden lg:flex flex-col`}
       >
         <SidebarContent isOpen={!isCollapsed} userRole={userRole} unreadReports={unreadReports} onReportsOpened={onReportsOpened} />
 
-        <div className="border-t border-gray-200 dark:border-slate-800 p-4">
+        <div className="border-t border-gray-200 dark:border-[#2b2e33] p-3">
           <button
             type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
