@@ -3,29 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --text: #202522;
-  --text-secondary: #746F67;
-  --bg: #F7F5F0;
-  --bg-white: #FFFFFF;
-  --border: #E5E0D7;
-  --primary: #B85C38;
-  --secondary: #6F8068;
-  --success: #6F8068;
-  --warning: #D9A441;
-  --danger: #B94A48;
+  --text: #111111;
+  --text-secondary: #555555;
+  --bg: #ffffff;
+  --bg-white: #ffffff;
+  --border: #e5e5e5;
+  --primary: #f97316;
+  --secondary: #ea580c;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
 }
 
 .dark {
-  --text: #F5F1E8;
-  --text-secondary: #B8B6AA;
-  --bg: #1D211E;
-  --bg-white: #2B302C;
-  --border: #414941;
-  --primary: #D9855F;
-  --secondary: #9CAF93;
-  --success: #9CAF93;
-  --warning: #E5BE64;
-  --danger: #E58B86;
+  --text: #ffffff;
+  --text-secondary: #b3b3b3;
+  --bg: #000000;
+  --bg-white: #000000;
+  --border: #2a2a2a;
+  --primary: #f97316;
+  --secondary: #fb923c;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #f87171;
 }
 
 * {
@@ -56,36 +56,82 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Recharts dark mode overrides */
-.dark .recharts-default-tooltip {
-  background-color: #2B302C !important;
-  border: 1px solid #414941 !important;
-  color: #F5F1E8 !important;
+/* Monochrome surfaces: light mode is white, dark mode is black. */
+.dark .bg-slate-900,
+.dark .bg-slate-800,
+.dark .bg-slate-700,
+.dark .bg-gray-900,
+.dark .bg-gray-800,
+.dark .bg-gray-700,
+.dark .bg-dark-bg,
+.dark .bg-dark-surface,
+.dark .bg-dark-card,
+.dark .bg-white {
+  background-color: #000000 !important;
 }
 
-.dark .recharts-cartesian-axis-line,
-.dark .recharts-cartesian-axis-tick-line {
-  stroke: #414941 !important;
+.dark .border-slate-800,
+.dark .border-slate-700,
+.dark .border-gray-800,
+.dark .border-gray-700,
+.dark .border-gray-200 {
+  border-color: #2a2a2a !important;
 }
 
-.dark .recharts-cartesian-grid-horizontal line,
-.dark .recharts-cartesian-grid-vertical line {
-  stroke: #414941 !important;
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-slate-900,
+.dark .text-slate-800 {
+  color: #ffffff !important;
 }
 
-.dark .recharts-text {
-  fill: #B8B6AA !important;
+/* Orange is reserved for actions, focus, active navigation, and emphasis. */
+.action-primary {
+  background: var(--primary);
+  color: #ffffff;
 }
 
-.dark .recharts-legend-item-text {
-  color: #B8B6AA !important;
+.action-primary:hover {
+  background: var(--secondary);
 }
 
-/* Editorial hospitality rhythm */
+.action-secondary {
+  background: var(--bg-white);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.dark .action-secondary {
+  background: #000000;
+  color: #ffffff;
+  border-color: #2a2a2a;
+}
+
+.dark button[class*="bg-white"]:not([class*="dark:bg-"]),
+.dark a[class*="bg-white"]:not([class*="dark:bg-"]),
+.dark button[class*="bg-gray-"]:not([class*="dark:bg-"]),
+.dark a[class*="bg-gray-"]:not([class*="dark:bg-"]) {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+button[class*="bg-primary"],
+button[class*="bg-indigo-"],
+button[class*="bg-blue-"],
+button[class*="bg-orange-"],
+a[class*="bg-primary"],
+a[class*="bg-indigo-"],
+a[class*="bg-blue-"],
+a[class*="bg-orange-"] {
+  color: #ffffff;
+}
+
 h1,
 h2,
 h3 {
@@ -101,49 +147,25 @@ textarea {
 }
 
 ::selection {
-  background: #E6C9B9;
-  color: #202522;
-}
-
-/* Semantic action contract: use these classes on new controls. */
-.action-primary {
   background: var(--primary);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-.action-primary:hover {
-  background: #8F462E;
+.dark .recharts-default-tooltip {
+  background-color: #000000 !important;
+  border: 1px solid #2a2a2a !important;
+  color: #ffffff !important;
 }
 
-.action-secondary {
-  background: var(--bg-white);
-  color: var(--text);
-  border: 1px solid var(--border);
+.dark .recharts-cartesian-axis-line,
+.dark .recharts-cartesian-axis-tick-line,
+.dark .recharts-cartesian-grid-horizontal line,
+.dark .recharts-cartesian-grid-vertical line {
+  stroke: #2a2a2a !important;
 }
 
-.dark .action-secondary {
-  background: var(--bg-white);
-  color: var(--text);
-  border-color: var(--border);
-}
-
-/* Legacy action fallback: only controls with explicit button/link backgrounds are affected. */
-.dark button[class*="bg-white"]:not([class*="dark:bg-"]),
-.dark a[class*="bg-white"]:not([class*="dark:bg-"]),
-.dark button[class*="bg-gray-"]:not([class*="dark:bg-"]),
-.dark a[class*="bg-gray-"]:not([class*="dark:bg-"]) {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #FFFFFF;
-}
-
-button[class*="bg-primary"],
-button[class*="bg-indigo-"],
-button[class*="bg-blue-"],
-button[class*="bg-orange-"],
-a[class*="bg-primary"],
-a[class*="bg-indigo-"],
-a[class*="bg-blue-"],
-a[class*="bg-orange-"] {
-  color: #FFFFFF;
+.dark .recharts-text,
+.dark .recharts-legend-item-text {
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
