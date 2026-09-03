@@ -254,13 +254,13 @@ export default function Restaurants() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
+    <div className="min-h-screen bg-white dark:bg-[#0b0c0d] transition-colors">
       {/* Back button */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div className="bg-white dark:bg-[#17191c] border-b border-gray-200 dark:border-[#2b2e33]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link
             to="/"
-            className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
           >
             <ArrowLeft size={16} /> Back to Home
           </Link>
@@ -278,7 +278,7 @@ export default function Restaurants() {
       </div>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-orange-300 via-orange-400 to-orange-500 text-gray-950">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-10 left-10 text-6xl sm:text-7xl md:text-8xl">🍝</div>
           <div className="absolute top-20 right-20 text-5xl sm:text-6xl md:text-7xl">🍣</div>
@@ -289,15 +289,15 @@ export default function Restaurants() {
           <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 rounded-full bg-white/15 backdrop-blur text-xs sm:text-sm font-medium mb-4 sm:mb-6">
             <Sparkles size={14} /> Over 1,200 restaurants · 12 cuisines
           </span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4">
-            Discover your next <span className="italic text-amber-300">favourite</span> table
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-3 sm:mb-4 text-gray-950">
+            Discover your next <span className="italic text-white">favourite</span> table
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4">
+          <p className="text-base sm:text-lg md:text-xl text-gray-900/75 max-w-2xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4">
             From neighbourhood gems to special-occasion splurges — browse, book, and
             taste your way through the city.
           </p>
 
-          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-2 flex items-center gap-2 mx-4">
+          <div className="max-w-2xl mx-auto bg-white dark:bg-[#17191c] rounded-md shadow-xl p-2 flex items-center gap-2 mx-4">
             <div className="flex items-center gap-2 flex-1 px-3">
               <Search size={18} className="text-gray-400 dark:text-gray-500" />
               <input
@@ -308,7 +308,7 @@ export default function Restaurants() {
                 className="w-full py-2.5 sm:py-3 bg-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none text-sm sm:text-base"
               />
             </div>
-            <button className="hidden sm:inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl transition-colors text-sm">
+            <button className="hidden sm:inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-md transition-colors text-sm">
               <Utensils size={16} /> Search
             </button>
           </div>
