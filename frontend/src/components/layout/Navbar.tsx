@@ -60,7 +60,7 @@ export default function Navbar({
   }, [isProfileOpen]);
 
   return (
-    <nav className="h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between pl-20 pr-4 sm:px-6 sticky top-0 z-30 transition-colors">
+    <nav className="h-16 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 transition-colors">
       <h1 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h1>
 
       <div className="flex items-center gap-2 sm:gap-3">
@@ -68,14 +68,14 @@ export default function Navbar({
           type="button"
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
+          className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
         >
           {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
         <button
           type="button"
-          className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
+          className="relative p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
           aria-label="Notifications"
         >
           <Bell size={20} />
@@ -85,21 +85,21 @@ export default function Navbar({
         <button
           type="button"
           onClick={() => navigate('/settings')}
-          className="hidden sm:inline-flex p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-[#F5F0E8] dark:hover:bg-[#303831] rounded-lg transition-all duration-200"
+          className="hidden sm:inline-flex p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
           aria-label="Settings"
         >
           <SettingsIcon size={20} />
         </button>
 
-        <div className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-slate-700" />
+        <div className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-gray-700" />
 
         <div className="relative" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg hover:bg-[#F5F0E8] dark:hover:bg-[#303831] transition-all duration-200"
+            className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
           >
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-semibold">
                 {displayName.charAt(0).toUpperCase()}
               </span>
@@ -117,22 +117,22 @@ export default function Navbar({
           </button>
 
           {isProfileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-dark-card rounded-lg border border-border dark:border-dark-border shadow-card py-1 z-50">
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 shadow-card py-1 z-50">
               <button
                 type="button"
                 onClick={() => { setIsProfileOpen(false); navigate('/settings'); }}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] flex items-center gap-2"
+                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
               >
                 <User size={16} /> Profile
               </button>
               <button
                 type="button"
                 onClick={() => { setIsProfileOpen(false); navigate('/settings'); }}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#F5F0E8] dark:hover:bg-[#303831] flex items-center gap-2"
+                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
               >
                 <SettingsIcon size={16} /> Settings
               </button>
-              <hr className="my-1 border-gray-200 dark:border-slate-700" />
+              <hr className="my-1 border-gray-200 dark:border-gray-700" />
               <button
                 type="button"
                 onClick={handleLogout}

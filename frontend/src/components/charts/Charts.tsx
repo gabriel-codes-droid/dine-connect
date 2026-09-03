@@ -29,12 +29,12 @@ export function RevenueChart({ data, height = 280 }: RevenueChartProps) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <AreaChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
-        <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
-        <YAxis tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
+        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-gray-700" />
+        <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-gray-400" />
+        <YAxis tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-gray-400" />
         <Tooltip
           contentStyle={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'rgba(255,255,255,0.96)',
             border: '1px solid #E5E0D7',
             borderRadius: '6px',
             fontSize: '12px',
@@ -44,17 +44,17 @@ export function RevenueChart({ data, height = 280 }: RevenueChartProps) {
         <Area
           type="monotone"
           dataKey="revenue"
-          stroke="#B85C38"
+          stroke="#EA580C"
           strokeWidth={2.5}
-          fill="#B85C38"
+          fill="rgba(234,88,12,0.15)"
           name="Revenue"
         />
         <Area
           type="monotone"
           dataKey="commission"
-          stroke="#6F8068"
+          stroke="#D97706"
           strokeWidth={2.5}
-          fill="#6F8068"
+          fill="rgba(217,119,6,0.15)"
           name="Commission"
         />
       </AreaChart>

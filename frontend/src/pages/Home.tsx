@@ -56,15 +56,15 @@ export default function Home() {
       <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-600 to-amber-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">DC</span>
             </div>
             <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base">DineConnect</span>
           </Link>
           <div className="hidden sm:flex items-center gap-6 lg:gap-8 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <Link to="/restaurants" className="hover:text-indigo-600 dark:hover:text-indigo-400">Restaurants</Link>
-            <a href="#how" className="hover:text-indigo-600 dark:hover:text-indigo-400">How it works</a>
-            <a href="#owners" className="hover:text-indigo-600 dark:hover:text-indigo-400">For owners</a>
+            <Link to="/restaurants" className="hover:text-orange-600 dark:hover:text-orange-400">Restaurants</Link>
+            <a href="#how" className="hover:text-orange-600 dark:hover:text-orange-400">How it works</a>
+            <a href="#owners" className="hover:text-orange-600 dark:hover:text-orange-400">For owners</a>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -78,13 +78,13 @@ export default function Home() {
               <>
                 <Link
                   to={dashboardPath(session.role)}
-                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"
+                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 px-3 py-2"
                 >
                   Dashboard
                 </Link>
                 <button
                   onClick={() => { auth.logout(); setSession(null); navigate('/'); }}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
+                  className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
                 >
                   Sign out
                 </button>
@@ -93,13 +93,13 @@ export default function Home() {
               <>
                 <Link
                   to="/signup"
-                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-2"
+                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 px-3 py-2"
                 >
                   Sign up
                 </Link>
                 <button
                   onClick={() => navigate('/login')}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
+                  className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors"
                 >
                   Sign in
                 </button>
@@ -110,7 +110,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-orange-500 to-amber-600 text-white">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-10 left-10 text-8xl">🍝</div>
           <div className="absolute top-32 right-20 text-7xl">🍣</div>
@@ -125,7 +125,7 @@ export default function Home() {
             One platform.<br />
             <span className="italic text-amber-300">Every table.</span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4">
+          <p className="text-base sm:text-lg md:text-xl text-orange-50 max-w-2xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4">
             Discover restaurants, book in seconds, and run your venue with tools
             built for hospitality.
           </p>
@@ -157,7 +157,7 @@ export default function Home() {
           </div>
           <Link
             to="/restaurants"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 self-start sm:self-auto"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 self-start sm:self-auto"
           >
             See all <ArrowRight size={14} />
           </Link>
@@ -166,7 +166,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {loading ? (
             <div className="col-span-full flex items-center justify-center py-12">
-              <Loader2 className="animate-spin text-indigo-600" size={32} />
+              <Loader2 className="animate-spin text-orange-600" size={32} />
             </div>
           ) : featured.map((r) => (
             <Link
@@ -212,7 +212,7 @@ export default function Home() {
                   <span className="text-gray-300">·</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">{r.priceRange}</span>
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 mb-1">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 mb-1">
                   {r.name}
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{r.tagline}</p>
@@ -241,7 +241,7 @@ export default function Home() {
                 icon: MapPin,
                 title: 'Diners discover',
                 body: 'Browse restaurants, read real reviews, and book a table in seconds — no phone calls needed.',
-                color: 'from-indigo-500 to-purple-500',
+                color: 'from-orange-500 to-amber-500',
               },
               {
                 icon: ChefHat,
@@ -276,7 +276,7 @@ export default function Home() {
       {/* Owners CTA */}
       <section
         id="owners"
-        className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-900 text-white"
+        className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-orange-900 text-white"
       >
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 right-10 text-6xl sm:text-8xl md:text-9xl">👨‍🍳</div>
@@ -289,7 +289,7 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4">
               Run your restaurant like a pro
             </h2>
-            <p className="text-indigo-200 text-base sm:text-lg mb-6">
+            <p className="text-orange-200 text-base sm:text-lg mb-6">
               Reservations, orders, analytics, and customer reviews — all in one
               beautiful dashboard.
             </p>
@@ -304,7 +304,7 @@ export default function Home() {
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
                     <Calendar size={14} className="text-emerald-400" />
                   </div>
-                  <span className="text-indigo-100 text-sm sm:text-base">{feat}</span>
+                  <span className="text-orange-100 text-sm sm:text-base">{feat}</span>
                 </li>
               ))}
             </ul>
@@ -330,7 +330,7 @@ export default function Home() {
                 <div className="text-2xl sm:text-3xl font-extrabold text-amber-300 mb-1">
                   {stat.value}
                 </div>
-                <div className="text-xs sm:text-sm text-indigo-200">{stat.label}</div>
+                <div className="text-xs sm:text-sm text-orange-200">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -341,7 +341,7 @@ export default function Home() {
       <footer className="bg-gray-950 text-gray-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-600 to-amber-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">DC</span>
             </div>
             <span className="font-bold text-white text-sm sm:text-base">DineConnect</span>

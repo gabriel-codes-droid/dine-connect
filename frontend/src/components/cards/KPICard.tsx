@@ -11,26 +11,26 @@ interface KPICardProps {
 }
 
 const accentBg: Record<NonNullable<KPICardProps['accent']>, string> = {
-  indigo: 'bg-[#F5E7DF] dark:bg-[#392B25]',
-  green: 'bg-[#E8EFE4] dark:bg-[#29352C]',
-  purple: 'bg-[#EEEAE2] dark:bg-[#3A3932]',
-  amber: 'bg-[#F5EEDB] dark:bg-[#443A22]',
-  sky: 'bg-[#E8EFEF] dark:bg-[#293737]',
-  rose: 'bg-[#F3E5E1] dark:bg-[#402C2A]',
-  emerald: 'bg-[#E8EFE4] dark:bg-[#29352C]',
-  orange: 'bg-[#F5E7DF] dark:bg-[#392B25]',
+  indigo: 'bg-[#FFF7ED] dark:bg-[#2A1F14]',
+  green: 'bg-[#F0F7F0] dark:bg-[#1A2A1A]',
+  purple: 'bg-[#F5F0F5] dark:bg-[#251A25]',
+  amber: 'bg-[#FFF8F0] dark:bg-[#2A1F10]',
+  sky: 'bg-[#F0F5F7] dark:bg-[#14252A]',
+  rose: 'bg-[#FBF0F2] dark:bg-[#2A1820]',
+  emerald: 'bg-[#F0F7F0] dark:bg-[#1A2A1A]',
+  orange: 'bg-[#FFF5EC] dark:bg-[#2A1810]',
 };
 
 const legacyBgDarkMap: Record<string, string> = {
-  'bg-indigo-50': 'bg-[#392B25]',
-  'bg-green-50': 'bg-[#29352C]',
-  'bg-purple-50': 'bg-[#3A3932]',
-  'bg-amber-50': 'bg-[#443A22]',
-  'bg-sky-50': 'bg-[#293737]',
-  'bg-rose-50': 'bg-[#402C2A]',
-  'bg-emerald-50': 'bg-[#29352C]',
-  'bg-orange-50': 'bg-[#392B25]',
-  'bg-blue-50': 'bg-[#293737]',
+  'bg-indigo-50': 'bg-[#2A1F14]',
+  'bg-green-50': 'bg-[#1A2A1A]',
+  'bg-purple-50': 'bg-[#251A25]',
+  'bg-amber-50': 'bg-[#2A1F10]',
+  'bg-sky-50': 'bg-[#14252A]',
+  'bg-rose-50': 'bg-[#2A1820]',
+  'bg-emerald-50': 'bg-[#1A2A1A]',
+  'bg-orange-50': 'bg-[#2A1810]',
+  'bg-blue-50': 'bg-[#14252A]',
   'bg-gray-50': 'bg-[#353A35]',
 };
 
