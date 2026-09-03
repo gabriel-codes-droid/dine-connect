@@ -48,7 +48,7 @@ function RestaurantCard({ restaurant, distance }: { restaurant: Restaurant; dist
   return (
     <Link
       to={`/restaurants/${r.id}`}
-      className="group bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      className="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
       <div className="relative h-48 overflow-hidden">
         <img
@@ -101,14 +101,14 @@ function RestaurantCard({ restaurant, distance }: { restaurant: Restaurant; dist
           {r.features.slice(0, 2).map((f) => (
             <span
               key={f}
-              className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700"
+              className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700"
             >
               {f}
             </span>
           ))}
         </div>
 
-        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-slate-800">
+        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-1.5 min-w-0">
             <MapPin size={12} className="flex-shrink-0" />
             <span className="truncate">{r.city}</span>
@@ -254,9 +254,9 @@ export default function Restaurants() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
       {/* Back button */}
-      <div className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link
             to="/"
@@ -268,7 +268,7 @@ export default function Restaurants() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
@@ -297,7 +297,7 @@ export default function Restaurants() {
             taste your way through the city.
           </p>
 
-          <div className="max-w-2xl mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-2 flex items-center gap-2 mx-4">
+          <div className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-2 flex items-center gap-2 mx-4">
             <div className="flex items-center gap-2 flex-1 px-3">
               <Search size={18} className="text-gray-400 dark:text-gray-500" />
               <input
@@ -325,7 +325,7 @@ export default function Restaurants() {
                 <Link
                   key={r.id}
                   to={`/restaurants/${r.id}`}
-                  className={`group relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all border border-transparent dark:border-slate-800 ${accent.glow}`}
+                  className={`group relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all border border-transparent dark:border-gray-800 ${accent.glow}`}
                 >
                   <div className="flex items-stretch">
                     <div className="relative w-24 sm:w-32 flex-shrink-0 overflow-hidden">
@@ -383,7 +383,7 @@ export default function Restaurants() {
               className={`p-2 rounded-lg transition-colors ${
                 viewMode === 'grid'
                   ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
-                  : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
               title="Grid view"
             >
@@ -394,7 +394,7 @@ export default function Restaurants() {
               className={`p-2 rounded-lg transition-colors ${
                 viewMode === 'map'
                   ? 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300'
-                  : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
               title="Map view"
             >
@@ -410,7 +410,7 @@ export default function Restaurants() {
             <select
               value={cuisine}
               onChange={(e) => setCuisine(e.target.value as 'All' | Cuisine)}
-              className="px-3 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {cuisines.map((c) => (
                 <option key={c} value={c}>
@@ -422,7 +422,7 @@ export default function Restaurants() {
             <select
               value={price}
               onChange={(e) => setPrice(e.target.value as 'Any' | PriceRange)}
-              className="px-3 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {priceRanges.map((p) => (
                 <option key={p} value={p}>
@@ -431,7 +431,7 @@ export default function Restaurants() {
               ))}
             </select>
 
-            <label className="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800">
+            <label className="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
               <input
                 type="checkbox"
                 checked={showOpenOnly}
@@ -487,7 +487,7 @@ export default function Restaurants() {
               className={`px-3 py-1.5 sm:px-4 rounded-full text-xs sm:text-sm font-medium transition-all ${
                 cuisine === c
                   ? 'bg-gray-900 dark:bg-indigo-600 text-white shadow-md'
-                  : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-gray-400 dark:hover:border-slate-500'
+                  : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
               }`}
             >
               {c}
@@ -512,7 +512,7 @@ export default function Restaurants() {
                 ))}
               </div>
             ) : (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <RestaurantMap 
                   restaurants={filtered} 
                   userLocation={userLocation}

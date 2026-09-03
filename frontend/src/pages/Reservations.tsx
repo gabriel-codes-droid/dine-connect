@@ -47,7 +47,7 @@ function getStatusColor(status: Reservation['status']): string {
     case 'cancelled':
       return 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800';
     default:
-      return 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-slate-800 dark:text-gray-300 dark:border-slate-700';
+      return 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700';
   }
 }
 
@@ -321,7 +321,7 @@ export default function Reservations() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-slate-800">
+        <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-800">
           {(
             [
               ['upcoming', 'Upcoming'],
@@ -346,9 +346,9 @@ export default function Reservations() {
         {/* Reservation Cards */}
         <div className="space-y-4">
           {filteredReservations.length === 0 ? (
-            <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-12 text-center">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-12 text-center">
               <Calendar
-                className="mx-auto text-gray-300 dark:text-slate-600 mb-4"
+                className="mx-auto text-gray-300 dark:text-gray-600 mb-4"
                 size={48}
               />
               <p className="text-gray-500 dark:text-gray-400">
@@ -371,7 +371,7 @@ export default function Reservations() {
               return (
                 <div
                   key={res.id}
-                  className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-6 hover:shadow-sm transition-shadow"
+                  className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 hover:shadow-sm transition-shadow"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     {/* Left: details */}

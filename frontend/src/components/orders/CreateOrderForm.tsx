@@ -110,18 +110,18 @@ export default function CreateOrderForm({ session }: CreateOrderFormProps) {
   }
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-md border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-200 dark:border-slate-800 bg-[#F5E7DF] dark:bg-[#392B25]">
+    <section className="bg-white dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-primary dark:text-[#D9855F] mb-1">
+            <div className="flex items-center gap-2 text-primary dark:text-orange-500 mb-1">
               <ShoppingBag size={18} />
               <span className="text-xs font-semibold uppercase tracking-wider">Quick order</span>
             </div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">Build your next meal</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Choose a restaurant, customize your basket, and send the order.</p>
           </div>
-          <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-md bg-white/80 dark:bg-slate-900/70 text-primary dark:text-[#D9855F]">
+          <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-md bg-white/80 dark:bg-gray-900/70 text-primary dark:text-orange-500">
             <ShoppingBag size={22} />
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function CreateOrderForm({ session }: CreateOrderFormProps) {
             value={restaurantId}
             onChange={(event) => changeRestaurant(event.target.value)}
             disabled={loadingRestaurants || submitting}
-            className="w-full rounded-md border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
+            className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
           >
             {loadingRestaurants ? <option>Loading restaurants…</option> : restaurants.length === 0 ? <option value="">No restaurants available</option> : restaurants.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.cuisine}</option>)}
           </select>
@@ -157,34 +157,34 @@ export default function CreateOrderForm({ session }: CreateOrderFormProps) {
             {restaurant?.menu.map((item) => {
               const quantity = quantities[item.id] ?? 0;
               return (
-                <div key={item.id} className={`rounded-md border p-4 transition-colors ${quantity > 0 ? 'border-[#D7A890] bg-[#F8EEE9] dark:border-[#6F493A] dark:bg-[#392B25]' : 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/60'}`}>
+                <div key={item.id} className={`rounded-md border p-4 transition-colors ${quantity > 0 ? 'border-orange-200 bg-orange-50 dark:border-orange-800/50 dark:bg-orange-950/30' : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60'}`}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-900 dark:text-white truncate">{item.name}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{item.description}</p>
-                      <p className="text-sm font-bold text-primary dark:text-[#D9855F] mt-2">${item.price.toFixed(2)}</p>
+                      <p className="text-sm font-bold text-primary dark:text-orange-500 mt-2">${item.price.toFixed(2)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <button type="button" onClick={() => changeQuantity(item.id, -1)} disabled={quantity === 0 || submitting} aria-label={`Remove one ${item.name}`} className="w-8 h-8 rounded-md border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-200 inline-flex items-center justify-center disabled:opacity-40"><Minus size={14} /></button>
+                      <button type="button" onClick={() => changeQuantity(item.id, -1)} disabled={quantity === 0 || submitting} aria-label={`Remove one ${item.name}`} className="w-8 h-8 rounded-md border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-200 inline-flex items-center justify-center disabled:opacity-40"><Minus size={14} /></button>
                       <span className="w-5 text-center text-sm font-semibold text-gray-900 dark:text-white">{quantity}</span>
-                      <button type="button" onClick={() => changeQuantity(item.id, 1)} disabled={submitting} aria-label={`Add one ${item.name}`} className="w-8 h-8 rounded-md bg-primary text-white inline-flex items-center justify-center disabled:opacity-40"><Plus size={14} /></button>
+                      <button type="button" onClick={() => changeQuantity(item.id, 1)} disabled={submitting} aria-label={`Add one ${item.name}`} className="w-8 h-8 rounded-md bg-primary hover:bg-orange-700 text-white inline-flex items-center justify-center disabled:opacity-40"><Plus size={14} /></button>
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-          {restaurant && restaurant.menu.length === 0 && <p className="text-sm text-gray-500 dark:text-gray-400 rounded-md bg-gray-50 dark:bg-slate-800 p-4">This restaurant has not published a menu yet.</p>}
+          {restaurant && restaurant.menu.length === 0 && <p className="text-sm text-gray-500 dark:text-gray-400 rounded-md bg-gray-50 dark:bg-gray-800 p-4">This restaurant has not published a menu yet.</p>}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2" htmlFor="order-address"><MapPin size={15} className="inline mr-1" />Delivery address</label>
-            <input id="order-address" value={deliveryAddress} onChange={(event) => setDeliveryAddress(event.target.value)} disabled={submitting} placeholder="Street, building, apartment" className="w-full rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary" />
+            <input id="order-address" value={deliveryAddress} onChange={(event) => setDeliveryAddress(event.target.value)} disabled={submitting} placeholder="Street, building, apartment" className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2" htmlFor="order-notes">Special instructions <span className="font-normal text-gray-400">(optional)</span></label>
-            <input id="order-notes" value={specialInstructions} onChange={(event) => setSpecialInstructions(event.target.value)} disabled={submitting} placeholder="Allergies or delivery notes" className="w-full rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary" />
+            <input id="order-notes" value={specialInstructions} onChange={(event) => setSpecialInstructions(event.target.value)} disabled={submitting} placeholder="Allergies or delivery notes" className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>
         </div>
 

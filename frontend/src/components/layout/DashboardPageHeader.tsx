@@ -13,7 +13,7 @@ export default function DashboardPageHeader({ eyebrow, title, subtitle, icon: Ic
     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
       <div>
         {eyebrow && (
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary dark:text-[#D9855F] mb-2">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary dark:text-orange-400 mb-2">
             {Icon && <Icon size={15} />}
             {eyebrow}
           </div>

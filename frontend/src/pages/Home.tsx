@@ -51,9 +51,9 @@ export default function Home() {
   const dashboardPath = (role: UserRole) => role === 'super-admin' ? '/admin' : role === 'restaurant-admin' ? '/restaurant' : '/customer';
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
       {/* Nav */}
-      <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-200 dark:border-slate-800 sticky top-0 z-30">
+      <nav className="bg-white/80 dark:bg-gray-950/80 backdrop-blur border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-orange-600 to-amber-600 rounded-lg flex items-center justify-center">
@@ -70,7 +70,7 @@ export default function Home() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
@@ -172,7 +172,7 @@ export default function Home() {
             <Link
               key={r.id}
               to={`/restaurants/${r.id}`}
-              className="group bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all"
+              className="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all"
             >
               <div className="relative h-40 sm:h-48 overflow-hidden">
                 <img
@@ -226,7 +226,7 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section id="how" className="bg-white dark:bg-slate-900 border-y border-gray-200 dark:border-slate-800 transition-colors">
+      <section id="how" className="bg-white dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
@@ -258,7 +258,7 @@ export default function Home() {
             ].map(({ icon: Icon, title, body, color }) => (
               <div
                 key={title}
-                className="bg-slate-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-2xl p-5 sm:p-7 hover:shadow-lg transition-shadow"
+                className="bg-gray-50 dark:bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 sm:p-7 hover:shadow-lg transition-shadow"
               >
                 <div
                   className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 shadow-lg`}

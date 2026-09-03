@@ -229,7 +229,7 @@ function CustomerAnalytics({ uid }: { uid: string }) {
       </div>
 
       {/* Timeline chart */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Order timeline</h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Orders placed in the last 30 days
@@ -320,7 +320,7 @@ function RestaurantOwnerAnalytics({ ownerId }: RestaurantOwnerAnalyticsProps) {
   // If no restaurant is selected yet (edge case: loading finished but activeRestaurantId still null)
   if (!activeRestaurantId) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-8 text-center">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-8 text-center">
         <Building2 className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={40} />
         <p className="text-gray-500 dark:text-gray-400">No restaurant found for this account.</p>
       </div>
@@ -369,7 +369,7 @@ function RestaurantOwnerAnalytics({ ownerId }: RestaurantOwnerAnalyticsProps) {
               className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
                 activeRestaurantId === r.id
                   ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300'
-                  : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                  : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
               }`}
             >
               {r.name}
@@ -407,8 +407,8 @@ function RestaurantOwnerAnalytics({ ownerId }: RestaurantOwnerAnalyticsProps) {
       </div>
 
       {/* Top items table */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-800">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Top menu items</h3>
         </div>
         {topItems.length === 0 ? (
@@ -420,14 +420,14 @@ function RestaurantOwnerAnalytics({ ownerId }: RestaurantOwnerAnalyticsProps) {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
+                <tr className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Item</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Qty Sold</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-slate-800">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                 {topItems.map((item) => (
-                  <tr key={item.name} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <tr key={item.name} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.name}</td>
                     <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{item.quantity}</td>
                   </tr>
@@ -439,7 +439,7 @@ function RestaurantOwnerAnalytics({ ownerId }: RestaurantOwnerAnalyticsProps) {
       </div>
 
       {/* Timeline chart */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Order timeline</h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Orders in the last 30 days
@@ -612,8 +612,8 @@ function SuperAdminAnalytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Top restaurants table */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-800">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Top restaurants by revenue</h3>
           </div>
           {topRestaurants.length === 0 ? (
@@ -625,16 +625,16 @@ function SuperAdminAnalytics() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
+                  <tr className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Restaurant</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Orders</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Revenue</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rating</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-slate-800">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {topRestaurants.map(r => (
-                    <tr key={r.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <tr key={r.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                       <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{r.name}</td>
                       <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{r.orders}</td>
                       <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">${r.revenue.toFixed(0)}</td>
@@ -657,7 +657,7 @@ function SuperAdminAnalytics() {
         </div>
 
         {/* Timeline chart */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Order timeline</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
             Orders across all restaurants (last 30 days)

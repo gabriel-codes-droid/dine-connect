@@ -107,15 +107,15 @@ export default function CreateReservationForm({ session }: CreateReservationForm
   }
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-md border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-200 dark:border-slate-800 bg-[#E8EFE4] dark:bg-[#29352C]">
+    <section className="bg-white dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-[#E8EFE4] dark:bg-[#29352C]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-secondary dark:text-[#9CAF93] mb-1"><Calendar size={18} /><span className="text-xs font-semibold uppercase tracking-wider">Plan ahead</span></div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">Reserve your table</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Choose the restaurant, date, time, and party size in one place.</p>
           </div>
-          <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-md bg-white/80 dark:bg-slate-900/70 text-secondary dark:text-[#9CAF93]"><Calendar size={22} /></div>
+          <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-md bg-white/80 dark:bg-gray-900/70 text-secondary dark:text-[#9CAF93]"><Calendar size={22} /></div>
         </div>
       </div>
 
@@ -124,7 +124,7 @@ export default function CreateReservationForm({ session }: CreateReservationForm
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2" htmlFor="reservation-restaurant">Restaurant</label>
-          <select id="reservation-restaurant" value={restaurantId} onChange={(event) => changeRestaurant(event.target.value)} disabled={loadingRestaurants || submitting} className="w-full rounded-md border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-60">
+          <select id="reservation-restaurant" value={restaurantId} onChange={(event) => changeRestaurant(event.target.value)} disabled={loadingRestaurants || submitting} className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-60">
             {loadingRestaurants ? <option>Loading restaurants…</option> : restaurants.length === 0 ? <option value="">No restaurants available</option> : restaurants.map((item) => <option key={item.id} value={item.id}>{item.name} · {item.cuisine}</option>)}
           </select>
           {restaurant && <p className="text-xs text-gray-500 dark:text-gray-400 mt-2"><MapPin size={13} className="inline mr-1" />{restaurant.address}{restaurant.city ? `, ${restaurant.city}` : ''}</p>}
@@ -133,15 +133,15 @@ export default function CreateReservationForm({ session }: CreateReservationForm
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2" htmlFor="reservation-date"><Calendar size={15} className="inline mr-1" />Date</label>
-            <input id="reservation-date" type="date" min={todayISO()} value={date} onChange={(event) => setDate(event.target.value)} disabled={submitting} className="w-full rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-secondary" />
+            <input id="reservation-date" type="date" min={todayISO()} value={date} onChange={(event) => setDate(event.target.value)} disabled={submitting} className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-secondary" />
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2" htmlFor="reservation-time"><Clock size={15} className="inline mr-1" />Time</label>
-            <select id="reservation-time" value={time} onChange={(event) => setTime(event.target.value)} disabled={submitting} className="w-full rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-secondary">{timeSlots.map((slot) => <option key={slot} value={slot}>{slot}</option>)}</select>
+            <select id="reservation-time" value={time} onChange={(event) => setTime(event.target.value)} disabled={submitting} className="w-full rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-secondary">{timeSlots.map((slot) => <option key={slot} value={slot}>{slot}</option>)}</select>
           </div>
           <div>
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2"><Users size={15} className="inline mr-1" />Guests</label>
-            <div className="flex items-center rounded-md border border-gray-200 dark:border-slate-700 overflow-hidden bg-white dark:bg-slate-800"><button type="button" onClick={() => setPartySize((current) => Math.max(1, current - 1))} disabled={submitting || partySize <= 1} className="px-4 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-40">−</button><span className="flex-1 text-center font-semibold text-gray-900 dark:text-white">{partySize}</span><button type="button" onClick={() => setPartySize((current) => Math.min(20, current + 1))} disabled={submitting || partySize >= 20} className="px-4 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-40">+</button></div>
+            <div className="flex items-center rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800"><button type="button" onClick={() => setPartySize((current) => Math.max(1, current - 1))} disabled={submitting || partySize <= 1} className="px-4 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40">−</button><span className="flex-1 text-center font-semibold text-gray-900 dark:text-white">{partySize}</span><button type="button" onClick={() => setPartySize((current) => Math.min(20, current + 1))} disabled={submitting || partySize >= 20} className="px-4 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40">+</button></div>
           </div>
         </div>
 

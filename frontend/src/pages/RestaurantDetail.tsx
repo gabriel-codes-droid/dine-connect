@@ -243,7 +243,7 @@ export default function RestaurantDetail() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-slate-950">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
         <Loader2 className="animate-spin text-indigo-600" size={32} />
       </div>
     );
@@ -257,7 +257,7 @@ export default function RestaurantDetail() {
   const openNow = isOpenNow(r.hours);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
       {/* Hero */}
       <section className="relative h-[420px] overflow-hidden">
         <img
@@ -269,7 +269,7 @@ export default function RestaurantDetail() {
 
         <Link
           to="/restaurants"
-          className="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur text-gray-900 dark:text-white font-medium text-sm hover:bg-white dark:hover:bg-slate-900 transition-colors shadow-lg z-10"
+          className="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur text-gray-900 dark:text-white font-medium text-sm hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-lg z-10"
         >
           <ArrowLeft size={16} /> All restaurants
         </Link>
@@ -277,12 +277,12 @@ export default function RestaurantDetail() {
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="absolute top-6 right-6 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur text-gray-900 dark:text-white hover:bg-white dark:hover:bg-slate-900 transition-colors shadow-lg z-10"
+          className="absolute top-6 right-6 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur text-gray-900 dark:text-white hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-lg z-10"
         >
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
-                <div className="absolute top-20 right-6 z-10 rounded-xl bg-white/90 p-1 shadow-lg backdrop-blur dark:bg-slate-900/90">
+                <div className="absolute top-20 right-6 z-10 rounded-xl bg-white/90 p-1 shadow-lg backdrop-blur dark:bg-gray-900/90">
           <PublicAccountControls />
         </div>
 
@@ -290,7 +290,7 @@ export default function RestaurantDetail() {
           onClick={handleToggleFavorite}
 
           disabled={favLoading}
-          className="absolute top-6 right-20 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur hover:bg-white dark:hover:bg-slate-900 transition-colors shadow-lg disabled:opacity-50"
+          className="absolute top-6 right-20 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-lg disabled:opacity-50"
           aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
           title={isFav ? 'Remove from favorites' : 'Add to favorites'}
         >
@@ -301,7 +301,7 @@ export default function RestaurantDetail() {
         </button>
         <button
           onClick={handleShare}
-          className="absolute top-6 right-36 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-900/90 backdrop-blur text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-slate-900 transition-colors shadow-lg"
+          className="absolute top-6 right-36 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-lg"
           aria-label="Share this restaurant"
           title="Share"
         >
@@ -343,7 +343,7 @@ export default function RestaurantDetail() {
       </section>
 
       {/* Quick stats bar */}
-      <section className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-20 shadow-sm transition-colors">
+      <section className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-20 shadow-sm transition-colors">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-6 text-sm">
             <div className="flex items-center gap-2">
@@ -390,7 +390,7 @@ export default function RestaurantDetail() {
           {r.galleryImages && r.galleryImages.length > 0 && (
             <section>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Gallery</h2>
-              <div className="rounded-2xl overflow-hidden mb-3 h-80 bg-gray-100 dark:bg-slate-800 shadow-lg">
+              <div className="rounded-2xl overflow-hidden mb-3 h-80 bg-gray-100 dark:bg-gray-800 shadow-lg">
                 <img
                   src={r.galleryImages[activeImage]}
                   alt={`${r.name} gallery ${activeImage + 1}`}
@@ -403,7 +403,7 @@ export default function RestaurantDetail() {
                     <button
                       key={i}
                       onClick={() => setActiveImage(i)}
-                      className={`h-24 rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800 transition-all ${
+                      className={`h-24 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 transition-all ${
                         activeImage === i
                           ? 'ring-4 ring-indigo-500 scale-95'
                           : 'hover:scale-95 opacity-80 hover:opacity-100'
@@ -430,7 +430,7 @@ export default function RestaurantDetail() {
               </p>
             ) : (
               <>
-                <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 dark:border-slate-800">
+                <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 dark:border-gray-800">
                   {menuCategories
                     .filter((cat) => r.menu.some((m) => m.category === cat))
                     .map((cat) => (
@@ -451,11 +451,11 @@ export default function RestaurantDetail() {
                   {filteredMenu.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl p-3 hover:shadow-md transition-shadow"
+                      className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center gap-4">
                         {item.image ? (
-                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-slate-800">
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
                             <img
                               src={item.image}
                               alt={item.name}
@@ -464,7 +464,7 @@ export default function RestaurantDetail() {
                             />
                           </div>
                         ) : (
-                          <div className="w-20 h-20 rounded-lg flex-shrink-0 bg-gray-100 dark:bg-slate-800" />
+                          <div className="w-20 h-20 rounded-lg flex-shrink-0 bg-gray-100 dark:bg-gray-800" />
                         )}
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-gray-900 dark:text-white mb-0.5">{item.name}</h3>
@@ -518,7 +518,7 @@ export default function RestaurantDetail() {
                         className={
                           s <= Math.round(r.rating || 0)
                             ? 'fill-amber-400 text-amber-400'
-                            : 'text-gray-300 dark:text-slate-600'
+                            : 'text-gray-300 dark:text-gray-600'
                         }
                       />
                     ))}
@@ -536,7 +536,7 @@ export default function RestaurantDetail() {
                         <div key={stars} className="flex items-center gap-2 text-xs">
                           <span className="w-4 text-gray-600 dark:text-gray-300 font-medium">{stars}</span>
                           <Star size={12} className="fill-amber-400 text-amber-400" />
-                          <div className="flex-1 h-2 bg-white/60 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div className="flex-1 h-2 bg-white/60 dark:bg-gray-800 rounded-full overflow-hidden">
                             <div className="h-full bg-amber-400" style={{ width: `${pct}%` }} />
                           </div>
                           <span className="w-10 text-right text-gray-600 dark:text-gray-300">{pct}%</span>
@@ -561,7 +561,7 @@ export default function RestaurantDetail() {
                 reviews.map((review) => (
                   <div
                     key={review.id}
-                    className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl p-5"
+                    className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5"
                   >
                     <div className="flex items-start gap-3">
                       <div
@@ -582,7 +582,7 @@ export default function RestaurantDetail() {
                               className={
                                 s <= review.rating
                                   ? 'fill-amber-400 text-amber-400'
-                                  : 'text-gray-300 dark:text-slate-600'
+                                  : 'text-gray-300 dark:text-gray-600'
                               }
                             />
                           ))}
@@ -602,7 +602,7 @@ export default function RestaurantDetail() {
         {/* Right rail — booking */}
         <aside className="lg:col-span-1">
           <div className="sticky top-24 space-y-4">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-lg p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg p-6">
               {reserved ? (
                 <div className="text-center py-4">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
@@ -647,7 +647,7 @@ export default function RestaurantDetail() {
                         value={date}
                         min={todayISO()}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                       />
                     </div>
 
@@ -659,7 +659,7 @@ export default function RestaurantDetail() {
                         <select
                           value={time}
                           onChange={(e) => setTime(e.target.value)}
-                          className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                          className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                         >
                           {timeSlots.map((t) => (
                             <option key={t} value={t}>{t}</option>
@@ -670,10 +670,10 @@ export default function RestaurantDetail() {
                         <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wide">
                           Guests
                         </label>
-                        <div className="flex items-center border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                        <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                           <button
                             onClick={() => setPartySize(Math.max(1, partySize - 1))}
-                            className="px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-600 dark:text-gray-300"
+                            className="px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
                             type="button"
                             aria-label="Decrease party size"
                           >
@@ -685,7 +685,7 @@ export default function RestaurantDetail() {
                           </div>
                           <button
                             onClick={() => setPartySize(Math.min(Math.max(r.capacity, 1), partySize + 1))}
-                            className="px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-600 dark:text-gray-300"
+                            className="px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
                             type="button"
                             aria-label="Increase party size"
                           >
@@ -740,7 +740,7 @@ export default function RestaurantDetail() {
               )}
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
               <h4 className="font-bold text-gray-900 dark:text-white mb-3">Quick info</h4>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -767,7 +767,7 @@ export default function RestaurantDetail() {
 
       {showReviewForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Write a review</h3>
               <button
@@ -782,7 +782,7 @@ export default function RestaurantDetail() {
               <input
                 value={formAuthor}
                 onChange={(e) => setFormAuthor(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white text-sm"
+                className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg text-gray-900 dark:text-white text-sm"
                 placeholder="Your name"
                 maxLength={80}
               />
@@ -797,7 +797,7 @@ export default function RestaurantDetail() {
                   >
                     <Star
                       size={20}
-                      className={s <= formRating ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-slate-600'}
+                      className={s <= formRating ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-gray-600'}
                     />
                   </button>
                 ))}
@@ -806,7 +806,7 @@ export default function RestaurantDetail() {
             <textarea
               value={formComment}
               onChange={(e) => setFormComment(e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 rounded-lg text-gray-900 dark:text-white text-sm resize-none"
+              className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 rounded-lg text-gray-900 dark:text-white text-sm resize-none"
               placeholder="What did you think?"
               rows={4}
               maxLength={1000}
@@ -842,7 +842,7 @@ export default function RestaurantDetail() {
               </button>
               <button
                 onClick={() => setShowReviewForm(false)}
-                className="flex-1 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-semibold py-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+                className="flex-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold py-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               >
                 Cancel
               </button>

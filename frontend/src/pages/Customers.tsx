@@ -191,8 +191,8 @@ export default function Customers() {
         </div>
 
         {rows.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-12 text-center">
-            <Users className="mx-auto text-gray-300 dark:text-slate-600 mb-4" size={48} />
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-12 text-center">
+            <Users className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
             <p className="text-gray-500 dark:text-gray-400">
               {session.role === 'super-admin'
                 ? 'No customers yet — they show up here after placing their first order.'
@@ -200,8 +200,8 @@ export default function Customers() {
             </p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {session.role === 'super-admin' ? 'All Customers' : 'Your Customers'}
               </h3>
@@ -212,7 +212,7 @@ export default function Customers() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-800">
+                  <tr className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
                     <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Orders</th>
@@ -220,9 +220,9 @@ export default function Customers() {
                     <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last order</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-slate-800">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {rows.map((row) => (
-                    <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold">

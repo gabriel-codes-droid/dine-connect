@@ -156,8 +156,8 @@ export default function Settings() {
           icon={User}
         />
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><User className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Profile</h2>
           </div>
@@ -171,7 +171,7 @@ export default function Settings() {
                 <p className="text-sm text-gray-500 dark:text-gray-400">{session.email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-slate-900 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg px-3 py-2">
               <Shield className="h-4 w-4 text-indigo-500" />
               <span>Role:</span>
               <span className="font-medium text-indigo-600 dark:text-indigo-400 capitalize">{session.role}</span>
@@ -179,8 +179,8 @@ export default function Settings() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><Sun className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Appearance</h2>
           </div>
@@ -196,7 +196,7 @@ export default function Settings() {
               </div>
               <button
                 onClick={toggleTheme}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
               >
                 {theme === 'dark' ? (
                   <><Sun className="h-4 w-4" />Light</>
@@ -209,8 +209,8 @@ export default function Settings() {
         </div>
 
         {/* ── Email ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><Mail className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Email</h2>
           </div>
@@ -238,7 +238,7 @@ export default function Settings() {
                   value={newEmail}
                   onChange={(e) => { setNewEmail(e.target.value); setEmailError(null); setEmailSuccess(null); }}
                   disabled={emailLoading}
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white disabled:opacity-50"
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white disabled:opacity-50"
                 />
                 <button
                   onClick={async () => {
@@ -311,8 +311,8 @@ export default function Settings() {
         </div>
 
         {/* ── Profile Picture ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><ImageIcon className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Profile Picture</h2>
           </div>
@@ -322,7 +322,7 @@ export default function Settings() {
                 <img
                   src={pictureUrl}
                   alt="Profile"
-                  className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-slate-600"
+                  className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
                   onError={(e) => { (e.target as HTMLImageElement).src = ''; setPictureUrl(null); }}
                 />
               ) : (
@@ -346,7 +346,7 @@ export default function Settings() {
             )}
 
                         <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-              <label className="flex-1 flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-gray-200 cursor-pointer hover:border-indigo-400 transition-colors">
+              <label className="flex-1 flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200 cursor-pointer hover:border-indigo-400 transition-colors">
                 <ImageIcon className="h-5 w-5 text-indigo-500 shrink-0" />
                 <span className="min-w-0">
                   <span className="block text-sm font-medium truncate">{pictureFile ? pictureFile.name : 'Choose an image file'}</span>
@@ -392,8 +392,8 @@ export default function Settings() {
         </div>
 
         {/* ── Account ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><LogOut className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Account</h2>
           </div>
@@ -411,16 +411,16 @@ export default function Settings() {
         </div>
 
         {role === 'customer' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
               <div className="text-indigo-600 dark:text-indigo-400"><Star className="h-5 w-5" /></div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Your Rewards</h2>
             </div>
             <div className="px-6 py-5">
               {customerLoading ? (
                 <div className="space-y-4">
-                  <div className="h-10 w-32 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
-                  <div className="h-10 w-32 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
+                  <div className="h-10 w-32 bg-gray-100 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="h-10 w-32 bg-gray-100 dark:bg-gray-700 rounded animate-pulse" />
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -450,14 +450,14 @@ export default function Settings() {
         )}
 
         {role === 'restaurant-admin' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
               <div className="text-indigo-600 dark:text-indigo-400"><Building2 className="h-5 w-5" /></div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Your Restaurant</h2>
             </div>
             <div className="px-6 py-5">
               {adminLoading ? (
-                <div className="h-14 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
+                <div className="h-14 bg-gray-100 dark:bg-gray-700 rounded animate-pulse" />
               ) : adminRestaurant ? (
                 <div className="flex items-center justify-between">
                   <div>
@@ -475,8 +475,8 @@ export default function Settings() {
           </div>
         )}
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
             <div className="text-indigo-600 dark:text-indigo-400"><Key className="h-5 w-5" /></div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Security</h2>
           </div>
@@ -497,7 +497,7 @@ export default function Settings() {
               </div>
 
               {resetEmail && (
-                <div className="bg-gray-50 dark:bg-slate-900 rounded-lg p-4 space-y-3">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Email Address
@@ -507,7 +507,7 @@ export default function Settings() {
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
                       disabled={resetLoading}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white disabled:opacity-50"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-50"
                     />
                   </div>
 
@@ -550,7 +550,7 @@ export default function Settings() {
                     <button
                       onClick={() => setResetEmail('')}
                       disabled={resetLoading}
-                      className="px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 font-medium disabled:opacity-50 transition-colors"
+                      className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium disabled:opacity-50 transition-colors"
                     >
                       Cancel
                     </button>
@@ -562,16 +562,16 @@ export default function Settings() {
         </div>
 
         {role === 'super-admin' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
               <div className="text-indigo-600 dark:text-indigo-400"><Shield className="h-5 w-5" /></div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Platform Stats</h2>
             </div>
             <div className="px-6 py-5">
               {superLoading ? (
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="h-16 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
-                  <div className="h-16 bg-gray-100 dark:bg-slate-700 rounded animate-pulse" />
+                  <div className="h-16 bg-gray-100 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="h-16 bg-gray-100 dark:bg-gray-700 rounded animate-pulse" />
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-4">

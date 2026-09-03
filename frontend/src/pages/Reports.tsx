@@ -103,18 +103,18 @@ function ReportForm({ sessionUid, reporterName, reporterEmail, onCreated }: {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm font-medium text-gray-800 dark:text-gray-100">
           Category
-          <select value={category} onChange={(event) => setCategory(event.target.value as ReportCategory)} className="mt-1.5 w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-gray-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white">
+          <select value={category} onChange={(event) => setCategory(event.target.value as ReportCategory)} className="mt-1.5 w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-gray-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-900 dark:text-white">
             {CATEGORY_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </label>
         <label className="block text-sm font-medium text-gray-800 dark:text-gray-100">
           Subject
-          <input value={subject} onChange={(event) => setSubject(event.target.value)} maxLength={120} placeholder="What is the problem?" className="mt-1.5 w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-gray-900 outline-none placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white" />
+          <input value={subject} onChange={(event) => setSubject(event.target.value)} maxLength={120} placeholder="What is the problem?" className="mt-1.5 w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-gray-900 outline-none placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-900 dark:text-white" />
         </label>
       </div>
       <label className="mt-4 block text-sm font-medium text-gray-800 dark:text-gray-100">
         Details
-        <textarea value={description} onChange={(event) => setDescription(event.target.value)} maxLength={2000} rows={5} placeholder="Include the page, order, restaurant, or action involved and what you expected to happen." className="mt-1.5 w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2.5 text-gray-900 outline-none placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white" />
+        <textarea value={description} onChange={(event) => setDescription(event.target.value)} maxLength={2000} rows={5} placeholder="Include the page, order, restaurant, or action involved and what you expected to happen." className="mt-1.5 w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2.5 text-gray-900 outline-none placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-900 dark:text-white" />
       </label>
       <div className="mt-4 flex justify-end">
         <button type="submit" disabled={saving} className="action-primary inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60">
@@ -133,7 +133,7 @@ function ReportList({ reports, isAdmin, updatingId, onStatusChange }: {
   onStatusChange: (id: string, status: ReportStatus) => void;
 }) {
   if (reports.length === 0) {
-    return <div className="rounded-lg border border-dashed border-gray-300 bg-white px-6 py-12 text-center dark:border-slate-700 dark:bg-dark-card"><FileText className="mx-auto mb-3 text-gray-400" size={38} /><p className="font-medium text-gray-800 dark:text-white">No reports yet</p><p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Submitted reports will appear here.</p></div>;
+    return <div className="rounded-lg border border-dashed border-gray-300 bg-white px-6 py-12 text-center dark:border-gray-700 dark:bg-dark-card"><FileText className="mx-auto mb-3 text-gray-400" size={38} /><p className="font-medium text-gray-800 dark:text-white">No reports yet</p><p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Submitted reports will appear here.</p></div>;
   }
 
   return <div className="space-y-3">
@@ -147,7 +147,7 @@ function ReportList({ reports, isAdmin, updatingId, onStatusChange }: {
             </div>
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{report.category.replace('_', ' ')} · {formatDate(report.createdAt)}{isAdmin && ` · ${report.reporterName}`}</p>
           </div>
-          {isAdmin && <select value={report.status} disabled={updatingId === report.id} onChange={(event) => onStatusChange(report.id, event.target.value as ReportStatus)} className="rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm text-gray-800 dark:border-slate-600 dark:bg-slate-900 dark:text-white"><option value="open">Open</option><option value="in_review">In review</option><option value="resolved">Resolved</option></select>}
+          {isAdmin && <select value={report.status} disabled={updatingId === report.id} onChange={(event) => onStatusChange(report.id, event.target.value as ReportStatus)} className="rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm text-gray-800 dark:border-gray-600 dark:bg-gray-900 dark:text-white"><option value="open">Open</option><option value="in_review">In review</option><option value="resolved">Resolved</option></select>}
         </div>
         <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-gray-700 dark:text-gray-200">{report.description}</p>
       </article>

@@ -71,9 +71,9 @@ export function OrdersBarChart({ data, height = 280 }: { data: OrderRow[]; heigh
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-slate-700" />
-        <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
-        <YAxis tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-slate-400" />
+        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-gray-200 dark:text-gray-700" />
+        <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-gray-400" />
+        <YAxis tick={{ fontSize: 11 }} stroke="currentColor" className="text-gray-500 dark:text-gray-400" />
         <Tooltip
           contentStyle={{
             backgroundColor: '#FFFFFF',
@@ -155,7 +155,7 @@ export const defaultOrders: OrderRow[] = [
 ];
 
 export const defaultOrderMix: DonutSlice[] = [
-  { name: 'Dine-in', value: 48, color: '#B85C38' },
+  { name: 'Dine-in', value: 48, color: '#EA580C' },
   { name: 'Takeaway', value: 24, color: '#6F8068' },
   { name: 'Delivery', value: 20, color: '#D9A441' },
   { name: 'Catering', value: 8, color: '#7F725F' },

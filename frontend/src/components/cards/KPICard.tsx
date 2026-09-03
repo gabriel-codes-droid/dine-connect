@@ -11,27 +11,27 @@ interface KPICardProps {
 }
 
 const accentBg: Record<NonNullable<KPICardProps['accent']>, string> = {
-  indigo: 'bg-[#FFF7ED] dark:bg-[#2A1F14]',
-  green: 'bg-[#F0F7F0] dark:bg-[#1A2A1A]',
-  purple: 'bg-[#F5F0F5] dark:bg-[#251A25]',
-  amber: 'bg-[#FFF8F0] dark:bg-[#2A1F10]',
-  sky: 'bg-[#F0F5F7] dark:bg-[#14252A]',
-  rose: 'bg-[#FBF0F2] dark:bg-[#2A1820]',
-  emerald: 'bg-[#F0F7F0] dark:bg-[#1A2A1A]',
-  orange: 'bg-[#FFF5EC] dark:bg-[#2A1810]',
+  indigo: 'bg-[#EDEEF2] dark:bg-black',
+  green: 'bg-[#ECF1EC] dark:bg-black',
+  purple: 'bg-[#EDEAEB] dark:bg-black',
+  amber: 'bg-[#F5EDE2] dark:bg-black',
+  sky: 'bg-[#E8EDF2] dark:bg-black',
+  rose: 'bg-[#F8EAEA] dark:bg-black',
+  emerald: 'bg-[#ECF1EC] dark:bg-black',
+  orange: 'bg-[#FDF0E6] dark:bg-black',
 };
 
 const legacyBgDarkMap: Record<string, string> = {
-  'bg-indigo-50': 'bg-[#2A1F14]',
-  'bg-green-50': 'bg-[#1A2A1A]',
-  'bg-purple-50': 'bg-[#251A25]',
-  'bg-amber-50': 'bg-[#2A1F10]',
-  'bg-sky-50': 'bg-[#14252A]',
-  'bg-rose-50': 'bg-[#2A1820]',
-  'bg-emerald-50': 'bg-[#1A2A1A]',
-  'bg-orange-50': 'bg-[#2A1810]',
-  'bg-blue-50': 'bg-[#14252A]',
-  'bg-gray-50': 'bg-[#353A35]',
+  'bg-indigo-50': 'bg-black',
+  'bg-green-50': 'bg-black',
+  'bg-purple-50': 'bg-black',
+  'bg-amber-50': 'bg-black',
+  'bg-sky-50': 'bg-black',
+  'bg-rose-50': 'bg-black',
+  'bg-emerald-50': 'bg-black',
+  'bg-orange-50': 'bg-black',
+  'bg-blue-50': 'bg-black',
+  'bg-gray-50': 'bg-black',
 };
 
 function resolveWrapperBg(bgColor?: string, accent?: KPICardProps['accent']): string {
@@ -60,8 +60,8 @@ export default function KPICard({
           <div
             className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-semibold ${
               isPositive
-                ? 'bg-[#E8EFE4] dark:bg-[#29352C] text-success'
-                : 'bg-[#F3E5E1] dark:bg-[#402C2A] text-danger'
+                ? 'bg-green-50 dark:bg-black text-green-700 dark:text-green-400'
+                : 'bg-red-50 dark:bg-black text-red-700 dark:text-red-400'
             }`}
           >
             {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}

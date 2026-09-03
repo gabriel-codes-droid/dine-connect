@@ -309,8 +309,8 @@ export default function Orders() {
         </div>
 
         {/* Orders Table */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-800">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               {session.role === 'customer'
                 ? 'Order History'
@@ -322,7 +322,7 @@ export default function Orders() {
 
           {orders.length === 0 ? (
             <div className="px-6 py-12 text-center">
-              <ShoppingBag className="mx-auto text-gray-300 dark:text-slate-600 mb-4" size={48} />
+              <ShoppingBag className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
               <p className="text-gray-500 dark:text-gray-400">
                 {session.role === 'customer'
                   ? "You haven't placed any orders yet."
@@ -332,11 +332,11 @@ export default function Orders() {
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-slate-800">
+            <div className="divide-y divide-gray-200 dark:divide-gray-800">
               {orders.map((order) => (
                 <div
                   key={order.id}
-                  className="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                  className="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-gray-900 dark:text-white truncate">

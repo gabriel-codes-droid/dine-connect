@@ -37,7 +37,7 @@ function validateEmail(s: string) {
 }
 
 function passwordStrength(p: string): { score: 0 | 1 | 2 | 3 | 4; label: string; color: string } {
-  if (!p) return { score: 0, label: '—', color: 'bg-gray-200 dark:bg-slate-700' };
+  if (!p) return { score: 0, label: '—', color: 'bg-gray-200 dark:bg-gray-700' };
   let score = 0;
   if (p.length >= 6) score++;
   if (p.length >= 10) score++;
@@ -167,7 +167,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-950">
       {/* Left — visual */}
       <div className="relative hidden lg:flex flex-col justify-between p-8 sm:p-12 overflow-hidden bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-700 text-white">
         <div className="absolute inset-0 opacity-15">
@@ -251,7 +251,7 @@ export default function Signup() {
           type="button"
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
         >
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
@@ -300,10 +300,10 @@ export default function Signup() {
                   autoComplete="username"
                   pattern="[a-zA-Z0-9]{3,30}"
                   title="Letters and numbers only (3-30 characters)"
-                  className={`w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full pl-10 pr-10 py-3 bg-white dark:bg-gray-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     fieldErrors.username || usernameStatus === 'taken'
                       ? 'border-red-300 dark:border-red-700 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-slate-700 focus:ring-indigo-500 focus:border-transparent'
+                      : 'border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-transparent'
                   }`}
                   required
                   minLength={3}
@@ -346,10 +346,10 @@ export default function Signup() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   autoComplete="email"
-                  className={`w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full pl-10 pr-10 py-3 bg-white dark:bg-gray-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     fieldErrors.email || emailStatus === 'taken'
                       ? 'border-red-300 dark:border-red-700 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-slate-700 focus:ring-indigo-500 focus:border-transparent'
+                      : 'border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-transparent'
                   }`}
                   required
                 />
@@ -390,10 +390,10 @@ export default function Signup() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 6 characters"
                   autoComplete="new-password"
-                  className={`w-full pl-10 pr-12 py-3 bg-white dark:bg-slate-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full pl-10 pr-12 py-3 bg-white dark:bg-gray-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     fieldErrors.password
                       ? 'border-red-300 dark:border-red-700 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-slate-700 focus:ring-indigo-500 focus:border-transparent'
+                      : 'border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-transparent'
                   }`}
                   required
                   minLength={6}
@@ -414,7 +414,7 @@ export default function Signup() {
                       <div
                         key={i}
                         className={`h-1.5 rounded-full transition-colors ${
-                          i < strength.score ? strength.color : 'bg-gray-200 dark:bg-slate-700'
+                          i < strength.score ? strength.color : 'bg-gray-200 dark:bg-gray-700'
                         }`}
                       />
                     ))}
@@ -443,10 +443,10 @@ export default function Signup() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat your password"
                   autoComplete="new-password"
-                  className={`w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+                  className={`w-full pl-10 pr-10 py-3 bg-white dark:bg-gray-900 border rounded-xl focus:outline-none focus:ring-2 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
                     fieldErrors.confirmPassword
                       ? 'border-red-300 dark:border-red-700 focus:ring-red-500'
-                      : 'border-gray-300 dark:border-slate-700 focus:ring-indigo-500 focus:border-transparent'
+                      : 'border-gray-300 dark:border-gray-700 focus:ring-indigo-500 focus:border-transparent'
                   }`}
                   required
                 />
@@ -474,7 +474,7 @@ export default function Signup() {
                       className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
                         active
                           ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:border-indigo-500'
-                          : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-900'
                       }`}
                     >
                       <input
@@ -492,7 +492,7 @@ export default function Signup() {
                       </div>
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                          active ? 'border-indigo-600 bg-indigo-600' : 'border-gray-300 dark:border-slate-600'
+                          active ? 'border-indigo-600 bg-indigo-600' : 'border-gray-300 dark:border-gray-600'
                         }`}
                       >
                         {active && <div className="w-2 h-2 rounded-full bg-white" />}
