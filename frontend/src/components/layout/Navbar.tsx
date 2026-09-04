@@ -68,14 +68,14 @@ export default function Navbar({
           type="button"
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="p-2 text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
+          className="p-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
         >
           {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
         <button
           type="button"
-          className="relative p-2 text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
+          className="relative p-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
           aria-label="Notifications"
         >
           <Bell size={20} />
@@ -85,7 +85,7 @@ export default function Navbar({
         <button
           type="button"
           onClick={() => navigate('/settings')}
-          className="hidden sm:inline-flex p-2 text-gray-500 dark:text-gray-400 hover:text-orange-500 dark:hover:text-orange-400 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
+          className="hidden sm:inline-flex p-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
           aria-label="Settings"
         >
           <SettingsIcon size={20} />
@@ -99,7 +99,7 @@ export default function Navbar({
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="flex items-center gap-3 px-2 sm:px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors"
           >
-            <div className="w-7 h-7 bg-orange-700 rounded-md flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-semibold">
                 {displayName.charAt(0).toUpperCase()}
               </span>
