@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Bell,
   LogOut,
   User,
   ChevronDown,
@@ -71,15 +70,6 @@ export default function Navbar({
           className="p-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
         >
           {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
-        <button
-          type="button"
-          className="relative p-2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light hover:bg-gray-100 dark:hover:bg-[#1a1a1a] rounded-md transition-colors"
-          aria-label="Notifications"
-        >
-          <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-danger rounded-full" />
         </button>
 
         <button
