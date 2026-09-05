@@ -112,15 +112,6 @@ code {
   border-color: #2a2a2a;
 }
 
-.dark button[class*="bg-white"]:not([class*="dark:bg-"]),
-.dark a[class*="bg-white"]:not([class*="dark:bg-"]),
-.dark button[class*="bg-gray-"]:not([class*="dark:bg-"]),
-.dark a[class*="bg-gray-"]:not([class*="dark:bg-"]) {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #ffffff;
-}
-
 button[class*="bg-primary"],
 button[class*="bg-indigo-"],
 button[class*="bg-blue-"],
