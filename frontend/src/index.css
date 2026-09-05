@@ -112,17 +112,6 @@ code {
   border-color: #2a2a2a;
 }
 
-button[class*="bg-primary"],
-button[class*="bg-indigo-"],
-button[class*="bg-blue-"],
-button[class*="bg-orange-"],
-a[class*="bg-primary"],
-a[class*="bg-indigo-"],
-a[class*="bg-blue-"],
-a[class*="bg-orange-"] {
-  color: #ffffff;
-}
-
 h1,
 h2,
 h3 {
